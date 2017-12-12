@@ -1,0 +1,21 @@
+[
+null,
+{"id":1,"expanded":true,"name":"Hawthorne Institute","order":1,"parentId":0,"scrollX":532,"scrollY":318.5},
+{"id":2,"expanded":true,"name":"Cells","order":2,"parentId":1,"scrollX":532,"scrollY":305.5},
+{"id":3,"expanded":false,"name":"Quote's Cell","order":3,"parentId":2,"scrollX":532,"scrollY":305.5},
+{"id":4,"expanded":true,"name":"Promenade","order":4,"parentId":1,"scrollX":572,"scrollY":297.5},
+{"id":5,"expanded":true,"name":"Path","order":5,"parentId":4,"scrollX":532,"scrollY":297.5},
+{"id":6,"expanded":false,"name":"Training Room","order":6,"parentId":4,"scrollX":532,"scrollY":305.5},
+{"id":7,"expanded":false,"name":"Scenes","order":9,"parentId":0,"scrollX":532,"scrollY":318.5},
+{"id":8,"expanded":false,"name":"Intro","order":10,"parentId":7,"scrollX":532,"scrollY":305.5},
+{"id":9,"expanded":false,"name":"Prep","order":11,"parentId":7,"scrollX":532,"scrollY":318.5},
+{"id":10,"expanded":true,"name":"Dungeons","order":12,"parentId":0,"scrollX":532,"scrollY":318.5},
+{"id":11,"expanded":true,"name":"Garden of Eden","order":13,"parentId":10,"scrollX":532,"scrollY":318.5},
+{"id":12,"expanded":false,"name":"Base Floor","order":14,"parentId":11,"scrollX":532,"scrollY":366.5},
+{"id":13,"expanded":false,"name":"Floors 1-4","order":15,"parentId":11,"scrollX":816,"scrollY":640.5},
+{"id":14,"expanded":false,"name":"Floor 5","order":16,"parentId":11,"scrollX":532,"scrollY":366.5},
+{"id":15,"expanded":false,"name":"Floors 6-9","order":17,"parentId":11,"scrollX":532,"scrollY":297.5},
+{"id":16,"expanded":false,"name":"Final Floor","order":18,"parentId":11,"scrollX":532,"scrollY":366.5},
+{"id":17,"expanded":false,"name":"Trade Area","order":7,"parentId":4,"scrollX":532,"scrollY":318.5},
+{"id":18,"expanded":false,"name":"Gambling Area","order":8,"parentId":4,"scrollX":832,"scrollY":640}
+]

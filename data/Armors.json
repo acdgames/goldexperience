@@ -1,0 +1,10 @@
+[
+null,
+{"id":1,"atypeId":1,"description":"Increase Armor and Magic Resist by 1 and HP by 10.","etypeId":2,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":137,"name":"Green Armour","note":"<gachaRank:1>\n<gachaNumLot:3>","params":[10,0,0,1,0,1,0,0],"price":500},
+{"id":2,"atypeId":1,"description":"Increase your Armor and Magic Resist by 2 plus....","etypeId":2,"traits":[{"code":22,"dataId":1,"value":0},{"code":64,"dataId":4,"value":1}],"iconIndex":135,"name":"Golden Coat of Chainmail","note":"<gachaRank:3>\n<gachaNumLot:3>","params":[0,0,0,2,0,2,0,0],"price":3000},
+{"id":3,"atypeId":1,"description":"Increase healing done to you by 30% and gain 1% HP Regen.","etypeId":2,"traits":[{"code":22,"dataId":1,"value":0},{"code":23,"dataId":2,"value":1.3},{"code":22,"dataId":7,"value":0.01}],"iconIndex":134,"name":"Crown of Immortality","note":"<gachaRank:3>\n<gachaNumLot:3>","params":[0,0,0,1,0,1,0,0],"price":1500},
+{"id":4,"atypeId":1,"description":"Negate burns and gain 2% HP Regen.","etypeId":2,"traits":[{"code":22,"dataId":1,"value":0},{"code":14,"dataId":20,"value":1},{"code":22,"dataId":7,"value":0.02}],"iconIndex":129,"name":"Svalinn","note":"<gachaRank:4>\n<gachaNumLot:3>","params":[0,0,0,3,0,3,0,0],"price":2000},
+{"id":5,"atypeId":1,"description":"Gain 10% Physical Lifesteal and 3% MP Regen.","etypeId":2,"traits":[{"code":22,"dataId":1,"value":0},{"code":22,"dataId":8,"value":0.03}],"iconIndex":142,"name":"Járngreipr","note":"<HP Life Steal Physical: +10%>\n\n<gachaRank:5>\n<gachaNumLot:3>","params":[0,0,1,1,0,1,0,0],"price":3000},
+{"id":6,"atypeId":1,"description":"Increase Armor and Magic Resist by 10.","etypeId":2,"traits":[{"code":22,"dataId":1,"value":0}],"iconIndex":137,"name":"Kavacha","note":"<gachaRank:5>\n<gachaNumLot:3>","params":[0,0,0,10,0,10,0,0],"price":3000},
+{"id":7,"atypeId":1,"description":"Restores some HP each turn.","etypeId":2,"traits":[{"code":22,"dataId":1,"value":0},{"code":22,"dataId":7,"value":0.08}],"iconIndex":265,"name":"Leftovers","note":"","params":[10,0,0,0,0,0,0,0],"price":5000}
+]
