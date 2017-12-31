@@ -68,6 +68,6 @@ var $plugins =
 {"name":"SAN_MapGenerator","status":true,"description":"SAN_MapGenerator ver1.00 \r\nGenerate map and allocate events automatically.","parameters":{}},
 {"name":"liply_memoryleak_patch","status":true,"description":"メモリリークパッチ","parameters":{}},
 {"name":"HIME_HMSChoiceDisplayMode","status":true,"description":"v1.3 - Customize the way choices are displayed","parameters":{"Default Choice Mode":"Embed","Choice Indent":"36"}},
-{"name":"TerraxLighting","status":true,"description":"v1.4.2 Creates an extra layer that darkens a map and adds lightsources!","parameters":{"Player radius":"0","Add to options":"No","Reset Lights":"No","Save DaynightHours":"0","Save DaynightMinutes":"0","Save DaynightSeconds":"0","Flashlight offset":"0","Screensize X":"866","Screensize Y":"630","Kill Switch":"No"}},
+{"name":"TerraxLighting","status":false,"description":"v1.4.2 Creates an extra layer that darkens a map and adds lightsources!","parameters":{"Player radius":"0","Add to options":"No","Reset Lights":"No","Save DaynightHours":"0","Save DaynightMinutes":"0","Save DaynightSeconds":"0","Flashlight offset":"0","Screensize X":"866","Screensize Y":"630","Kill Switch":"No"}},
 {"name":"MOG_EventText","status":true,"description":"(v1.2) Adiciona um texto em cima do evento.","parameters":{"X axis":"0","Y axis":"0","Font Size":"18"}}
 ];
