@@ -1,5 +1,5 @@
 //=============================================================================
-// rpg_windows.js v1.4.0
+// rpg_windows.js
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -1474,7 +1474,7 @@ Window_Help.prototype.constructor = Window_Help;
 
 Window_Help.prototype.initialize = function(numLines) {
     var width = Graphics.boxWidth;
-    var height = this.fittingHeight(3);
+    var height = this.fittingHeight(numLines || 2);
     Window_Base.prototype.initialize.call(this, 0, 0, width, height);
     this._text = '';
 };
@@ -1750,7 +1750,7 @@ Window_MenuStatus.prototype.drawItemImage = function(index) {
     var actor = $gameParty.members()[index];
     var rect = this.itemRect(index);
     this.changePaintOpacity(actor.isBattleMember());
-    this.drawActorFace(actor, rect.x + 1, rect.y + 1, Window_Base._faceWidth, Window_Base._faceHeight);
+    this.drawActorFace(actor, rect.x + 1, rect.y + 1, 144, rect.height - 2);
     this.changePaintOpacity(true);
 };
 
@@ -5431,14 +5431,7 @@ Window_ActorCommand.prototype.processOk = function() {
 Window_ActorCommand.prototype.selectLast = function() {
     this.select(0);
     if (this._actor && ConfigManager.commandRemember) {
-        var symbol = this._actor.lastCommandSymbol();
-        this.selectSymbol(symbol);
-        if (symbol === 'skill') {
-            var skill = this._actor.lastBattleSkill();
-            if (skill) {
-                this.selectExt(skill.stypeId);
-            }
-        }
+        this.selectSymbol(this._actor.lastCommandSymbol());
     }
 };
 

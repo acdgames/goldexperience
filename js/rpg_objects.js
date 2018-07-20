@@ -1,5 +1,5 @@
 //=============================================================================
-// rpg_objects.js v1.3.1
+// rpg_objects.js
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -88,9 +88,6 @@ Game_System.prototype.initialize = function() {
     this._defeatMe = null;
     this._savedBgm = null;
     this._walkingBgm = null;
-	this.rateupItems = [];
-	this.rateupWeapons = [];
-	this.rateupArmors = [];
 };
 
 Game_System.prototype.isJapanese = function() {
@@ -1092,7 +1089,7 @@ Game_Picture.prototype.updateTone = function() {
 };
 
 Game_Picture.prototype.updateRotation = function() {
-    if (this._rotationSpeed !== 0) {
+    if (this._rotationSpeed > 0) {
         this._angle += this._rotationSpeed / 2;
     }
 };
@@ -1294,17 +1291,8 @@ Game_Action.prototype.isItem = function() {
 Game_Action.prototype.numRepeats = function() {
     var repeats = this.item().repeats;
     if (this.isAttack()) {
-		var certain = Math.floor(this.subject().attackTimesAdd());
-		var chance = this.subject().attackTimesAdd();
-		var bonus = (chance - certain);
-		var chance2 = Math.random();
-		if (bonus >= chance2) {
-			if (bonus != 0) {
-			repeats += 1;
-			}
-		};
-        repeats += certain;
-    };
+        repeats += this.subject().attackTimesAdd();
+    }
     return Math.floor(repeats);
 };
 
@@ -1396,11 +1384,6 @@ Game_Action.prototype.isAttack = function() {
     return this.item() === $dataSkills[this.subject().attackSkillId()];
 };
 
-Game_Action.prototype.isAttackSkill = function() {
-    return this.item().damage.elementId == 2;
-};
-
-
 Game_Action.prototype.isGuard = function() {
     return this.item() === $dataSkills[this.subject().guardSkillId()];
 };
@@ -1423,7 +1406,7 @@ Game_Action.prototype.decideRandomTarget = function() {
         target = this.opponentsUnit().randomTarget();
     }
     if (target) {
-        this._targetIndex = target.index();
+        this._targetIndex = target.index;
     } else {
         this.clear();
     }
@@ -1545,7 +1528,7 @@ Game_Action.prototype.evaluate = function() {
             value += targetValue;
         } else if (targetValue > value) {
             value = targetValue;
-            this._targetIndex = target.index();
+            this._targetIndex = target.index;
         }
     }, this);
     value *= this.numRepeats();
@@ -1685,22 +1668,10 @@ Game_Action.prototype.makeDamageValue = function(target, critical) {
     var baseValue = this.evalDamageFormula(target);
     var value = baseValue * this.calcElementRate(target);
     if (this.isPhysical()) {
-		if (critical) {
-			value -= (target.def*0.125);
-		} else {
-		value -= (target.def*0.5);
         value *= target.pdr;
-		}
-		value = Math.max(1, value)
     }
     if (this.isMagical()) {
-        if (critical) {
-			value -= (target.mdf*0.125);
-		} else {
-		value -= (target.mdf*0.5);
         value *= target.mdr;
-		}
-		value = Math.max(1, value)
     }
     if (baseValue < 0) {
         value *= target.rec;
@@ -1721,9 +1692,7 @@ Game_Action.prototype.evalDamageFormula = function(target) {
         var b = target;
         var v = $gameVariables._data;
         var sign = ([3, 4].contains(item.damage.type) ? -1 : 1);
-        var value = Math.max(eval(item.damage.formula), 0) * sign;
-		if (isNaN(value)) value = 0;
-		return value;
+        return Math.max(eval(item.damage.formula), 0) * sign;
     } catch (e) {
         return 0;
     }
@@ -1748,7 +1717,7 @@ Game_Action.prototype.elementsMaxRate = function(target, elements) {
 };
 
 Game_Action.prototype.applyCritical = function(damage) {
-    return damage * 1;
+    return damage * 3;
 };
 
 Game_Action.prototype.applyVariance = function(damage, variance) {
@@ -2650,7 +2619,7 @@ Game_BattlerBase.prototype.mpRate = function() {
 };
 
 Game_BattlerBase.prototype.tpRate = function() {
-    return this.tp / this.maxTp();
+    return this.tp / 100;
 };
 
 Game_BattlerBase.prototype.hide = function() {
@@ -2850,10 +2819,6 @@ Game_BattlerBase.prototype.attackSkillId = function() {
 
 Game_BattlerBase.prototype.guardSkillId = function() {
     return 2;
-};
-
-Game_BattlerBase.prototype.attackSpecialSkillId = function() {
-    return this;
 };
 
 Game_BattlerBase.prototype.canAttack = function() {
@@ -4966,7 +4931,7 @@ Game_Party.prototype.numItems = function(item) {
 };
 
 Game_Party.prototype.maxItems = function(item) {
-    return 1000;
+    return 99;
 };
 
 Game_Party.prototype.hasMaxItems = function(item) {
@@ -10291,7 +10256,7 @@ Game_Interpreter.prototype.command320 = function() {
 Game_Interpreter.prototype.command321 = function() {
     var actor = $gameActors.actor(this._params[0]);
     if (actor && $dataClasses[this._params[1]]) {
-        actor.changeClass(this._params[1], this._params[2]);
+        actor.changeClass(this._params[1], false);
     }
     return true;
 };
