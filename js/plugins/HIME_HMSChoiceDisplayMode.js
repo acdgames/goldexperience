@@ -207,7 +207,6 @@ var HMS = HMS || {};
   
   // IAVRA windowlayer fix for now
   delete WindowLayer.prototype._renderCanvas;
-  delete WindowLayer.prototype._canvasClearWindowRect;
   delete WindowLayer.prototype._renderWebGL;
   delete WindowLayer.prototype._webglMaskOutside;
   delete WindowLayer.prototype._webglMaskWindow;
