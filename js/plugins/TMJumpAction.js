@@ -1,7 +1,7 @@
 ﻿//=============================================================================
 // TMPlugin - ジャンプアクション
-// バージョン: 1.0.3
-// 最終更新日: 2018/01/04
+// バージョン: 1.0.4
+// 最終更新日: 2018/02/21
 // 配布元    : http://hikimoki.sakura.ne.jp/
 //-----------------------------------------------------------------------------
 // Copyright (c) 2015 tomoaky
@@ -56,6 +56,16 @@
  * 初期値: 25
  * @default 25
  * 
+ * @param jumpRule
+ * @type select
+ * @option 地面に足がついていなくてもジャンプ可能
+ * @value 1
+ * @option 地面に足がついてるときのみジャンプ可能
+ * @value 2
+ * @desc ジャンプのルール設定です。
+ * このルールはジャンプ回数が 1 回のときのみ適用されます。
+ * @default 1
+ * 
  * @param eventCollapse
  * @type boolean
  * @desc イベント戦闘不能時に崩壊エフェクトを使う。
@@ -73,7 +83,7 @@
  * @desc ダメージ床から受けるダメージ。
  * 初期値: 10
  * @default 10
- *
+ * 
  * @param damageFallRate
  * @type number
  * @desc 落下ダメージの倍率。
@@ -408,7 +418,7 @@
  * @requiredAssets img/system/TMJumpActionShield
  * 
  * @help
- * TMPlugin - ジャンプアクション ver1.0.2
+ * TMPlugin - ジャンプアクション ver1.0.4
  *
  * 使い方:
  *
@@ -577,6 +587,7 @@ function Game_Bullet() {
   var actAllDeadEvent = +(parameters['allDeadEvent'] || 0);
   var actGuardStateId = +(parameters['guardState'] || 2);
   var actGuardMoveRate = +(parameters['guardMoveRate'] || 25);
+  var actJumpRule = parameters['jumpRule'] || '1';
   var actEventCollapse = JSON.parse(parameters['eventCollapse']);
   var actHpGauge = JSON.parse(parameters['hpGauge']);
   var actFloorDamage = +(parameters['floorDamage'] || 10);
@@ -2088,14 +2099,14 @@ function Game_Bullet() {
       }
     } else {
       // ダッシュ状態でなければ移動速度を超えないように調整する
-      if (!this.isDashing()) {
+      //if (!this.isDashing()) {
         var n = this.isSwimming() ? this._swimSpeed : this._moveSpeed;
         if (this._vx < -n) {
           this._vx = Math.min(this._vx + 0.005, -n);
         } else if (this._vx > n) {
           this._vx = Math.max(this._vx - 0.005, n);
         }
-      }
+      //}
       if (this.isLanding()) {
         var n = actFriction;
         var speed = this._moveSpeed;
@@ -2379,6 +2390,7 @@ function Game_Bullet() {
         this.resetJump();
         this._jumpCount--;
       } else if (this._jumpCount > 0) {
+        if (actJumpRule === '2' && !this.isLanding() && !this._ladder && this._mulchJump === 1) return;
         this._jumpCount--;
       } else {
         if (!this._wallJump) return;
@@ -2815,7 +2827,8 @@ function Game_Bullet() {
       this.battler().requestEffect('collapse');
       SoundManager.playEnemyCollapse();
     } else {
-      this._lockCount = 1;
+      this._lockCount = 2;
+      this.battler().requestEffect('normal');
     }
   };
 

@@ -1,5 +1,4 @@
 [
 null,
-{"id":1,"battlerName":"","characterIndex":0,"characterName":"$Clear","classId":1,"equips":[0,0,0,0,0],"faceIndex":0,"faceName":"","traits":[],"initialLevel":1,"maxLevel":99,"name":"Clear","nickname":"","note":"<move_speed:0.075>\n<accele:0.015>\n<jump_speed: 0.14> \n<jump_input: 15> \n<gravity: 0.0045> \n<mulch_jump: 2>\n<wall_jump> \n<dash_speed_x:0.30>","profile":""},
-{"id":2,"battlerName":"","characterIndex":7,"characterName":"Actor1","classId":2,"equips":[2,1,2,3,0],"faceIndex":7,"faceName":"Actor1","traits":[],"initialLevel":1,"maxLevel":99,"name":"テレーゼ","nickname":"","note":"","profile":""}
+{"id":1,"battlerName":"","characterIndex":0,"characterName":"$Clear","classId":1,"equips":[0,0,0,0,0],"faceIndex":0,"faceName":"","traits":[],"initialLevel":1,"maxLevel":99,"name":"Clear","nickname":"","note":"<move_speed:0.075>\n<accele:0.015>\n<jump_speed: 0.175> \n<jump_input: 15> \n<gravity: 0.0095> \n<mulch_jump: 2>\n<wall_jump> \n<dash_speed_x:0.30>\n<w: 0.385>\n<h: 1.875>","profile":""}
 ]
