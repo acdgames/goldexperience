@@ -1415,9 +1415,9 @@ function Game_Bullet() {
     this._vy = Math.min(this._vy + this._gravity, this.maxFallSpeed());
   };
 
-  // 最大落下速度の取得
+  // Terminal Velocity
   Game_CharacterBase.prototype.maxFallSpeed = function() {
-    return this.isSwimming() ? 0.04 : 0.6;
+    return this.isSwimming() ? 0.04 : 0.3;
   };
 
   // 摩擦の処理
