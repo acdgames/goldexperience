@@ -9,6 +9,6 @@ null,
 {"id":7,"expanded":false,"name":"Stage 1","order":6,"parentId":5,"scrollX":532,"scrollY":318.5},
 {"id":8,"expanded":false,"name":"Stage 2","order":7,"parentId":5,"scrollX":832,"scrollY":640},
 {"id":9,"expanded":false,"name":"Stage 3","order":8,"parentId":5,"scrollX":532,"scrollY":318.5},
-{"id":10,"expanded":false,"name":"Stage 4","order":9,"parentId":5,"scrollX":532,"scrollY":640.5},
-{"id":11,"expanded":false,"name":"Stage 5","order":10,"parentId":5,"scrollX":750,"scrollY":886.5}
+{"id":10,"expanded":false,"name":"Stage 4","order":9,"parentId":5,"scrollX":832,"scrollY":640},
+{"id":11,"expanded":false,"name":"Stage 5","order":10,"parentId":5,"scrollX":832,"scrollY":640}
 ]
