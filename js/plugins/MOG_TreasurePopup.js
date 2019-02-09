@@ -2,7 +2,7 @@
 // MOG_TreasurePopup.js
 //=============================================================================
 /*:
- * @plugindesc (v1.0) Apresenta o ícone e o nome do tesouro ganho.
+ * @plugindesc (v1.1) Apresenta o ícone e o nome do tesouro ganho.
  * @author Moghunter
  *
  * @param Duration
@@ -59,7 +59,7 @@
  * 
  * @help  
  * =============================================================================
- * +++ MOG - Treasure Popup (v1.0) +++
+ * +++ MOG - Treasure Popup (v1.1) +++
  * By Moghunter 
  * https://atelierrgss.wordpress.com/
  * =============================================================================
@@ -73,7 +73,13 @@
  *
  * show_treasure_popup
  *
+ * ============================================================================
+ * HISTÓRICO
+ * ============================================================================
+ * (v1.1) - Melhoria da codificação e na compatibilidade de plugins.   
+ *        
  */
+
 
 //=============================================================================
 // ** PLUGIN PARAMETERS
@@ -217,8 +223,37 @@ Game_Interpreter.prototype.pluginCommand = function(command, args) {
 };
 
 //=============================================================================
+// ** SpriteSet Base
+//=============================================================================
+
+//==============================
+// ** create Hud Field
+//==============================
+Spriteset_Base.prototype.createHudField = function() {
+	this._hudField = new Sprite();
+	this._hudField.z = 10;
+	this.addChild(this._hudField);
+};
+
+//==============================
+// ** sort MZ
+//==============================
+Spriteset_Base.prototype.sortMz = function() {
+   this._hudField.children.sort(function(a, b){return a.mz-b.mz});
+};
+
+//=============================================================================
 // ** Spriteset Map
 //=============================================================================
+
+//==============================
+// ** create Lower Layer
+//==============================
+var _mog_TrePopup_sprMap_createLowerLayer = Spriteset_Map.prototype.createLowerLayer;
+Spriteset_Map.prototype.createLowerLayer = function() {
+    _mog_TrePopup_sprMap_createLowerLayer.call(this);
+	if (!this._hudField) {this.createHudField()};
+};
 
 //==============================
 // * create Upper Layer
@@ -264,7 +299,9 @@ Spriteset_Map.prototype.recordTreasureData = function() {
 Spriteset_Map.prototype.createTreasureField = function() {
 	this._treasureIcons = [];
     this._treasureField = new Sprite();
+	this._treasureField.mz = 110;
 	this.addChild(this._treasureField);
+	this.sortMz();
 };
 
 //==============================

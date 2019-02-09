@@ -8,29 +8,42 @@ Imported.YEP_LifeSteal = true;
 
 var Yanfly = Yanfly || {};
 Yanfly.LS = Yanfly.LS || {};
+Yanfly.LS.version = 1.04;
 
 //=============================================================================
  /*:
- * @plugindesc v1.00 Enables passive life steal traits without them being
+ * @plugindesc v1.04 Enables passive life steal traits without them being
  * active abilities but instead as passive traits.
  * @author Yanfly Engine Plugins
  *
  * @param Enable HP Overheal
+ * @type boolean
+ * @on Enable
+ * @off Disable
  * @desc Allow Life Steal to drain more HP than damage?
  * NO - false     YES - true
  * @default false
  *
  * @param Enable MP Overheal
+ * @type boolean
+ * @on Enable
+ * @off Disable
  * @desc Allow Life Steal to drain more MP than damage?
  * NO - false     YES - true
  * @default false
  *
  * @param Negative HP LifeSteal
+ * @type boolean
+ * @on Enable
+ * @off Disable
  * @desc Allow HP Life Steal values to go negative and damage
  * the attacker? NO - false     YES - true
  * @default false
  *
  * @param Negative MP LifeSteal
+ * @type boolean
+ * @on Enable
+ * @off Disable
  * @desc Allow MP Life Steal values to go negative and damage
  * the attacker? NO - false     YES - true
  * @default false
@@ -223,9 +236,29 @@ Yanfly.LS = Yanfly.LS || {};
  *   <Custom MP Life Steal Certain Flat>
  *    flat = user.mhp;
  *   </Custom MP Life Steal Certain Flat>
- *   The 'flate' variable is the bonus amount of flat bonus the related user
+ *   The 'flat' variable is the bonus amount of flat bonus the related user
  *   will life steal HP/MP from its target relative to the damage dealt. This
  *   is a flat bonus value and stacks additively.
+ *
+ * ============================================================================
+ * Changelog
+ * ============================================================================
+ *
+ * Version 1.04:
+ * - Bypass the isDevToolsOpen() error when bad code is inserted into a script
+ * call or custom Lunatic Mode code segment due to updating to MV 1.6.1.
+ *
+ * Version 1.03:
+ * - Updated for RPG Maker MV version 1.5.0.
+ *
+ * Version 1.02:
+ * - Lunatic Mode fail safes added.
+ *
+ * Version 1.01:
+ * - Updated for RPG Maker MV version 1.1.0.
+ *
+ * Version 1.00:
+ * - Finished Plugin!
  */
 //=============================================================================
 
@@ -233,7 +266,7 @@ Yanfly.LS = Yanfly.LS || {};
 // Parameter Variables
 //=============================================================================
 
-Yanfly.Parameters = PluginManager.parameters('YEP_Template');
+Yanfly.Parameters = PluginManager.parameters('YEP_LifeSteal');
 Yanfly.Param = Yanfly.Param || {};
 
 Yanfly.Param.LSHPOver = eval(String(Yanfly.Parameters['Enable HP Overheal']));
@@ -248,7 +281,8 @@ Yanfly.Param.LSMPNeg = eval(String(Yanfly.Parameters['Negative MP LifeSteal']));
 
 Yanfly.LS.DataManager_isDatabaseLoaded = DataManager.isDatabaseLoaded;
 DataManager.isDatabaseLoaded = function() {
-    if (!Yanfly.LS.DataManager_isDatabaseLoaded.call(this)) return false;
+  if (!Yanfly.LS.DataManager_isDatabaseLoaded.call(this)) return false;
+  if (!Yanfly._loaded_YEP_LifeSteal) {
     this.processLSNotetags1($dataActors);
     this.processLSNotetags1($dataClasses);
     this.processLSNotetags1($dataEnemies);
@@ -257,7 +291,9 @@ DataManager.isDatabaseLoaded = function() {
     this.processLSNotetags1($dataStates);
     this.processLSNotetags2($dataSkills);
     this.processLSNotetags2($dataItems);
-    return true;
+    Yanfly._loaded_YEP_LifeSteal = true;
+  }
+  return true;
 };
 
 DataManager.processLSNotetags1 = function(group) {
@@ -500,7 +536,11 @@ Game_Battler.prototype.getLifeStealRateEval = function(formula, target) {
     var b = target;
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    eval(formula);
+    try {
+      eval(formula);
+    } catch (e) {
+      Yanfly.Util.displayError(e, formula, 'LIFE STEAL RATE FORMULA ERROR');
+    }
     return rate;
 };
 
@@ -513,7 +553,11 @@ Game_Battler.prototype.getLifeStealFlatEval = function(formula, target) {
     var b = target;
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    eval(formula);
+    try {
+      eval(formula);
+    } catch (e) {
+      Yanfly.Util.displayError(e, formula, 'LIFE STEAL FLAT FORMULA ERROR');
+    }
     return flat;
 };
 
@@ -734,7 +778,11 @@ Game_Action.prototype.getLifeStealRateEval = function(formula, target, value) {
     var damage = value;
     var item = this.item();
     var skill = this.item();
-    eval(formula);
+    try {
+      eval(formula);
+    } catch (e) {
+      Yanfly.Util.displayError(e, formula, 'LIFE STEAL RATE FORMULA ERROR');
+    }
     return rate;
 };
 
@@ -749,8 +797,30 @@ Game_Action.prototype.getLifeStealFlatEval = function(formula, target, value) {
     var damage = value;
     var item = this.item();
     var skill = this.item();
-    eval(formula);
+    try {
+      eval(formula);
+    } catch (e) {
+      Yanfly.Util.displayError(e, formula, 'LIFE STEAL FLAT FORMULA ERROR');
+    }
     return flat;
+};
+
+//=============================================================================
+// Utilities
+//=============================================================================
+
+Yanfly.Util = Yanfly.Util || {};
+
+Yanfly.Util.displayError = function(e, code, message) {
+  console.log(message);
+  console.log(code || 'NON-EXISTENT');
+  console.error(e);
+  if (Utils.RPGMAKER_VERSION && Utils.RPGMAKER_VERSION >= "1.6.0") return;
+  if (Utils.isNwjs() && Utils.isOptionValid('test')) {
+    if (!require('nw.gui').Window.get().isDevToolsOpen()) {
+      require('nw.gui').Window.get().showDevTools();
+    }
+  }
 };
 
 //=============================================================================

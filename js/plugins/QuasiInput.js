@@ -420,7 +420,7 @@ var QuasiInput = (function() {
   };
 
   var Alias_Input_clear = Input.clear;
-  Input.clear = function() {
+  Input.clear = function() {    
     Alias_Input_clear.call(this);
     this._ranPress = false;
     this._lastPressed = null;
@@ -644,7 +644,6 @@ var QuasiInput = (function() {
   // ConfigManager
   //
   // The static class that manages the configuration data.
-
   ConfigManager.keys = JSON.parse(JSON.stringify(QuasiInput.public.remapped));
 
   var Alias_ConfigManager_makeData = ConfigManager.makeData;

@@ -3,7 +3,7 @@
 //=============================================================================
 
 /*:
- * @plugindesc (v1.0) Apresenta uma janela com nome da ação.
+ * @plugindesc (v1.2) Apresenta uma janela com nome da ação.
  * @author Moghunter
  *
  * @param Layout X-Axis
@@ -36,7 +36,7 @@
  *
  * @help  
  * =============================================================================
- * +++ MOG - Action Name (v1.0) +++
+ * +++ MOG - Action Name (v1.2) +++
  * By Moghunter 
  * https://atelierrgss.wordpress.com/
  * =============================================================================
@@ -53,6 +53,11 @@
  * 
  * Disable Name
  *
+ * =============================================================================
+ * HISTÓRICO
+ * =============================================================================
+ * (v1.2) - Melhoria na codificação e na compatibilidade de plugins.
+ * (v1.1) - Compatibilidade com o Chrono Engine.
  */
 
 //=============================================================================
@@ -70,6 +75,7 @@
     Moghunter.skillName_icon_x = Number(Moghunter.parameters['Icon X-Axis'] || 0);
     Moghunter.skillName_icon_y = Number(Moghunter.parameters['Icon Y-Axis'] || -4);
     Moghunter.skillName_FontSize = Number(Moghunter.parameters['Font Size'] || 22);
+	Moghunter.skillName_duration = Number(Moghunter.parameters['ABS Mode Duration'] || 120);
 	
 //=============================================================================
 // ** Game Temp
@@ -82,8 +88,9 @@ var _alias_mog_skillname_initialize = Game_Temp.prototype.initialize
 Game_Temp.prototype.initialize = function() {
 	_alias_mog_skillname_initialize.call(this);
 	this._skillNameData = [false,null,false];
+	this._skillNameDuration = [0,Number(Moghunter.skillName_duration),0];
 };
-
+    
 //=============================================================================
 // ** Battle Manager
 //=============================================================================
@@ -121,17 +128,94 @@ BattleManager.endAction = function() {
 };
 
 //=============================================================================
-// ** SpritesetBattle
+// ** Scene Base
 //=============================================================================
 
 //==============================
-// * create Pictures
+// ** create Hud Field
 //==============================
-var _mog_skillName_sprbattle_createPictures = Spriteset_Battle.prototype.createPictures;
-Spriteset_Battle.prototype.createPictures = function() {
+Scene_Base.prototype.createHudField = function() {
+	this._hudField = new Sprite();
+	this._hudField.z = 10;
+	this.addChild(this._hudField);
+};
+
+//==============================
+// ** sort MZ
+//==============================
+Scene_Base.prototype.sortMz = function() {
+   this._hudField.children.sort(function(a, b){return a.mz-b.mz});
+};
+
+//==============================
+// * create Action Name
+//==============================
+Scene_Base.prototype.createActionName = function() {
 	this._spriteSkillName = new SpriteSkillName();
-	this.addChild(this._spriteSkillName);
-	_mog_skillName_sprbattle_createPictures.call(this);
+	this._spriteSkillName.mz = 140;
+    this._hudField.addChild(this._spriteSkillName);
+};
+
+//=============================================================================
+// ** SpriteSet Base
+//=============================================================================
+
+//==============================
+// ** create Hud Field
+//==============================
+Spriteset_Base.prototype.createHudField = function() {
+	this._hudField = new Sprite();
+	this._hudField.z = 10;
+	this.addChild(this._hudField);
+};
+
+//==============================
+// ** sort MZ
+//==============================
+Spriteset_Base.prototype.sortMz = function() {
+   this._hudField.children.sort(function(a, b){return a.mz-b.mz});
+};
+
+//==============================
+// * create Action Name
+//==============================
+Spriteset_Base.prototype.createActionName = function() {
+	this._spriteSkillName = new SpriteSkillName();
+	this._spriteSkillName.mz = 130;
+    this._hudField.addChild(this._spriteSkillName);
+};
+
+
+//=============================================================================
+// ** Scene Battle
+//=============================================================================
+
+//==============================
+// ** create Spriteset
+//==============================
+var _mog_actionName_sbattle_createSpriteset = Scene_Battle.prototype.createSpriteset;
+Scene_Battle.prototype.createSpriteset = function() {
+	_mog_actionName_sbattle_createSpriteset.call(this);
+	if (!this._hudField) {this.createHudField()};
+    this.createActionName();
+	this.sortMz();	
+};
+
+//=============================================================================
+// ** SpriteSet Map
+//=============================================================================
+
+//==============================
+// ** create Lower Layer
+//==============================
+var _mog_ActionName_sprMap_createLowerLayer = Spriteset_Map.prototype.createLowerLayer;
+Spriteset_Map.prototype.createLowerLayer = function() {
+    _mog_ActionName_sprMap_createLowerLayer.call(this);
+	if (!this._hudField) {this.createHudField()};
+	if (Imported.MOG_ChronoEngine) {
+	    this.createActionName();
+	    this.sortMz();
+	};
 };
 
 //=============================================================================
@@ -153,6 +237,10 @@ SpriteSkillName.prototype.initialize = function() {
 	this.createLayout();
 	this.createName();
 	this.createIcon();
+	this.visible = false;
+    if ($gameTemp._skillNameDuration[0] > 0 && $gameTemp._skillNameDuration[1]) {
+		$gameTemp._skillNameData[0] = true;	
+	};
 };
 
 //==============================
@@ -174,6 +262,14 @@ SpriteSkillName.prototype.item = function() {
 // * is Visible
 //==============================
 SpriteSkillName.prototype.isVisible = function() {
+	if (Imported.MOG_ChronoEngine) {
+		if ($gameSystem.isChronoMode()) {
+		    if ($gameSystem._chronoMode.inTurn && $gameTemp._skillNameDuration[0] > 0) {return true};
+		} else {
+			if ($gameTemp._skillNameDuration[0] > 0) {return true};
+		};
+		return false
+	};
     return $gameTemp._skillNameData[2];
 };
 
@@ -295,5 +391,8 @@ SpriteSkillName.prototype.update = function() {
 		return;
 	};
 	if ($gameTemp._skillNameData[0]) {this.refreshSkillName()};
+	if ($gameTemp._skillNameDuration[0] > 0) {$gameTemp._skillNameDuration[0]--};
 	this.updateVisible();
+	this.visible = true;
+	this.visible = this._layout[0].y === 0 ? false : true;
 };
