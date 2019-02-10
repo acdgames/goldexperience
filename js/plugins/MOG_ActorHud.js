@@ -1,424 +1,774 @@
 //=============================================================================
-// MOG_ActorHud.js
+// MOG_ActorHud.js           (Template - 01)
 //=============================================================================
 
 /*:
- * @plugindesc (v1.9) Adiciona uma Hud com os parâmetros do personagem.
+ * @plugindesc (v2.0 *) Adiciona uma Hud com os parâmetros do personagem.
  * @author Moghunter
  *
+ * @param -> MAIN <<<<<<<<<<<<<<<<<<<<<<<
+ * @desc
+ *  
  * @param Initial Visible
  * @desc Ativar a Hud no inicio do jogo.
  * @default true
+ * @type boolean
+ * @on Visible From Start
+ * @off Hide
+ * @parent -> MAIN <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Hud X-Axis
  * @desc Definição da posição X-Axis da Hud.
  * @default 0
+ * @type number 
+ * @parent -> MAIN <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Hud Y-Axis
  * @desc Definição da posição Y-Axis da Hud.
  * @default 440
+ * @type number
+ * @parent -> MAIN <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Smart Fade
  * @desc Ativa transparência na hud quando a hud estiver acima do personagem.
  * @default true
+ * @type boolean
+ * @on Overlapping Character
+ * @off Always Visible
+ * @parent -> MAIN <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Auto Fade
- * @desc Ativa transparência na hud quando a janela de messagem estiver ativada.
+ * @desc Oculta na hud quando a janela de messagem estiver ativada.
  * @default true
+ * @type boolean
+ * @on Window Message
+ * @off Always Visible 
+ * @parent -> MAIN <<<<<<<<<<<<<<<<<<<<<<<
  *
- * @param >> FACE ===================
+ * @param
+ * 
+ * @param -> LAYOUT 2 <<<<<<<<<<<<<<<<<<<<<<<
  * @desc 
- * @default  
+ *
+ * @param Layout Overlay Visible
+ * @desc Apresentar o segundo layout acima dos medidores e face.
+ * @default false
+ * @type boolean
+ * @on Show
+ * @off Hide
+ * @parent -> LAYOUT 2 <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param Layout Overlay X-Axis
+ * @desc Definição da posição X-Axis da face.
+ * @default 0
+ * @type number
+ * @parent -> LAYOUT 2 <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param Layout Overlay Y-Axis
+ * @desc Definição da posição Y-Axis da face.
+ * @default 0
+ * @type number
+ * @parent -> LAYOUT 2 <<<<<<<<<<<<<<<<<<<<<<<
+ * 
+ *
+ * @param
+ * 
+ * @param -> FACE <<<<<<<<<<<<<<<<<<<<<<<
+ * @desc 
  *
  * @param Face Visible
  * @desc Apresentar a imagem da face.
  * @default true
+ * @type boolean
+ * @on Show
+ * @off Hide
+ * @parent -> FACE <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Face X-Axis
  * @desc Definição da posição X-Axis da face.
  * @default 55
+ * @type number
+ * @parent -> FACE <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Face Y-Axis
  * @desc Definição da posição Y-Axis da face.
  * @default 100
+ * @type number
+ * @parent -> FACE <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Face Priority
  * @desc Prioridade da Face. (0 Low - 1 High)
  * @default 1
+ * @type select
+ * @option (0) Below the Layout
+ * @value 0
+ * @option (1) Above the Layout
+ * @value 1
+ * @parent -> FACE <<<<<<<<<<<<<<<<<<<<<<<
  *
- * @param >> NAME ===================
+ * @param
+ * 
+ * @param -> NAME <<<<<<<<<<<<<<<<<<<<<<<
  * @desc 
- * @default
  *
  * @param Name Visible
  * @desc Apresentar o nome do personagem.
  * @default true
+ * @type boolean
+ * @on Show
+ * @off Hide
+ * @parent -> NAME <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Name X-Axis
  * @desc Definição da posição X-Axis do nome.
  * @default 5
+ * @type number
+ * @parent -> NAME <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Name Y-Axis
  * @desc Definição da posição Y-Axis do nome.
  * @default 20 
+ * @type number
+ * @parent -> NAME <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Name Font Size
  * @desc Definição do tamanho da fonte do nome.
  * @default 20
+ * @type number
+ * @parent -> NAME <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Name Bold Size
  * @desc Definição do tamanho do contorno.
  * @default 4
+ * @type number
+ * @parent -> NAME <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Name Font Italic
  * @desc Ativar fonte em itálico.
  * @default false
+ * @type boolean 
+ * @on Enable
+ * @off Disable
+ * @parent -> NAME <<<<<<<<<<<<<<<<<<<<<<<
  *
- * @param >> HP ===================
+ * @param
+ * 
+ * @param -> HP <<<<<<<<<<<<<<<<<<<<<<<
  * @desc 
- * @default 
  *
  * @param HP Meter Visible
+ * @text Gauge Visible 
  * @desc Apresentar o medidor de HP
- * @default true   
+ * @default true
+ * @type boolean
+ * @on Show
+ * @off Hide
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Meter X-Axis
+ * @text Gauge X-Axis
  * @desc Definição da posição X-Axis do medidor de HP.
  * @default 143
+ * @type number
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Meter Y-Axis
+ * @text Gauge Y-Axis
  * @desc Definição da posição Y-Axis do medidor de HP.
  * @default 85
+ * @type number
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Meter Angle
+ * @text Gauge Angle  
  * @desc Ángulo do medidor.
  * @default 0 
+ * @type number
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Meter Flow Anime
+ * @text Gauge Gradient Animation 
  * @desc Ativar animação de gradiente no medidor.
  * É necessário que a imagem tenha 3x a largura do medidor.
  * @default true
+ * @type boolean
+ * @on Enable
+ * @off Disable
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param HP Meter Flow Speed
+ * @text Gauge Gradient Speed  
+ * @desc Define a velocidade de animação do gradient.
+ * É necessário que a imagem tenha 3x a largura do medidor.
+ * @default 4
+ * @type number
+ * @min 1
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Number Visible
  * @desc Apresentar o numero de HP
  * @default true
+ * @type boolean
+ * @on Show
+ * @off Hide
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Number Align
  * @desc Definição do alinhamento dos números.
  * 0 - Espquerda     1 - Centro       2 - Direita
- * @default 0
+ * @default 0 
+ * @type select
+ * @option Left
+ * @value 0
+ * @option Center
+ * @value 1
+ * @option Right
+ * @value 2  
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *  
  * @param HP Number X-Axis
  * @desc Definição da posição X-Axis do numero de HP.
  * @default 270
+ * @type number
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Number Y-Axis
  * @desc Definição da posição Y-Axis do numero de HP.
  * @default 70
+ * @type number
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  * 
  * @param MaxHP Number Visible
  * @desc Apresentar o numero de HP maximo.
  * @default false
+ * @type boolean 
+ * @on Show
+ * @off Hide
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MaxHP Number X-Axis
  * @desc Definição da posição X-Axis do numero de HP maximo.
  * @default 185
+ * @type number
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MaxHP Number Y-Axis
  * @desc Definição da posição Y-Axis do numero de HP maximo.
  * @default 40
+ * @type number
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Icon Visible
  * @desc Apresentar o ícone de HP.
  * @default false
+ * @type boolean 
+ * @on Show
+ * @off Hide 
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Icon Half Mode
  * @desc Um ícone equivale a 2 pontos de HP.
  * @default false
+ * @type boolean 
+ * @on Enable (Zelda Style)
+ * @off Disable 
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Icon Max Colors
  * @desc Quantidade de cores do ícone.
  * A imagem será dividida pelo número de cores.
  * @default 2
+ * @type number
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Icon Max Rows
  * @desc Quantidade de ícones por linha.
  * @default 10
+ * @type number
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Icon Max Columns
  * @desc Quantidade de linhas.
  * @default 2
+ * @type number
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Icon X-Axis
  * @desc Quantidade X-Axis dos ícones.
  * @default 143
+ * @type number
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Icon Y-Axis
  * @desc Quantidade Y-Axis dos ícones.
  * @default 85
+ * @type number
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Icon Space X
  * @desc Definição do espaço entre os ícones na horizontal.
  * @default 0
+ * @type number
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Icon Space Y
  * @desc Definição do espaço entre os ícones na vertical.
  * @default 0
+ * @type number
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Icon Zoom Anime
  * @desc Ativar a animação de zoom no último ícone.
+ * @type boolean 
+ * @on Enable
+ * @off Disable  
  * @default true
+ 
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
- * @param >> MP ===================
+ * @param
+ * 
+ * @param -> MP <<<<<<<<<<<<<<<<<<<<<<<
  * @desc 
- * @default  
  *
  * @param MP Meter Visible
+ * @text Gauge Visible 
  * @desc Apresentar o medidor de MP
- * @default true   
+ * @default true
+ * @type boolean
+ * @on Show
+ * @off Hide 
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Meter X-Axis
+ * @text Gauge X-Axis
  * @desc Definição da posição X-Axis do medidor de MP.
  * @default 160
+ * @type number
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Meter Y-Axis
+ * @text Gauge Y-Axis
  * @desc Definição da posição Y-Axis do medidor de MP.
  * @default 115
+ * @type number
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Meter Angle
+ * @text Gauge Angle 
  * @desc Ángulo do medidor.
  * @default 0
+ * @type number
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Meter Flow Anime
+ * @text Gauge Gradient Animation  
  * @desc Ativar animação de gradiente no medidor.
  * É necessário que a imagem tenha 3x a largura do medidor.
  * @default true
+ * @type boolean
+ * @on Enable
+ * @off Disable 
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param MP Meter Flow Speed
+ * @text Gauge Gradient Speed  
+ * @desc Define a velocidade de animação do gradient.
+ * É necessário que a imagem tenha 3x a largura do medidor.
+ * @default 4
+ * @type number
+ * @min 1
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Number Visible
  * @desc Apresentar o numero de MP
  * @default true
+ * @type boolean
+ * @on Show
+ * @off Hide 
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Number Align
  * @desc Definição do alinhamento dos números.
  * 0 - Espquerda     1 - Centro       2 - Direita
  * @default 0
+ * @type select
+ * @option Left
+ * @value 0
+ * @option Center
+ * @value 1
+ * @option Right
+ * @value 2   
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *  
  * @param MP Number X-Axis
  * @desc Definição da posição X-Axis do numero de MP.
  * @default 287
+ * @type number
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Number Y-Axis
  * @desc Definição da posição Y-Axis do numero de MP.
  * @default 100
+ * @type number
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MaxMP Number Visible
  * @desc Apresentar o numero de MP maximo.
  * @default false
+ * @type boolean 
+ * @on Show
+ * @off Hide 
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MaxMP Number X-Axis
  * @desc Definição da posição X-Axis do numero de MP maximo.
  * @default 196
+ * @type number
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MaxMP Number Y-Axis
  * @desc Definição da posição Y-Axis do numero de MP maximo.
  * @default 78
+ * @type number
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Icon Visible
  * @desc Apresentar o ícone de MP.
  * @default false
+ * @type boolean 
+ * @on Show
+ * @off Hide 
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Icon Half Mode
  * @desc Um ícone equivale a 2 pontos de MP.
- * @default false 
+ * @default false
+ * @type boolean 
+ * @on Enable (Zelda Style)
+ * @off Disable 
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  * 
  * @param MP Icon Max Colors
  * @desc Quantidade de cores do ícone.
  * A imagem será dividida pelo número de cores.
  * @default 2
+ * @type number
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Icon Max Rows
  * @desc Quantidade de ícones por linha.
  * @default 10
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Icon Max Columns
  * @desc Quantidade de linhas.
  * @default 2
+ * @type number
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Icon X-Axis
  * @desc Quantidade X-Axis dos ícones.
  * @default 143
+ * @type number
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Icon Y-Axis
  * @desc Quantidade Y-Axis dos ícones.
  * @default 120
+ * @type number
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Icon Space X
  * @desc Definição do espaço entre os ícones na horizontal.
  * @default 0
+ * @type number
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Icon Space Y
  * @desc Definição do espaço entre os ícones na vertical.
  * @default 0
+ * @type number
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Icon Zoom Anime
  * @desc Ativar a animação de zoom no último ícone.
  * @default true
+ * @type boolean 
+ * @on Enable
+ * @off Disable
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  * 
- * @param >> TP ===================
+ * @param
+ * 
+ * @param -> TP <<<<<<<<<<<<<<<<<<<<<<<
  * @desc 
- * @default  
  *
  * @param TP Meter Visible
+ * @text Gauge Visible  
  * @desc Apresentar o medidor de TP
- * @default true   
+ * @default true
+ * @type boolean
+ * @on Show
+ * @off Hide 
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Meter X-Axis
+ * @text Gauge X-Axis
  * @desc Definição da posição X-Axis do medidor de TP.
  * @default 143
+ * @type number
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Meter Y-Axis
+ * @text Gauge Y-Axis
  * @desc Definição da posição Y-Axis do medidor de TP.
  * @default 145
+ * @type number
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Meter Angle
+ * @text Gauge Angle
  * @desc Ángulo do medidor.
  * @default 0
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Meter Flow Anime
+ * @text Gauge Gradient Animation 
  * @desc Ativar animação de gradiente no medidor.
  * É necessário que a imagem tenha 3x a largura do medidor.
  * @default true
+ * @type boolean
+ * @on Enable
+ * @off Disable
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param TP Meter Flow Speed
+ * @text Gauge Gradient Speed  
+ * @desc Define a velocidade de animação do gradient.
+ * É necessário que a imagem tenha 3x a largura do medidor.
+ * @default 4
+ * @type number
+ * @min 1
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Number Visible
  * @desc Apresentar o numero de TP.
  * @default true   
+ * @type boolean
+ * @on Show
+ * @off Hide
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Number Align
  * @desc Definição do alinhamento dos números.
  * 0 - Espquerda     1 - Centro       2 - Direita
  * @default 0
+ * @type select
+ * @option Left
+ * @value 0
+ * @option Center
+ * @value 1
+ * @option Right
+ * @value 2  
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Number X-Axis
  * @desc Definição da posição X-Axis do numero de TP.
  * @default 270
+ * @type number
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Number Y-Axis
  * @desc Definição da posição Y-Axis do numero de TP.
  * @default 130
+ * @type number
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MaxTP Number Visible
  * @desc Apresentar o numero de TP maximo.
  * @default false
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MaxTP Number X-Axis
  * @desc Definição da posição X-Axis do numero de TP maximo.
  * @default 185
+ * @type number
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MaxTP Number Y-Axis
  * @desc Definição da posição Y-Axis do numero de TP maximo.
  * @default 116
+ * @type number
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Icon Visible
  * @desc Apresentar o ícone de TP.
  * @default false
+ * @type boolean 
+ * @on Show
+ * @off Hide
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Icon Half Mode
  * @desc Um ícone equivale a 2 pontos de TP.
  * @default false
+ * @type boolean 
+ * @on Enable (Zelda Style)
+ * @off Disable 
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  * 
  * @param TP Icon Max Colors
  * @desc Quantidade de cores do ícone.
  * A imagem será dividida pelo número de cores.
  * @default 2
+ * @type number
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Icon Max Rows
  * @desc Quantidade de ícones por linha.
  * @default 10
+ * @type number
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Icon Max Columns
  * @desc Quantidade de linhas.
  * @default 2
+ * @type number
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Icon X-Axis
  * @desc Quantidade X-Axis dos ícones.
  * @default 143
+ * @type number
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Icon Y-Axis
  * @desc Quantidade Y-Axis dos ícones.
  * @default 50
+ * @type number
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Icon Space X
  * @desc Definição do espaço entre os ícones na horizontal.
  * @default 0
+ * @type number
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Icon Space Y
  * @desc Definição do espaço entre os ícones na vertical.
  * @default 0
+ * @type number
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Icon Zoom Anime
  * @desc Ativar a animação de zoom no último ícone.
  * @default true
+ * @type boolean 
+ * @on Enable
+ * @off Disable
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  * 
- * @param >> EXP ===================
+ * @param
+ * 
+ * @param -> EXP <<<<<<<<<<<<<<<<<<<<<<<
  * @desc 
- * @default  
  *
  * @param EXP Meter Visible
  * @desc Apresentar o medidor de EXP
- * @default true   
+ * @default true
+ * @type boolean
+ * @on Show
+ * @off Hide
+ * @parent -> EXP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param EXP Meter X-Axis
  * @desc Definição da posição X-Axis do medidor de EXP.
  * @default 127
+ * @type number
+ * @parent -> EXP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param EXP Meter Y-Axis
  * @desc Definição da posição Y-Axis do medidor de EXP.
  * @default 173
+ * @type number
+ * @parent -> EXP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param EXP Meter Angle
  * @desc Ángulo do medidor.
  * @default 0
+ * @type number
+ * @parent -> EXP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Level Number Visible
  * @desc Apresentar o numero de Level.
- * @default true   
+ * @default true
+ * @type boolean
+ * @on Show
+ * @off Hide
+ * @parent -> EXP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Level Number Align
  * @desc Definição do alinhamento dos números.
  * 0 - Espquerda     1 - Centro       2 - Direita
  * @default 1
+ * @type select
+ * @option Left
+ * @value 0
+ * @option Center
+ * @value 1
+ * @option Right
+ * @value 2
+ * @parent -> EXP <<<<<<<<<<<<<<<<<<<<<<<
  * 
  * @param Level Number X-Axis
  * @desc Definição da posição X-Axis do numero de Level.
  * @default 65
+ * @type number
+ * @parent -> EXP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Level Number Y-Axis
  * @desc Definição da posição Y-Axis do numero de Level.
  * @default 153
- *
- * @param >> STATES ===================
+ * @type number
+ * @parent -> EXP <<<<<<<<<<<<<<<<<<<<<<<
+ * 
+ * @param
+ * 
+ * @param -> STATES <<<<<<<<<<<<<<<<<<<<<<<
  * @desc 
- * @default 
  *
  * @param States Visible
  * @desc Apresentar o numero as condições.
- * @default true   
+ * @default true
+ * @type boolean
+ * @on Show
+ * @off Hide
+ * @parent -> STATES <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param States X-Axis
  * @desc Definição da posição X-Axis das condições.
  * @default 5
+ * @type number
+ * @parent -> STATES <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param States Y-Axis
  * @desc Definição da posição Y-Axis das condições.
  * @default 64
+ * @type number
+ * @parent -> STATES <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @help  
  * =============================================================================
- * +++ MOG Actor Hud (v1.9) +++
+ * +++ MOG Actor Hud (v2.0) +++
  * By Moghunter 
  * https://atelierrgss.wordpress.com/
  * =============================================================================
  * Adiciona uma Hud com os parâmetros do personagem.
+ *
+ * =============================================================================
+ * - REQUIRED FILES
+ * =============================================================================
  * Serão necessários os arquivos. (img/actorhud/)
  *
  * HP_Meter.png
@@ -436,38 +786,27 @@
  *
  * Face_ + ACTOR_ID.png
  *
- * Ex
- *
  * Face_1.png
  * Face_2.png
  * Face_3.png
+ * ...
  *
  * =============================================================================
- * Para ocultar ou apresentar a hud use os códigos abaixo através do
- * PLUGIN COMMAND
+ * - PLUGIN COMMANDS
+ * =============================================================================
+ * Para ocultar ou apresentar a hud use os códigos abaixo.
  *
  * hide_actor_hud
  * show_actor_hud
  * 
  * ============================================================================
- * HISTÓRICO
+ * - WHAT'S  NEW (version 2.0) 
  * ============================================================================
- * (v1.9) - Melhoria no sistema de ícones de múltiplas cores. 
- *        - Melhoria na compatibilidade com RM v1.50+
- * (v1.8) - Correção do glitch de fazer a hud piscar após acessar o menu.
- *        - Melhoria na compatibilidade de plugins.
- * (v1.7) - Adição do medidor em ícones.
- *        - Melhoria na definição do ángulo do medidor.
- *        - Correção na apresentação do valor de TP máximo.
- *        - Correção na valor do medidor de dano ao aumentar o nível.
- * (v1.6) - Compatibilidade com Chrono Engine.
- * (v1.5) - Correção do glitch de piscar a hud. 
- *        - Melhoria na apresentação das condições.
- * (v1.4) - Correção do crash quando o states está em false.
- * (v1.3) - Adição de ocultar a hud no inicio do jogo.
- * (v1.2) - Correção do setup da posição do numero de HP. 
- * (v1.1) - Correção de piscar a hud no modo ocultar a hud.
- *        
+ * - (NEW) - Plugins parameters compatíveis com RM1.5+
+ * - (NEW) - Adição da segunda camada de Layout (Overlay). 
+ * - (NEW) - Possibilidade de mudar a velocidade de animação do gradient.
+ * - (BUG FIX) - Correção de resetar a animação de gradiente ao voltar do menu.
+ * - (BUG FIX) - Correção de resetar a transparência ao voltar do menu.    
  */
  
 //=============================================================================
@@ -483,6 +822,9 @@
 	Moghunter.ahud_pos_x = Number(Moghunter.parameters['Hud X-Axis'] || 0);
 	Moghunter.ahud_pos_y = Number(Moghunter.parameters['Hud Y-Axis'] || 440);
 	Moghunter.ahud_fade_limit = Number(Moghunter.parameters['Fade Max'] || 90);
+	Moghunter.ahud_layout2_visible = String(Moghunter.parameters['Layout Overlay Visible'] || true);
+	Moghunter.ahud_layout2_x = Number(Moghunter.parameters['Layout Overlay X-Axis'] || 0);
+	Moghunter.ahud_layout2_y = Number(Moghunter.parameters['Layout Overlay Y-Axis'] || 0);
 	
 	// FACE POSITION
 	Moghunter.ahud_face_visible = String(Moghunter.parameters['Face Visible'] || true);
@@ -543,6 +885,7 @@
 	Moghunter.ahud_hp_meter_pos_y = Number(Moghunter.parameters['HP Meter Y-Axis'] || 85);
 	Moghunter.ahud_hp_meter_rotation = Number(Moghunter.parameters['HP Meter Angle'] || 0);
 	Moghunter.ahud_hp_meter_flow = String(Moghunter.parameters['HP Meter Flow Anime'] || true);
+	Moghunter.ahud_hp_flowSpd = Number(Moghunter.parameters['HP Meter Flow Speed'] || 2); 
 	
 	// HP NUMBER POSITION
 	Moghunter.ahud_hp_number_visible  = String(Moghunter.parameters['HP Number Visible'] || true);
@@ -550,8 +893,8 @@
 	Moghunter.ahud_hp_number_pos_x  = Number(Moghunter.parameters['HP Number X-Axis'] || 270);
 	Moghunter.ahud_hp_number_pos_y  = Number(Moghunter.parameters['HP Number Y-Axis'] || 70);
 	Moghunter.ahud_maxhp_number_visible  = String(Moghunter.parameters['MaxHP Number Visible'] || false);
-	Moghunter.ahud_maxhp_number_pos_x  = Number(Moghunter.parameters['MaxHP Number X-Axis'] || 185);
-	Moghunter.ahud_maxhp_number_pos_y  = Number(Moghunter.parameters['MaxHP Number Y-Axis'] || 40);	
+	Moghunter.ahud_maxhp_number_pos_x  = Number(Moghunter.parameters['MaxHP Number X-Axis'] || 125);
+	Moghunter.ahud_maxhp_number_pos_y  = Number(Moghunter.parameters['MaxHP Number Y-Axis'] || 13);	
 
 	// MP METER POSITION
 	Moghunter.ahud_mp_meter_visible = String(Moghunter.parameters['MP Meter Visible'] || true);
@@ -559,6 +902,7 @@
 	Moghunter.ahud_mp_meter_pos_y = Number(Moghunter.parameters['MP Meter Y-Axis'] || 115);	
 	Moghunter.ahud_mp_meter_rotation = Number(Moghunter.parameters['MP Meter Angle'] || 0);
 	Moghunter.ahud_mp_meter_flow = String(Moghunter.parameters['MP Meter Flow Anime'] || true);
+	Moghunter.ahud_mp_flowSpd = Number(Moghunter.parameters['MP Meter Flow Speed'] || 2);
 	
 	// MP NUMBER POSITION
 	Moghunter.ahud_mp_number_visible  = String(Moghunter.parameters['MP Number Visible'] || true);
@@ -575,6 +919,7 @@
 	Moghunter.ahud_tp_meter_pos_y = Number(Moghunter.parameters['TP Meter Y-Axis'] || 145);	
 	Moghunter.ahud_tp_meter_rotation = Number(Moghunter.parameters['TP Meter Angle'] || 0);
 	Moghunter.ahud_tp_meter_flow = String(Moghunter.parameters['TP Meter Flow Anime'] || false);
+	Moghunter.ahud_tp_flowSpd = Number(Moghunter.parameters['TP Meter Flow Speed'] || 2);
 	
 	// TP NUMBER POSITION
 	Moghunter.ahud_tp_number_visible  = String(Moghunter.parameters['TP Number Visible'] || true);
@@ -632,6 +977,7 @@ Game_System.prototype.initialize = function() {
 	this._ahud_smartFade = String(Moghunter.ahud_smartFade) === "true" ? true : false;
 	this._ahud_autoFade = String(Moghunter.ahud_autoFade) === "true" ? true : false;
 	this._ahud_opacity = 0;
+	this._ahud_flowData = [0,0,0];
 };
 
 //=============================================================================
@@ -763,7 +1109,11 @@ Actor_Hud.prototype.initialize = function(hud_id) {
 	this._hud_size = [-1,-1,-1,-1];
     this.base_parameter_clear();
     this.load_img();
-	if (!$gameSystem._ahud_visible) {this.opacity = 0};
+	if (!$gameSystem._ahud_visible) {
+		$gameSystem._ahud_opacity = 0;
+		this.opacity = 0
+	};
+	this.opacity = $gameSystem._ahud_opacity;
 	this.update();
 };
 
@@ -773,6 +1123,7 @@ Actor_Hud.prototype.initialize = function(hud_id) {
 Actor_Hud.prototype.load_img = function() {
 	this._layout_img = ImageManager.loadAHud("Layout");
 	this._state_img = ImageManager.loadSystem("IconSet");
+	if (String(Moghunter.ahud_layout2_visible) == "true") {this._layout2_img = ImageManager.loadAHud("Layout2")};
 	if (String(Moghunter.ahud_hp_meter_visible) == "true") {this._hp_meter_img = ImageManager.loadAHud("HP_Meter")};
 	if (String(Moghunter.ahud_mp_meter_visible) == "true") {this._mp_meter_img = ImageManager.loadAHud("MP_Meter")};
 	if (String(Moghunter.ahud_tp_meter_visible) == "true") {this._tp_meter_img = ImageManager.loadAHud("TP_Meter")};	
@@ -819,6 +1170,9 @@ Actor_Hud.prototype.base_parameter_clear = function() {
 	 this._states_old = [];
 	 this._states_data = [0,0,0];
 	 this._active = false;
+	 this._hp_flow_speed = Moghunter.ahud_hp_flowSpd * 0.1;
+	 this._mp_flow_speed = Moghunter.ahud_mp_flowSpd * 0.1;
+	 this._tp_flow_speed = Moghunter.ahud_tp_flowSpd * 0.1;
 	 this._hud_size = [0,0];
 };
 
@@ -906,7 +1260,8 @@ Actor_Hud.prototype.create_sprites = function() {
 	this.create_mp_icon();
     this.create_tp_icon();
 	this.create_exp_meter();
-	this.create_hp_number();	
+	if (this._layout2_img) {this.create_layout2()};
+	this.create_hp_number();
 	this.create_maxhp_number();
 	this.create_mp_number();	
     this.create_maxmp_number();
@@ -1066,6 +1421,18 @@ Actor_Hud.prototype.create_layout = function() {
 	this._layout = new Sprite(this._layout_img);
 	this.addChild(this._layout);
 };
+
+//==============================
+// * Create Layout 2
+//==============================
+Actor_Hud.prototype.create_layout2 = function() {
+	this.removeChild(this._layout2);
+	if (!this._battler) {return};
+	this._layout2 = new Sprite(this._layout2_img);
+	this._layout2.x = Moghunter.ahud_layout2_x;
+	this._layout2.y = Moghunter.ahud_layout2_y;
+	this.addChild(this._layout2);
+};
 	
 //==============================
 // * Create Face
@@ -1187,7 +1554,7 @@ Actor_Hud.prototype.create_hp_meter = function() {
 	this._hp_meter_blue = new Sprite(this._hp_meter_img);
 	this._hp_meter_blue.x = this._hp_meter_red.x;
 	this._hp_meter_blue.y = this._hp_meter_red.y;
-	this._hp_meter_blue.rotation = this._hp_meter_red.rotation * Math.PI / 180;
+	this._hp_meter_blue.rotation = Moghunter.ahud_hp_meter_rotation * Math.PI / 180;
 	this._hp_meter_blue.setFrame(0,0,0,0);
 	this.addChild(this._hp_meter_blue);
 	this._hp_old_ani[0] = this._battler.hp - 1;
@@ -1216,6 +1583,7 @@ Actor_Hud.prototype.create_hp_icon = function() {
 	this._hp_icons = [];
 	this._hp_icons.iconMode = String(Moghunter.ahud_hp_icon_halfMode) == "true" ? true : false;
 	this._hp_iconsB = [];
+
 	this._hp_iconsB.iconMode = this._hp_icons.iconMode;
 	this._hp_IconZoomAnime = String(Moghunter.ahud_hp_icon_zoomAnime) == "true" ? true : false;
 	var colors = Math.max(Moghunter.ahud_hp_icon_colorMax, 2)
@@ -1297,6 +1665,7 @@ Actor_Hud.prototype.create_mp_icon = function() {
 		 this._mp_icons[i].anchor.x = 0.5;
 		 this._mp_icons[i].anchor.y = 0.5;		 
 		 this._mp_icons[i].rows = Moghunter.ahud_mp_icon_rows;
+
 		 this._mp_icons[i].cols = Moghunter.ahud_mp_icon_cols;
 		 this._mp_icons[i].org = [this._pos_x + Moghunter.ahud_mp_icon_pos_x - cw,this._pos_y + Moghunter.ahud_mp_icon_pos_y - ch];
 		 this._mp_icons[i].spc = [Moghunter.ahud_mp_icon_space_x,Moghunter.ahud_mp_icon_space_y];
@@ -1593,7 +1962,8 @@ Actor_Hud.prototype.create_hp_number = function() {
 	   this._hp_number[i] = new Sprite(this._hp_number_img);
 	   this._hp_number[i].visible = false;
 	   this._hp_number[i].x = this._hp_img_data[4];
-	   this._hp_number[i].y = this._hp_img_data[5];
+	   this._hp_number[i].y = this._hp_img_data[5] + [i]*5;
+	   this._hp_number[i].rotation = 15 * Math.PI / 180;
 	   this.addChild(this._hp_number[i]);
 	};	
 	this._hp_number_old = this._battler.hp;	
@@ -1630,20 +2000,18 @@ Actor_Hud.prototype.create_maxhp_number = function() {
 //==============================
 Actor_Hud.prototype.update_hp = function() {
 	if (this._hp_meter_blue) {
-		this._hp_meter_blue.opacity += 15;
-		this._hp_meter_red.opacity += 15;
 		if(this._hp_flow[0]) {
 		   if (this._hp_old[1] != this._battler.mhp) {
 		       this._hp_old = [this._battler.hp,this._battler.mhp];
-			   this.refresh_meter_flow(this._hp_meter_red,this._battler.hp,this._battler.mhp,1,this._hp_flow[1]);
+			   this.refresh_meter_flow(this._hp_meter_red,this._battler.hp,this._battler.mhp,1,$gameSystem._ahud_flowData[0]);
 		   };					
-		   this.refresh_meter_flow(this._hp_meter_blue,this._battler.hp,this._battler.mhp,0,this._hp_flow[1]);
+		   this.refresh_meter_flow(this._hp_meter_blue,this._battler.hp,this._battler.mhp,0,$gameSystem._ahud_flowData[0]);
 	   	   var dif_meter = this.update_dif(this._hp_old_ani[0],this._battler.hp,160)
 		   if (this._hp_old_ani[0] != dif_meter) {this._hp_old_ani[0] = dif_meter;
-	       this.refresh_meter_flow(this._hp_meter_red,this._hp_old_ani[0],this._battler.mhp,1,this._hp_flow[1]);
+	       this.refresh_meter_flow(this._hp_meter_red,this._hp_old_ani[0],this._battler.mhp,1,$gameSystem._ahud_flowData[0]);
 		   };
-		   this._hp_flow[1] += 2;
-		   if (this._hp_flow[1] > this._hp_flow[3]) {this._hp_flow[1] = 0};		   
+		   $gameSystem._ahud_flowData[0] += this._hp_flow_speed;
+		   if ($gameSystem._ahud_flowData[0] > this._hp_flow[3]) {$gameSystem._ahud_flowData[0] = 0};
    	    }
 		else {
 		   if (this.need_refresh_parameter(0)) {
@@ -1692,7 +2060,7 @@ Actor_Hud.prototype.create_mp_meter = function() {
 	this._mp_meter_blue = new Sprite(this._mp_meter_img);
 	this._mp_meter_blue.x = this._mp_meter_red.x;
 	this._mp_meter_blue.y = this._mp_meter_red.y;
-	this._mp_meter_blue.rotation = this._mp_meter_red.rotation * Math.PI / 180;
+	this._mp_meter_blue.rotation = Moghunter.ahud_mp_meter_rotation * Math.PI / 180;
 	this._mp_meter_blue.setFrame(0,0,0,0);
 	this.addChild(this._mp_meter_blue);
 	this._mp_old_ani[0] = this._battler.mp - 1;
@@ -1721,7 +2089,8 @@ Actor_Hud.prototype.create_mp_number = function() {
 	   this._mp_number[i] = new Sprite(this._mp_number_img);
 	   this._mp_number[i].visible = false;
 	   this._mp_number[i].x = this._mp_img_data[4];
-	   this._mp_number[i].y = this._mp_img_data[5] ;
+	   this._mp_number[i].y = this._mp_img_data[5] + [i]*5;
+	   this._mp_number[i].rotation = 15 * Math.PI / 180;
 	   this.addChild(this._mp_number[i]);
 	};	
 	this._mp_number_old = this._battler.mp;
@@ -1758,20 +2127,18 @@ Actor_Hud.prototype.create_maxmp_number = function() {
 //==============================
 Actor_Hud.prototype.update_mp = function() {
 	if (this._mp_meter_blue) {
-     	this._mp_meter_blue.opacity += 15;
-	    this._mp_meter_red.opacity += 15;			
 		if(this._mp_flow[0]) {
 		   if (this._mp_old[1] != this._battler.mmp) {
 		       this._mp_old = [this._battler.mp,this._battler.mmp];
-			   this.refresh_meter_flow(this._mp_meter_red,this._battler.mp,this._battler.mmp,1,this._mp_flow[1]);
+			   this.refresh_meter_flow(this._mp_meter_red,this._battler.mp,this._battler.mmp,1,$gameSystem._ahud_flowData[1]);
 		   };			
-		   this.refresh_meter_flow(this._mp_meter_blue,this._battler.mp,this._battler.mmp,0,this._mp_flow[1]);
+		   this.refresh_meter_flow(this._mp_meter_blue,this._battler.mp,this._battler.mmp,0,$gameSystem._ahud_flowData[1]);
 	   	   var dif_meter = this.update_dif(this._mp_old_ani[0],this._battler.mp,160);
 		   if (this._mp_old_ani[0] != dif_meter) {this._mp_old_ani[0] = dif_meter;
-	       this.refresh_meter_flow(this._mp_meter_red,this._mp_old_ani[0],this._battler.mmp,1,this._mp_flow[1]);
+	       this.refresh_meter_flow(this._mp_meter_red,this._mp_old_ani[0],this._battler.mmp,1,$gameSystem._ahud_flowData[1]);
 		   };
-		   this._mp_flow[1] += 2;
-		   if (this._mp_flow[1] > this._mp_flow[3]) {this._mp_flow[1] = 0};		   
+		   $gameSystem._ahud_flowData[1] += this._mp_flow_speed;
+		   if ($gameSystem._ahud_flowData[1] > this._mp_flow[3]) {$gameSystem._ahud_flowData[1] = 0};		   
    	    }
 		else {		
 			if (this.need_refresh_parameter(1)) {
@@ -1886,20 +2253,18 @@ Actor_Hud.prototype.create_maxtp_number = function() {
 //==============================
 Actor_Hud.prototype.update_tp = function() {
 	if (this._tp_meter_blue) {
-		this._tp_meter_blue.opacity += 15;
-		this._tp_meter_red.opacity += 15;
 		if(this._tp_flow[0]) {
 		   if (this._tp_old[1] != this._battler.maxTp()) {
 		       this._tp_old = [this._battler.tp,this._battler.maxTp()];
-			   this.refresh_meter_flow(this._tp_meter_red,this._battler.tp,this._battler.maxTp(),1,this._tp_flow[1]);
+			   this.refresh_meter_flow(this._tp_meter_red,this._battler.tp,this._battler.maxTp(),1,$gameSystem._ahud_flowData[2]);
 		   };				
-		   this.refresh_meter_flow(this._tp_meter_blue,this._battler.tp,this._battler.maxTp(),0,this._tp_flow[1]);
+		   this.refresh_meter_flow(this._tp_meter_blue,this._battler.tp,this._battler.maxTp(),0,$gameSystem._ahud_flowData[2]);
 	   	   var dif_meter = this.update_dif(this._tp_old_ani[0],this._battler.tp,160)
 		   if (this._tp_old_ani[0] != dif_meter) {this._tp_old_ani[0] = dif_meter;
-	       this.refresh_meter_flow(this._tp_meter_red,this._tp_old_ani[0],this._battler.maxTp(),1,this._tp_flow[1]);
+	       this.refresh_meter_flow(this._tp_meter_red,this._tp_old_ani[0],this._battler.maxTp(),1,$gameSystem._ahud_flowData[2]);
 		   };
-		   this._tp_flow[1] += 2;
-		   if (this._tp_flow[1] > this._tp_flow[3]) {this._tp_flow[1] = 0};		   
+		   $gameSystem._ahud_flowData[2] += this._tp_flow_speed;
+		   if ($gameSystem._ahud_flowData[2] > this._tp_flow[3]) {$gameSystem._ahud_flowData[2] = 0};		   
    	    }
 		else {	
 			if (this.need_refresh_parameter(2)) {
@@ -1978,7 +2343,6 @@ Actor_Hud.prototype.create_level_number = function() {
 //==============================
 Actor_Hud.prototype.update_exp = function() {
 	if (this._exp_meter) {
-		this._exp_meter.opacity += 15; 
 		if (this.need_refresh_parameter(3)) {
 			if (this._battler.isMaxLevel()) {
 			    this.refresh_meter(this._exp_meter,1,1,0,1,1);
