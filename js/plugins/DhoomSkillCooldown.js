@@ -402,7 +402,7 @@ Game_BattlerBase.prototype.getCooldownLimitValue = function (mode, skill, type) 
     if (this.isActor()) battler = this.actor();
     if (this.isEnemy()) battler = this.enemy();
     var states = this.states();
-    var equips = this.equips();
+    var equips = (this.isActor() ? this.equips() : []);
     switch (type) {
         case 'skill':
             index = skill.id;
@@ -523,7 +523,7 @@ Game_BattlerBase.prototype.getSkillCooldownRate = function (id) {
     if (this.isActor()) battler = this.actor();
     if (this.isEnemy()) battler = this.enemy();
     var states = this.states();
-    var equips = this.equips();
+    var equips = (this.isActor() ? this.equips() : []);
     if (battler) array.push(battler._skillCooldownRate[id]);
     if (this.isActor()) array.push(this.currentClass()._skillCooldownRate[id]);
     for (var state of states) {
@@ -542,7 +542,7 @@ Game_BattlerBase.prototype.getSkillTypeCooldownRate = function (id) {
     if (this.isActor()) battler = this.actor();
     if (this.isEnemy()) battler = this.enemy();
     var states = this.states();
-    var equips = this.equips();
+    var equips = (this.isActor() ? this.equips() : []);
     if (battler) array.push(battler._stypeCooldownRate[id]);
     if (this.isActor()) array.push(this.currentClass()._stypeCooldownRate[id]);
     for (var state of states) {
@@ -561,7 +561,7 @@ Game_BattlerBase.prototype.getGlobalCooldownRate = function () {
     if (this.isActor()) battler = this.actor();
     if (this.isEnemy()) battler = this.enemy();
     var states = this.states();
-    var equips = this.equips();
+    var equips = (this.equips() = []);
     if (battler) array.push(battler._globalCooldownRate);
     if (this.isActor()) array.push(this.currentClass()._globalCooldownRate);
     for (var state of states) {

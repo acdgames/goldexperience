@@ -7,7 +7,7 @@ Imported.Dhoom_ChronoToolHUD = true;
 var Dhoom = Dhoom || {};
 Dhoom.ChronoToolHUD = Dhoom.ChronoToolHUD || {};
 /*:
- * @plugindesc Dhoom ChronoToolHUD v1.1a - 28/12/2018
+ * @plugindesc Dhoom ChronoToolHUD v1.1b - 11/02/2019
  * @author DrDhoom - drd-workshop.blogspot.com
  * 
  * @param Main Switch ID
@@ -607,7 +607,7 @@ Game_Player.prototype.commandChargeUsable = function () {
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 Dhoom.ChronoToolHUD.Game_Party_inBattle = Game_Party.prototype.inBattle;
 Game_Party.prototype.inBattle = function () {
-    return Dhoom.ChronoToolHUD.Game_Party_inBattle.call(this) || (SceneManager._scene instanceof Scene_Map && !$gameSystem.isNonBattleMode());
+    return Dhoom.ChronoToolHUD.Game_Party_inBattle.call(this) || (SceneManager._scene instanceof Scene_Map && !$gameSystem.isNonBattleMode() && !$gameMap._interpreter.isRunning());
 };
 
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv

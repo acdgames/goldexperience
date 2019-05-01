@@ -1,6 +1,5 @@
 [
 null,
-{"id":1,"battlerName":"Diego","characterIndex":0,"characterName":"Diego","classId":1,"equips":[9,5,0,0,0],"faceIndex":0,"faceName":"Diego","traits":[],"initialLevel":1,"maxLevel":21,"name":"Diego","nickname":"Jaeger Prince","note":"State Icon Y-Axis : 64\n","profile":""},
-{"id":2,"battlerName":"Actor2_2","characterIndex":0,"characterName":"$Hero02","classId":2,"equips":[2,1,2,5,0],"faceIndex":1,"faceName":"Actor2","traits":[],"initialLevel":1,"maxLevel":99,"name":"Silvia","nickname":"Miki","note":"State Icon Y-Axis : 64","profile":"Her father is a master assassin. Throughout her\nyouth, she mastered the techniques of fighting."},
-{"id":3,"battlerName":"Actor2_8","characterIndex":0,"characterName":"$Hero03","classId":3,"equips":[3,0,2,3,0],"faceIndex":7,"faceName":"Actor2","traits":[],"initialLevel":1,"maxLevel":99,"name":"Miria","nickname":"Tomoe","note":"State Icon Y-Axis : 64","profile":"A woman whose destiny was to become a saint. She\nis full of passion and gives equal love to the enemy."}
+{"id":1,"battlerName":"","characterIndex":0,"characterName":"$JoJo","classId":1,"equips":[10,0,2,3,0],"faceIndex":0,"faceName":"PartyMember","traits":[{"code":31,"dataId":1,"value":1},{"code":41,"dataId":1,"value":1},{"code":41,"dataId":2,"value":1},{"code":41,"dataId":3,"value":1}],"initialLevel":1,"maxLevel":99,"name":"JoJo","nickname":"Jotori Engarde","note":"<Menu Bust: QuoteCard>\n<Menu Bust Width: 335>\n<Menu Bust Height: 470>\n","profile":"Inmate #999: Gold Experience"},
+{"id":2,"battlerName":"","characterIndex":0,"characterName":"","classId":1,"equips":[0,0,0,0,0],"faceIndex":0,"faceName":"","traits":[],"initialLevel":1,"maxLevel":99,"name":"","nickname":"","note":"","profile":""}
 ]

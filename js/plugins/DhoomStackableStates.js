@@ -7,7 +7,7 @@ Imported.Dhoom_StackableStates = true;
 var Dhoom = Dhoom || {};
 Dhoom.StackableStates = Dhoom.StackableStates || {};
 /*:
- * @plugindesc Dhoom StackableStates v1.0a - 31/01/2019
+ * @plugindesc Dhoom StackableStates v1.0c - 20/04/2019
  * @author DrDhoom - drd-workshop.blogspot.com
  *
  * @help State Notetags:
@@ -256,7 +256,12 @@ if (Imported.Dhoom_ChronoStates) {
             var code = 91 + ['hp', 'mp', 'tp', 'movespeed'].indexOf(effect.type);
             var formula = state.stackFormulaCode[code] || state.stackFormula;
             var stack = this.stateStack(stateId);
-            if (code && formula) effect.value = formula.replace('value', '(' + effect.value + ')').replace('stack', stack).replace('state', '$dataStates[' + stateId + ']');
+            var regValue = /(^| |"|'|\(|-|\+|\/|\*)(value)/g;
+            var regStack = /(^| |"|'|\(|-|\+|\/|\*)(stack)/g;
+            var regState = /(^| |"|'|\(|-|\+|\/|\*)(state)/g;
+            if (code && formula) {
+                effect.value = formula.replace(regValue, '$1(' + effect.value + ')').replace(regStack, '$1' + stack).replace(regState, '$1$dataStates[' + stateId + ']');
+            }
         }
         Dhoom.StackableStates.Game_BattlerBase_applyStateEffect.call(this, stateId, effect, index, sprite);
     };

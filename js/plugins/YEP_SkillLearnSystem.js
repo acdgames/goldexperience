@@ -224,6 +224,10 @@ Yanfly.SLS = Yanfly.SLS || {};
  *   OpenLearnSkill actor x    Opens Learn Skill menu for actor x.
  *   OpenLearnSkill party x    Opens Learn Skill menu for party member x.
  *
+ *
+ * Script Call:
+ *  actor.currentClass().learnSkills.push(x); 
+ *
  * ============================================================================
  * Changelog
  * ============================================================================

@@ -823,7 +823,7 @@ Window_SkillEquipList.prototype.includes = function (item) {
         var note_data = note.split(' : ')
         if (note_data[0].toLowerCase() == "tool id") {
             enable = true;
-        } else if (note_data[0].toLowerCase() == "abs mode") {
+        } else {
             abs_mode = true;
         };
         if (enable && abs_mode) return;

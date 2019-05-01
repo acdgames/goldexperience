@@ -4639,7 +4639,6 @@ Game_Chrono.prototype.updateStatesTurn = function(battler,char) {
 //==============================
 Game_Chrono.prototype.onStatesTurn = function(battler,char) {
 	battler._chrono.statesTurn[0] = 0;
-	battler.regenerateAll();
 	battler.updateStateTurns();
     battler.updateBuffTurns();
 	battler.removeStatesAuto(1);

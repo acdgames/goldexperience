@@ -8,11 +8,11 @@ Imported.YEP_AutoPassiveStates = true;
 
 var Yanfly = Yanfly || {};
 Yanfly.APS = Yanfly.APS || {};
-Yanfly.APS.version = 1.15;
+Yanfly.APS.version = 1.17;
 
 //=============================================================================
  /*:
- * @plugindesc v1.15 This plugin allows for some states to function as
+ * @plugindesc v1.17 This plugin allows for some states to function as
  * passives for actors, enemies, skills, and equips.
  * @author Yanfly Engine Plugins
  *
@@ -146,6 +146,14 @@ Yanfly.APS.version = 1.15;
  * ============================================================================
  * Changelog
  * ============================================================================
+ *
+ * Version 1.17:
+ * - Optimization update. There should be less lag spikes if there are more
+ * passive conditions present on a battler.
+ *
+ * Version 1.16:
+ * - Bypass the isDevToolsOpen() error when bad code is inserted into a script
+ * call or custom Lunatic Mode code segment due to updating to MV 1.6.1.
  *
  * Version 1.15:
  * - Bug fixed that made global passives not apply to actors.
@@ -310,8 +318,8 @@ DataManager.processAPSNotetags1 = function(group, inheritArray) {
 };
 
 DataManager.processAPSNotetags2 = function(group) {
-  var note1a = /<(?:PASSIVE CONDITION):[ ](.*)[ ](?:ABOVE)[ ](\d+)([%％])>/i;
-  var note1b = /<(?:PASSIVE CONDITION):[ ](.*)[ ](?:BELOW)[ ](\d+)([%％])>/i;
+  var note1a = /<(?:PASSIVE CONDITION):[ ](.*)[ ](?:ABOVE)[ ](\d+)([%ï¼…])>/i;
+  var note1b = /<(?:PASSIVE CONDITION):[ ](.*)[ ](?:BELOW)[ ](\d+)([%ï¼…])>/i;
   var note2a = /<(?:PASSIVE CONDITION):[ ](.*)[ ](?:ABOVE)[ ](\d+)>/i;
   var note2b = /<(?:PASSIVE CONDITION):[ ](.*)[ ](?:BELOW)[ ](\d+)>/i;
   var note3a = /<(?:PASSIVE CONDITION):[ ]SWITCH[ ](\d+)[ ](.*)>/i;
@@ -367,6 +375,11 @@ DataManager.processAPSNotetags2 = function(group) {
         obj.passiveConditionEval = obj.passiveConditionEval + line + '\n';
       }
     }
+
+    obj.passiveCondition = new Function('condition','a','user','subject','b',
+      'target','s','v', obj.passiveCondition + '\nreturn condition;');
+    obj.passiveConditionEval = new Function('condition','a','user','subject',
+      'b','target','s','v', obj.passiveConditionEval + '\nreturn condition;');
   }
 };
 
@@ -491,7 +504,8 @@ Game_BattlerBase.prototype.passiveStateConditions = function(state) {
   var v = $gameVariables._data;
   var code = state.passiveCondition;
   try {
-    eval(code);
+    condition = state.passiveCondition.call(this, condition, a, user, subject,
+      b, target, s, v);
   } catch (e) {
     Yanfly.Util.displayError(e, code, 'PASSIVE STATE CUSTOM CONDITION ERROR');
   }
@@ -513,7 +527,8 @@ Game_BattlerBase.prototype.passiveStateConditionEval = function(state) {
   var v = $gameVariables._data;
   var code = state.passiveConditionEval;
   try {
-    eval(code);
+    condition = state.passiveConditionEval.call(this, condition, a, user,
+      subject, b, target, s, v);
   } catch (e) {
     Yanfly.Util.displayError(e, code, 'PASSIVE STATE CUSTOM CONDITION ERROR');
   }
@@ -648,6 +663,7 @@ Yanfly.Util.displayError = function(e, code, message) {
   console.log(message);
   console.log(code || 'NON-EXISTENT');
   console.error(e);
+  if (Utils.RPGMAKER_VERSION && Utils.RPGMAKER_VERSION >= "1.6.0") return;
   if (Utils.isNwjs() && Utils.isOptionValid('test')) {
     if (!require('nw.gui').Window.get().isDevToolsOpen()) {
       require('nw.gui').Window.get().showDevTools();
