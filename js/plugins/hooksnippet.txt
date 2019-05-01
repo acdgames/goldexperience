@@ -1,0 +1,8 @@
+var hook = $gameMap._events.filter(function(event) { return event._tool.enabled == true; });
+var hook = hook.filter(function(event) { return event._dataEventId == 138; });
+if (hook.length) {
+this.teleportToPoint(hook[0].x,hook[0].y);
+} else {
+this._user.battler.removeState(99);
+this._user.battler.addState(100);
+};

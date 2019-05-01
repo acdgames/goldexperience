@@ -1,0 +1,5 @@
+[
+null,
+{"id":1,"battlerName":"","characterIndex":0,"characterName":"$JoJo","classId":1,"equips":[10,0,2,3,0],"faceIndex":0,"faceName":"PartyMember","traits":[{"code":31,"dataId":1,"value":1},{"code":41,"dataId":1,"value":1},{"code":41,"dataId":2,"value":1},{"code":41,"dataId":3,"value":1}],"initialLevel":1,"maxLevel":99,"name":"JoJo","nickname":"Jotori Engarde","note":"<Menu Bust: QuoteCard>\n<Menu Bust Width: 335>\n<Menu Bust Height: 470>\n","profile":"Inmate #999: Gold Experience"},
+{"id":2,"battlerName":"","characterIndex":0,"characterName":"","classId":1,"equips":[0,0,0,0,0],"faceIndex":0,"faceName":"","traits":[],"initialLevel":1,"maxLevel":99,"name":"","nickname":"","note":"","profile":""}
+]
