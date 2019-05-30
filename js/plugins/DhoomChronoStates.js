@@ -7,7 +7,7 @@ Imported.Dhoom_ChronoStates = true;
 var Dhoom = Dhoom || {};
 Dhoom.ChronoStates = Dhoom.ChronoStates || {};
 /*:
- * @plugindesc Dhoom ChronoStates v1.1d - 20/04/2019
+ * @plugindesc Dhoom ChronoStates v1.1e - 09/05/2019
  * @author DrDhoom - drd-workshop.blogspot.com
  * 
  * @param Minimum Character Move Speed
@@ -24,6 +24,9 @@ Dhoom.ChronoStates = Dhoom.ChronoStates || {};
  * @default 20
  *
  * @help Changelog:
+ * • v1.1e 09/05/2019:
+ * - Fix state effects not restored when all states has been cleared.
+ * 
  * • v1.1b 29/12/2018:
  * - Compatibility with YEP Buffs and States Core.
  * 
@@ -148,6 +151,12 @@ Game_Player.prototype.canMove = function () {
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 Dhoom.ChronoStates.Game_BattlerBase_clearStates = Game_BattlerBase.prototype.clearStates;
 Game_BattlerBase.prototype.clearStates = function () {
+    if (this._states) {
+        var states = this.states();
+        for (var i = 0; i < states.length; i++) {
+            this.eraseState(states[i].id);
+        }
+    }
     Dhoom.ChronoStates.Game_BattlerBase_clearStates.call(this);
     this._stateDurations = {};
     this._stateEffectIntervals = {};
@@ -238,7 +247,6 @@ Game_BattlerBase.prototype.updateChronoStates = function () {
 };
 
 Game_BattlerBase.prototype.updateChronoStatesEffect = function () {
-	this.regenerateAll();
     var states = this.states();
     for (var i = 0; i < states.length; i++) {
         var state = states[i];
@@ -298,9 +306,6 @@ Game_Battler.prototype.applyStateHPRegeneration = function (formula, source) {
     var b = source;
     try {
         var value = Number(eval(formula));
-		if (value > 0) {
-			value = Math.round(value * this.rec);
-		};
         value = Math.max(value, -this.maxSlipDamage());
         this.gainHp(value);
     } catch (e) {

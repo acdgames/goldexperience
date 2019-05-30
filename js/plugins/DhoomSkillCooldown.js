@@ -7,7 +7,7 @@ Imported.Dhoom_SkillCooldown = true;
 var Dhoom = Dhoom || {};
 Dhoom.SkillCooldown = Dhoom.SkillCooldown || {};
 /*:
- * @plugindesc Dhoom SkillCooldown v1.1 - 10/10/2018
+ * @plugindesc Dhoom SkillCooldown v2.1 - 14/05/2019
  * @author DrDhoom - drd-workshop.blogspot.com
  * 
  * @param Debug Log
@@ -327,24 +327,20 @@ Game_BattlerBase.prototype.initMembers = function () {
 };
 
 Game_BattlerBase.prototype.clearAllSkillsCooldown = function () {
-    this.clearSkillsCooldown();
-    this.clearSTypeCooldown();
-    this.clearGlobalCooldown();
-};
-
-Game_BattlerBase.prototype.clearSkillsCooldown = function () {
     this._skillsCooldown = {};
     this._skillsCooldownMax = {};
 };
 
-Game_BattlerBase.prototype.clearSTypeCooldown = function () {
-    this._stypeCooldown = {};
-    this._stypeCooldownMax = {};
+Game_BattlerBase.prototype.clearSkillCooldown = function (skillId) {
+    this._skillsCooldown[skillId] = 0;
+    this._skillsCooldownMax[skillId] = 0;
 };
 
-Game_BattlerBase.prototype.clearGlobalCooldown = function () {
-    this._globalCooldown = 0;
-    this._globalCooldownMax = 0;
+Game_BattlerBase.prototype.clearSkillTypeCooldown = function (stypeId) {
+    var skills = this.isActor() ? this.skills() : [];
+    skills.filter(function (s) { return s && s.stypeId === stypeId; }).forEach(function (s) {
+        this.clearSkillCooldown(s.id);
+    }, this);
 };
 
 Dhoom.SkillCooldown.Game_BattlerBase_meetsSkillConditions = Game_BattlerBase.prototype.meetsSkillConditions;
@@ -353,32 +349,31 @@ Game_BattlerBase.prototype.meetsSkillConditions = function (skill) {
 };
 
 Game_BattlerBase.prototype.getSkillCooldown = function (skill) {
-    if (skill && skill._bypassCooldown) return 0;
-    var gc = [this._globalCooldown, this._globalCooldownMax];
-    var tc = this._stypeCooldown[skill.stypeId] ? [this._stypeCooldown[skill.stypeId], this._stypeCooldownMax[skill.stypeId]] : [0, 0];
-    var sc = this._skillsCooldown[skill.id] ? [this._skillsCooldown[skill.id], this._skillsCooldownMax[skill.id]] : [0, 0];
-    return [gc, tc, sc].sort(function (a, b) { return a[0] < b[0] })[0];
+    if (skill && skill._bypassCooldown) return [0, 0];
+    return this._skillsCooldown[skill.id] ? [this._skillsCooldown[skill.id], this._skillsCooldownMax[skill.id]] : [0, 0];
 };
 
 Game_BattlerBase.prototype.getMaxSkillCooldown = function (skill, cooldown, type) {
     var battler = this.isActor() ? this.actor() : this.enemy();
-    var sym, sym2, min, max, amin, amax, cmin, cmax;
-    switch (type) {
-        case 'skill':
-            sym = '_skillCooldownModifier';
-            sym2 = 'id';
-            break;
-        case 'stype':
-            sym = '_skillTypeCooldownModifier';
-            sym2 = 'stypeId';
-            break;
-        case 'global':
-            sym = '_globalCooldownModifier';
-            break;
-    }
-    var min = this.getCooldownLimitValue('Min', skill, type);
-    var max = this.getCooldownLimitValue('Max', skill, type);
-    var modifiers = this.getAllSkillCooldownModifiers(sym, sym2 ? skill[sym2] : null);
+    var min1 = this.getCooldownLimitValue('Min', skill, 'skill');
+    var min2 = this.getCooldownLimitValue('Min', skill, 'stype');
+    var min3 = this.getCooldownLimitValue('Min', skill, 'global');
+    var min = [min1, min2, min3].filter(function (v) {
+        return typeof v === 'number';
+    }).sort(function (a, b) {
+        return a > b;
+    })[0];
+    var max1 = this.getCooldownLimitValue('Max', skill, 'skill');
+    var max2 = this.getCooldownLimitValue('Max', skill, 'stype');
+    var max3 = this.getCooldownLimitValue('Max', skill, 'global');
+    var max = [max1, max2, max3].filter(function (v) {
+        return typeof v === 'number';
+    }).sort(function (a, b) {
+        return a < b;
+    })[0];
+    var modifiers = this.getAllSkillCooldownModifiers('_skillCooldownModifier', skill.id);
+    modifiers = modifiers.concat(this.getAllSkillCooldownModifiers('_skillTypeCooldownModifier', skill.stypeId));
+    modifiers = modifiers.concat(this.getAllSkillCooldownModifiers('_globalCooldownModifier', null));
     var a = this;
     var b = cooldown;
     var c = cooldown;
@@ -391,8 +386,8 @@ Game_BattlerBase.prototype.getMaxSkillCooldown = function (skill, cooldown, type
         }
     }
     b = Math.round(b);
-    if (!isNaN(max)) b = Math.min(max, b);
-    if (!isNaN(min)) b = Math.max(min, b);
+    if (typeof max === 'number') b = Math.min(max, b);
+    if (typeof min === 'number') b = Math.max(min, b);
     return b;
 };
 
@@ -402,7 +397,7 @@ Game_BattlerBase.prototype.getCooldownLimitValue = function (mode, skill, type) 
     if (this.isActor()) battler = this.actor();
     if (this.isEnemy()) battler = this.enemy();
     var states = this.states();
-    var equips = (this.isActor() ? this.equips() : []);
+    if (this.isActor()) var equips = this.equips();
     switch (type) {
         case 'skill':
             index = skill.id;
@@ -417,14 +412,16 @@ Game_BattlerBase.prototype.getCooldownLimitValue = function (mode, skill, type) 
             sym = '_globalCooldown' + mode;
             break;
     }
-    if (isNaN(index)) {
+    if (typeof index !== 'number') {
         if (battler) array.push(battler[sym]);
         if (this.isActor()) array.push(this.currentClass()[sym]);
         for (var state of states) {
             array.push(state[sym]);
         }
-        for (var obj of equips) {
-            if (obj) array.push(obj[sym]);
+        if (equips) {
+            for (var obj of equips) {
+                if (obj) array.push(obj[sym]);
+            }
         }
     } else {
         if (battler) array.push(battler[sym][index]);
@@ -432,11 +429,13 @@ Game_BattlerBase.prototype.getCooldownLimitValue = function (mode, skill, type) 
         for (var state of states) {
             array.push(state[sym][index]);
         }
-        for (var obj of equips) {
-            if (obj) array.push(obj[sym][index]);
+        if (equips) {
+            for (var obj of equips) {
+                if (obj) array.push(obj[sym][index]);
+            }
         }
     }
-    return array.filter(function (a) { return !isNaN(a) }).sort(function (a, b) { a > b })[0];
+    return array.filter(function (a) { return typeof a === 'number'; }).sort(function (a, b) { return mode === 'Min' ? b - a : a - b; })[0];
 };
 
 Game_BattlerBase.prototype.getAllSkillCooldownModifiers = function (sym, id) {
@@ -474,63 +473,67 @@ Game_BattlerBase.prototype.setSkillCooldown = function (skill) {
         }
     }
     if (skill._stypeCooldown && skill._stypeCooldown.length) {
+        var skills = this.isActor() ? this.skills() : [];
         for (var setting of skill._stypeCooldown) {
-            var value = this.getMaxSkillCooldown($dataSkills[setting[0]], setting[1], 'stype');
-            this._stypeCooldown[setting[0]] = this._stypeCooldown[setting[0]] || 0;
-            this._stypeCooldownMax[setting[0]] = this._stypeCooldownMax[setting[0]] || 0;
-            if (value > this._stypeCooldown[setting[0]]) {
-                this._stypeCooldown[setting[0]] = value;
-                this._stypeCooldownMax[setting[0]] = value;
+            var askills = skills.filter(function (s) { return s && s.stypeId === setting[0]; });
+            for (var i = 0; i < askills.length; i++) {
+                var value = this.getMaxSkillCooldown(askills[i], setting[1], 'skill');
+                var id = askills[i].id;
+                this._skillsCooldown[id] = this._skillsCooldown[id] || 0;
+                this._skillsCooldownMax[id] = this._skillsCooldownMax[id] || 0;
+                if (value > this._skillsCooldown[id]) {
+                    this._skillsCooldown[id] = value;
+                    this._skillsCooldownMax[id] = value;
+                }
             }
-            if (Dhoom.SkillCooldown.debugLog) console.log(this.name() + ': ' + skill.stypeId + ':' + $dataSystem.skillTypes[skill.stypeId] + ': ' + this._stypeCooldown[setting[0]]);
+            if (Dhoom.SkillCooldown.debugLog) console.log(this.name() + ': ' + skill.stypeId + ':' + $dataSystem.skillTypes[skill.stypeId] + ': ' + setting[1]);
         }
     }
     if (skill._globalCooldown) {
-        var value = this.getMaxSkillCooldown(skill, skill._globalCooldown, 'global');
-        if (value > this._globalCooldown) {
-            this._globalCooldown = value;
-            this._globalCooldownMax = value;
+        var skills = this.isActor() ? this.skills() : [];
+        for (var i = 0; i < skills.length; i++) {
+            var value = this.getMaxSkillCooldown(skills[i], skill._globalCooldown, 'skill');
+            var id = skills[i].id;
+            this._skillsCooldown[id] = this._skillsCooldown[id] || 0;
+            this._skillsCooldownMax[id] = this._skillsCooldownMax[id] || 0;
+            if (value > this._skillsCooldown[id]) {
+                this._skillsCooldown[id] = value;
+                this._skillsCooldownMax[id] = value;
+            }
+            if (Dhoom.SkillCooldown.debugLog) console.log(this.name() + ': ' + skills[i].id + ':' + skills[i].name + ': ' + this._skillsCooldown[id]);
         }
-        if (Dhoom.SkillCooldown.debugLog) console.log(this.name() + ': ' + 'Global cooldown: ' + this._globalCooldown);
+        if (Dhoom.SkillCooldown.debugLog) console.log(this.name() + ': ' + 'Global cooldown: ' + skill._globalCooldown);
     }
 };
 
 Game_BattlerBase.prototype.updateSkillsCooldown = function () {
     for (var id in this._skillsCooldown) {
-        this._skillsCooldown[id] -= this.getSkillCooldownRate(id);
+        this._skillsCooldown[id] -= this.getSkillCooldownRate(id) + this.getSkillTypeCooldownRate($dataSkills[id].stypeId) + this.getGlobalCooldownRate();
         if (this._skillsCooldown[id] <= 0) {
             delete this._skillsCooldown[id];
             delete this._skillsCooldownMax[id];
             if (Dhoom.SkillCooldown.debugLog) console.log(this.name() + ': ' + id + ':' + $dataSkills[id].name + ' cooldown removed.');
         }
     }
-    for (var id in this._stypeCooldown) {
-        this._stypeCooldown[id] -= this.getSkillTypeCooldownRate(id);
-        if (this._stypeCooldown[id] <= 0) {
-            delete this._stypeCooldown[id];
-            delete this._stypeCooldownMax[id];
-            if (Dhoom.SkillCooldown.debugLog) console.log(this.name() + ': ' + id + ':' + $dataSystem.skillTypes[id] + ' cooldown removed.');
-        }
-    }
-    if (this._globalCooldown > 0) {
-        this._globalCooldown -= this.getGlobalCooldownRate();
-        if (!this._globalCooldown && Dhoom.SkillCooldown.debugLog) console.log(this.name() + ': ' + 'Global cooldown removed.');
-    }
 };
 
 Game_BattlerBase.prototype.getSkillCooldownRate = function (id) {
     var array = [];
-    if (this.isActor()) battler = this.actor();
-    if (this.isEnemy()) battler = this.enemy();
+    if (this.isActor()) {
+        var battler = this.actor();
+        var equips = this.equips();
+    }
+    if (this.isEnemy()) var battler = this.enemy();
     var states = this.states();
-    var equips = (this.isActor() ? this.equips() : []);
     if (battler) array.push(battler._skillCooldownRate[id]);
     if (this.isActor()) array.push(this.currentClass()._skillCooldownRate[id]);
     for (var state of states) {
         array.push(state._skillCooldownRate[id]);
     }
-    for (var obj of equips) {
-        if (obj) array.push(obj._skillCooldownRate[id]);
+    if (equips) {
+        for (var obj of equips) {
+            if (obj) array.push(obj._skillCooldownRate[id]);
+        }
     }
     var mod = array.filter(function (a) { return !isNaN(a) }).reduce(function (a, b) { return a + b }, 0);
     if (!mod) mod = 100;
@@ -539,98 +542,86 @@ Game_BattlerBase.prototype.getSkillCooldownRate = function (id) {
 
 Game_BattlerBase.prototype.getSkillTypeCooldownRate = function (id) {
     var array = [];
-    if (this.isActor()) battler = this.actor();
-    if (this.isEnemy()) battler = this.enemy();
+    if (this.isActor()) {
+        var battler = this.actor();
+        var equips = this.equips();
+    }
+    if (this.isEnemy()) var battler = this.enemy();
     var states = this.states();
-    var equips = (this.isActor() ? this.equips() : []);
     if (battler) array.push(battler._stypeCooldownRate[id]);
     if (this.isActor()) array.push(this.currentClass()._stypeCooldownRate[id]);
     for (var state of states) {
         array.push(state._stypeCooldownRate[id]);
     }
-    for (var obj of equips) {
-        if (obj) array.push(obj._stypeCooldownRate[id]);
+    if (equips) {
+        for (var obj of equips) {
+            if (obj) array.push(obj._stypeCooldownRate[id]);
+        }
     }
     var mod = array.filter(function (a) { return !isNaN(a) }).reduce(function (a, b) { return a + b }, 0);
-    if (!mod) mod = 100;
+    if (!mod) mod = 0;
     return 1 * mod / 100;
 };
 
 Game_BattlerBase.prototype.getGlobalCooldownRate = function () {
     var array = [];
-    if (this.isActor()) battler = this.actor();
-    if (this.isEnemy()) battler = this.enemy();
+    if (this.isActor()) {
+        var battler = this.actor();
+        var equips = this.equips();
+    }
+    if (this.isEnemy()) var battler = this.enemy();
     var states = this.states();
-    var equips = (this.equips() = []);
     if (battler) array.push(battler._globalCooldownRate);
     if (this.isActor()) array.push(this.currentClass()._globalCooldownRate);
     for (var state of states) {
         array.push(state._globalCooldownRate);
     }
-    for (var obj of equips) {
-        if (obj) array.push(obj._globalCooldownRate);
+    if (equips) {
+        for (var obj of equips) {
+            if (obj) array.push(obj._globalCooldownRate);
+        }
     }
     var mod = array.filter(function (a) { return !isNaN(a) }).reduce(function (a, b) { return a + b }, 0);
-    if (!mod) mod = 100;
+    if (!mod) mod = 0;
     return 1 * mod / 100;
 };
 
 Game_BattlerBase.prototype.applyItemCooldownModifier = function (item) {
     for (var id in item._targetSkillCooldownModifier) {
-        this.applyCooldownModifier('skill', item._targetSkillCooldownModifier[id], id);
+        this.applyCooldownModifier(item._targetSkillCooldownModifier[id], parseInt(id));
     }
-    for (var id in item._targetStypeCooldownModifier) {
-        this.applyCooldownModifier('stype', item._targetStypeCooldownModifier[id], id);
+    if (item._targetStypeCooldownModifier) {
+        var skills = this.isActor() ? this.skills() : [];
+        for (var di in item._targetStypeCooldownModifier) {
+            id = parseInt(di);
+            var askills = skills.filter(function (s) { return s && s.stypeId === id; });
+            for (var i = 0; i < askills.length; i++) {
+                this.applyCooldownModifier(item._targetStypeCooldownModifier[id], askills[i].id);
+            }
+        }
     }
-    this.applyCooldownModifier('global', item._targetGlobalCooldownModifier);
+    if (item._targetGlobalCooldownModifier) {
+        var skills = this.isActor() ? this.skills() : [];
+        for (var i = 0; i < skills.length; i++) {
+            this.applyCooldownModifier(item._targetGlobalCooldownModifier, skills[i].id);
+        }
+    }
 };
 
-Game_BattlerBase.prototype.applyCooldownModifier = function (type, modifier, id) {
+Game_BattlerBase.prototype.applyCooldownModifier = function (modifier, id) {
     if (modifier) {
         var a = this;
-        var b, value, sym, sym2, c;
-        switch (type) {
-            case 'skill':
-                sym = '_skillsCooldown';
-                sym2 = '_skillsCooldownMax';
-                break;
-            case 'stype':
-                sym = '_stypeCooldown';
-                sym2 = '_stypeCooldownMax';
-                break;
-            case 'global':
-                sym = '_globalCooldown';
-                sym2 = '_globalCooldownMax';
-                break;
-        }
-        if (isNaN(id)) {
-            b = this[sym];
-            c = this[sym2];
-            if (b) {
-                try {
-                    value = eval(modifier);
-                    if (value > this[sym2]) this[sym2] = Math.round(value);
-                    this[sym] = value;
-                    if (Dhoom.SkillCooldown.debugLog) console.log(this.name() + ': ' + type + ' cooldown set to: ' + this[sym]);
-                } catch (error) {
-                    console.error('Target ' + type + ' cooldown modifier error: ' + modifier);
-                    console.error(error.message);
-                }
-            }
-        } else {
-            b = this[sym][id];
-            c = this[sym2][id];
-            if (b) {
-                try {
-                    value = eval(modifier);
-                    if (value > this[sym2][id]) this[sym2][id] = value;
-                    this[sym][id] = value;
-                    if (Dhoom.SkillCooldown.debugLog) console.log(this.name() + ': ' + type + ':' + id + ':' + (type === 'skill' ? $dataSkills[id].name : $dataSystem.skillTypes[id]) + ' cooldown set to: ' + this[sym][id]);
-                } catch (error) {
-                    console.error('Target ' + type + ' cooldown modifier error: ' + modifier);
-                    console.error(error.message);
-                }
-            }
+        var value;
+        var b = this._skillsCooldown[id] || 0;
+        var c = this._skillsCooldownMax[id] || 0;
+        try {
+            value = eval(modifier);
+            if (value > this._skillsCooldownMax[id]) this._skillsCooldownMax[id] = value;
+            this._skillsCooldown[id] = value;
+            if (Dhoom.SkillCooldown.debugLog) console.log(this.name() + ': skill:' + id + ':' + $dataSkills[id].name + ' cooldown set to: ' + this._skillsCooldown[id]);
+        } catch (error) {
+            console.error('Target skill cooldown modifier error: ' + modifier);
+            console.error(error.message);
         }
     }
 };
@@ -696,7 +687,7 @@ Game_CharacterBase.prototype.prepareCast = function (toolID) {
 Dhoom.SkillCooldown.Game_CharacterBase_canUseTool = Game_CharacterBase.prototype.canUseTool;
 Game_CharacterBase.prototype.canUseTool = function (toolID) {
     var result = Dhoom.SkillCooldown.Game_CharacterBase_canUseTool.call(this, toolID);
-    if (result) {
+    if (result && this._user.actionTimes[1] === 0) {
         var item = $gameMap.toolEvent(toolID).item();
         if (item && DataManager.isSkill(item) && this.battler().isSkillInCooldown(item)) return false;
     }
@@ -758,26 +749,16 @@ Game_Interpreter.prototype.pluginCommand = function (command, args) {
                 var id = parseInt(args[3]);
                 if (actorId) {
                     var actor = $gameActors.actor(actorId);
-                    if (type) {
-                        var sym;
-                        if (type === 'skill') sym = '_skillsCooldown';
-                        if (type === 'stype') sym = '_stypeCooldown';
-                        if (type === 'global') sym = '_globalCooldown';
-                        if (id) {
-                            actor[sym][id] = 0;
+                    if (type && id && type !== 'global') {
+                        if (type === 'skill') {
+                            actor.clearSkillCooldown(id);
                             if (Dhoom.SkillCooldown.debugLog) {
                                 console.log(actorId + ':' + actor.name() + ': ' + type + ' ' + id + ' cooldown cleared.');
                             }
-                        } else {
-                            if (type === 'global') {
-                                actor[sym] = 0;
-                            } else {
-                                for (var i in actor[sym]) {
-                                    actor[sym][i] = 0;
-                                }
-                            }
+                        } else if (type === 'stype') {
+                            actor.clearSkillTypeCooldown(id);
                             if (Dhoom.SkillCooldown.debugLog) {
-                                console.log(actorId + ':' + actor.name() + ': ' + type + ' cooldown cleared.');
+                                console.log(actorId + ':' + actor.name() + ': ' + type + ' ' + id + ' cooldown cleared.');
                             }
                         }
                     } else {
