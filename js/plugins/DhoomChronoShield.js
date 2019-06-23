@@ -7,7 +7,7 @@ Imported.Dhoom_ChronoShield = true;
 var Dhoom = Dhoom || {};
 Dhoom.ChronoShield = Dhoom.ChronoShield || {};
 /*:
- * @plugindesc Dhoom ChronoShield v1.3a - 12/12/2018
+ * @plugindesc Dhoom ChronoShield v2.0 - 22/06/2019
  * @author DrDhoom - drd-workshop.blogspot.com
  * 
  * @param Shield Durability Damage Formula
@@ -575,8 +575,33 @@ if (Imported.Dhoom_ChronoToolHUD) {
             var name = '';
             var cost = '';
             var cooldown = '';
-            var key = this.input().toUpperCase().replace('#', '');
-            var ckey = this.changeInput().toUpperCase().replace('#', '');
+            if (this._setting.type === 'chronoItem') {
+                var index = Dhoom.ChronoToolHUD.itemSettings.indexOf(this._setting);
+                var inputs = ConfigManager.keys['chronoItem' + (index + 1)];
+                var cInputs = ConfigManager.keys['chronoChangeItem' + (index + 1)];
+            } else if (this._setting.type === 'chronoSkill') {
+                var index = Dhoom.ChronoToolHUD.skillSettings.indexOf(this._setting);
+                var inputs = ConfigManager.keys['chronoSkill' + (index + 1)];
+                var cInputs = ConfigManager.keys['chronoChangeSkill' + (index + 1)];
+            } else {
+                var inputs = ConfigManager.keys[this._setting.type];
+                var cInputs = ConfigManager.keys['chronoEquip'];
+            }
+            var keyName = '';
+            var cKeyName = '';
+            if (Input.preferKeyboard()) {
+                regex = /^#(.*)/;
+            } else {
+                regex = /^\$(.*)/;
+            }
+            for (var i = 0; i < inputs.length; i++) {
+                if (regex.test(inputs[i])) keyName = inputs[i];
+            }
+            for (var i = 0; i < cInputs.length; i++) {
+                if (regex.test(cInputs[i])) cKeyName = cInputs[i];
+            }
+            var key = keyName.toUpperCase().replace('#', '').replace('$', '');
+            var ckey = cKeyName.toUpperCase().replace('#', '').replace('$', '');
             name = this._item.name;
             cooldown = Math.round($gamePlayer.battler().chronoShieldDurabilityPercentage(this._item.id) * 100);
             cost = $gameParty.numItems(this._item);

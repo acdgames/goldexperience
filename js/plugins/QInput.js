@@ -13,12 +13,13 @@ Imported.QInput = '2.2.1';
 
 //=============================================================================
 /*:
- * @plugindesc <QInput>
+ * @plugindesc <QInput> (Modified by DrDhoom)
  * Adds additional keys to Input class, and allows remapping keys.
  * @version 2.2.1
  * @author Quxios  | Version 2.2.1
  * @site https://quxios.github.io/
  * @updateurl https://quxios.github.io/data/pluginsMin.json
+ * @modifiedby DrDhoom
  *
  * @param Threshold
  * @desc The threshold for gamepad analog sticks to send input
@@ -313,7 +314,7 @@ function QInput() {
 //=============================================================================
 // QInput
 
-(function() {
+(function () {
   var _PARAMS = QPlus.getParams('<QInput>', {
     'Ok': ["#enter", "#space", "#z", "$A"],
     'Escape / Cancel': ["#esc", "#insert", "#x", "#num0", "$B"],
@@ -375,7 +376,7 @@ function QInput() {
   };
 
   // returns key code based off the key name
-  QInput.keyAt = function(obj, val) {
+  QInput.keyAt = function (obj, val) {
     for (var key in obj) {
       if (!obj.hasOwnProperty(key)) continue;
       if (obj[key] === val) return key;
@@ -391,7 +392,7 @@ function QInput() {
   // ConfigManager.keys is real remap key while QInput.remapped is the default
   // values, which is needed if you are using an in game key remapper so it knows
   // what value to set it when setting all the keys back to default.
-  QInput.remap = function(key) {
+  QInput.remap = function (key) {
     switch (key) {
       case 'tab':
         return ConfigManager.keys['tab'];
@@ -481,7 +482,7 @@ function QInput() {
   };
 
   var Alias_Input_clear = Input.clear;
-  Input.clear = function() {
+  Input.clear = function () {
     Alias_Input_clear.call(this);
     this._lastUsed = 'keyboard';
     this._ranPress = false;
@@ -493,7 +494,7 @@ function QInput() {
   };
 
   // Checks if any press is pressed with .onkeydown()
-  Input.anyTriggered = function(keys) {
+  Input.anyTriggered = function (keys) {
     var any = [];
     var start, i, j;
     if (keys === 'sym') {
@@ -528,7 +529,7 @@ function QInput() {
     }
     if (any.length === 0) {
       any = keys.split(',');
-      any = any.map(function(s) {
+      any = any.map(function (s) {
         s = s.replace(/\s+|#/g, '');
         return s;
       });
@@ -544,7 +545,7 @@ function QInput() {
   };
 
   // Checks if any press is pressed with .onkeypress()
-  Input.anyPressed = function(keys) {
+  Input.anyPressed = function (keys) {
     if (this._ranPress) {
       // should filter the input here based of the keys argument
       // the key that was pressed can be grabbed with this._lastPressed
@@ -554,7 +555,7 @@ function QInput() {
     return false;
   };
 
-  Input.remap = function(keyName, alias) {
+  Input.remap = function (keyName, alias) {
     var newKey = QInput.remap(keyName);
     if (!newKey) return alias.call(this, keyName);
     if (newKey.constructor === Array) {
@@ -572,7 +573,7 @@ function QInput() {
   };
 
   var Alias_Input_isPressed = Input.isPressed;
-  Input.isPressed = function(keyName) {
+  Input.isPressed = function (keyName) {
     if (!/^#/.test(keyName)) {
       return this.remap(keyName, Alias_Input_isPressed);
     }
@@ -580,7 +581,7 @@ function QInput() {
   };
 
   var Alias_Input_isTriggered = Input.isTriggered;
-  Input.isTriggered = function(keyName) {
+  Input.isTriggered = function (keyName) {
     if (!/^#/.test(keyName)) {
       return this.remap(keyName, Alias_Input_isTriggered);
     }
@@ -588,7 +589,7 @@ function QInput() {
   };
 
   var Alias_Input_isRepeated = Input.isRepeated;
-  Input.isRepeated = function(keyName) {
+  Input.isRepeated = function (keyName) {
     if (!/^#/.test(keyName)) {
       return this.remap(keyName, Alias_Input_isRepeated);
     }
@@ -596,7 +597,7 @@ function QInput() {
   };
 
   var Alias_Input_isLongPressed = Input.isLongPressed;
-  Input.isLongPressed = function(keyName) {
+  Input.isLongPressed = function (keyName) {
     if (!/^#/.test(keyName)) {
       return this.remap(keyName, Alias_Input_isLongPressed);
     }
@@ -605,12 +606,12 @@ function QInput() {
 
   // Added keypress listener to check for caps lock.
   var Alias_Input__setupEventHandlers = Input._setupEventHandlers;
-  Input._setupEventHandlers = function() {
+  Input._setupEventHandlers = function () {
     document.addEventListener('keypress', this._onKeyPress.bind(this));
     Alias_Input__setupEventHandlers.call(this);
   };
 
-  Input._onKeyDown = function(event) {
+  Input._onKeyDown = function (event) {
     this._lastUsed = 'keyboard';
     if (this._shouldPreventDefault(event.keyCode)) {
       event.preventDefault();
@@ -630,7 +631,7 @@ function QInput() {
     }
   };
 
-  Input._onKeyUp = function(event) {
+  Input._onKeyUp = function (event) {
     var buttonName = QInput.keys[event.keyCode];
     if (buttonName) {
       this._currentState['#' + buttonName] = false;
@@ -645,7 +646,7 @@ function QInput() {
     }
   };
 
-  Input._onKeyPress = function(event) {
+  Input._onKeyPress = function (event) {
     this._lastUsed = 'keyboard';
     this._lastPressed = String.fromCharCode(event.charCode);
     this._ranPress = true;
@@ -654,7 +655,7 @@ function QInput() {
 
   // Based off
   // http://www.codeproject.com/Articles/17180/Detect-Caps-Lock-with-Javascript
-  Input._setCapsLock = function(event) {
+  Input._setCapsLock = function (event) {
     var key = event.keyCode;
     var shift = event.shiftKey ? event.shiftKey : key === 16;
     if ((key >= 65 && key <= 90 && !shift) || (key >= 97 && key <= 122 && shift)) {
@@ -664,13 +665,14 @@ function QInput() {
     }
   };
 
-  Input._updateGamepadState = function(gamepad) {
+  Input._updateGamepadState = function (gamepad) {
     var lastState = this._gamepadStates[gamepad.index] || [];
     var newState = [];
     var buttons = gamepad.buttons;
     var axes = gamepad.axes;
     this._usingGamepad = false;
-    this._lastGamepadTriggered = null;
+    this._lastGamepadTriggered = this._lastGamepadTriggered || [];
+    this._lastGamepadTriggered[gamepad.index] = null;
     this._dirAxesA.x = 0;
     this._dirAxesA.y = 0;
     this._dirAxesB.x = 0;
@@ -701,39 +703,46 @@ function QInput() {
       this._dirAxesA.x = (axes[0] + _THRESHOLD) / max;
       newState[14] = true;    // left
       this._lastUsed = 'gamepad';
+      this._lastUsedGamepadIndex = gamepad.index;
     } else if (axes[0] > _THRESHOLD) {
       this._dirAxesA.x = (axes[0] - _THRESHOLD) / max;
       newState[15] = true;    // right
       this._lastUsed = 'gamepad';
+      this._lastUsedGamepadIndex = gamepad.index;
     }
     if (axes[1] < -_THRESHOLD) {
       this._dirAxesA.y = (axes[1] + _THRESHOLD) / max;
       newState[12] = true;    // up
       this._lastUsed = 'gamepad';
+      this._lastUsedGamepadIndex = gamepad.index;
     } else if (axes[1] > _THRESHOLD) {
       this._dirAxesA.y = (axes[1] - _THRESHOLD) / max;
       newState[13] = true;    // down
       this._lastUsed = 'gamepad';
+      this._lastUsedGamepadIndex = gamepad.index;
     }
     // right stick
     if (Math.abs(axes[2]) > _THRESHOLD) {
       var sign = axes[2] > 0 ? 1 : -1;
       this._dirAxesB.x = (axes[2] + _THRESHOLD * sign) / max;
       this._lastUsed = 'gamepad';
+      this._lastUsedGamepadIndex = gamepad.index;
     }
     if (Math.abs(axes[3]) > _THRESHOLD) {
       var sign = axes[3] > 0 ? 1 : -1;
       this._dirAxesB.y = (axes[3] + _THRESHOLD * sign) / max;
       this._lastUsed = 'gamepad';
+      this._lastUsedGamepadIndex = gamepad.index;
     }
-    this._lastGamepadTriggered = null;
+    this._lastGamepadTriggered[gamepad.index] = null;
     for (var j = 0; j < newState.length; j++) {
       if (newState[j] !== lastState[j]) {
         var buttonName = this.gamepadKeys[j];
         if (buttonName) {
           this._lastUsed = 'gamepad';
+          this._lastUsedGamepadIndex = gamepad.index;
           if (newState[j]) {
-            this._lastGamepadTriggered = buttonName;
+            this._lastGamepadTriggered[gamepad.index] = buttonName;
           }
           this._currentState[buttonName] = newState[j];
         }
@@ -742,11 +751,12 @@ function QInput() {
     this._gamepadStates[gamepad.index] = newState;
   };
 
-  Input.anyGamepadTriggered = function() {
-    return this._lastGamepadTriggered;
+  Input.anyGamepadTriggered = function () {
+    this._lastGamepadTriggered = this._lastGamepadTriggered || [];
+    return this._lastGamepadTriggered[this._lastUsedGamepadIndex];
   };
 
-  Input.anyGamepadPressed = function() {
+  Input.anyGamepadPressed = function () {
     for (var i = 0; i < this._gamepadStates.length; i++) {
       var states = this._gamepadStates[i];
       for (var j = 0; j < states.length; j++) {
@@ -758,18 +768,18 @@ function QInput() {
     return false;
   };
 
-  Input.preferKeyboard = function() {
+  Input.preferKeyboard = function () {
     return this._lastUsed === 'keyboard';
   };
 
-  Input.preferGamepad = function() {
+  Input.preferGamepad = function () {
     return this._lastUsed === 'gamepad';
   };
 
   //-----------------------------------------------------------------------------
   // Graphics
 
-  Graphics._onKeyDown = function(event) {
+  Graphics._onKeyDown = function (event) {
     if (!event.ctrlKey && !event.altKey) {
       switch (event.keyCode) {
         case QInput.remap('fps'):
@@ -793,7 +803,7 @@ function QInput() {
   //
   // The static class that manages scene transitions.
 
-  SceneManager.onKeyDown = function(event) {
+  SceneManager.onKeyDown = function (event) {
     if (!event.ctrlKey && !event.altKey) {
       switch (event.keyCode) {
         case QInput.remap('restart'): {
@@ -827,7 +837,7 @@ function QInput() {
   Window_TextInput.prototype = Object.create(Window_Base.prototype);
   Window_TextInput.prototype.constructor = Window_TextInput;
 
-  Window_TextInput.prototype.initialize = function(x, y, width, height) {
+  Window_TextInput.prototype.initialize = function (x, y, width, height) {
     Window_Base.prototype.initialize.call(this, x || 0, y || 0, width || this.windowWidth(), height || this.windowHeight());
     this._text = '';
     this._title = '';
@@ -841,20 +851,20 @@ function QInput() {
     this.refresh();
   };
 
-  Window_TextInput.prototype.windowWidth = function() {
+  Window_TextInput.prototype.windowWidth = function () {
     return 480;
   };
 
-  Window_TextInput.prototype.windowHeight = function() {
+  Window_TextInput.prototype.windowHeight = function () {
     return this.fittingHeight(2);
   };
 
-  Window_TextInput.prototype.center = function() {
+  Window_TextInput.prototype.center = function () {
     this.x = (Graphics.boxWidth - this.width) / 2;
     this.y = (Graphics.boxHeight - this.height) / 2;
   };
 
-  Window_TextInput.prototype.update = function() {
+  Window_TextInput.prototype.update = function () {
     var wasOpenAndActive = this.isOpenAndActive();
     Window_Base.prototype.update.call(this);
     if (!wasOpenAndActive && this.isOpenAndActive()) {
@@ -863,7 +873,7 @@ function QInput() {
     this.processHandling();
   };
 
-  Window_TextInput.prototype.processHandling = function() {
+  Window_TextInput.prototype.processHandling = function () {
     if (this.isOpenAndActive()) {
       for (var handler in this._handlers) {
         if (!this._handlers.hasOwnProperty(handler)) continue;
@@ -889,45 +899,45 @@ function QInput() {
     }
   };
 
-  Window_TextInput.prototype.isOpenAndActive = function() {
+  Window_TextInput.prototype.isOpenAndActive = function () {
     return this.isOpen() && this.active;
   };
 
-  Window_TextInput.prototype.setHandler = function(symbol, method) {
+  Window_TextInput.prototype.setHandler = function (symbol, method) {
     this._handlers[symbol] = method;
   };
 
-  Window_TextInput.prototype.isHandled = function(symbol) {
+  Window_TextInput.prototype.isHandled = function (symbol) {
     return !!this._handlers[symbol];
   };
 
-  Window_TextInput.prototype.callHandler = function(symbol) {
+  Window_TextInput.prototype.callHandler = function (symbol) {
     if (this.isHandled(symbol)) {
       this._handlers[symbol]();
     }
   };
 
-  Window_TextInput.prototype.setTitle = function(title) {
+  Window_TextInput.prototype.setTitle = function (title) {
     this._title = title;
     this.refresh();
   };
 
-  Window_TextInput.prototype.text = function() {
+  Window_TextInput.prototype.text = function () {
     return this._text;
   };
 
-  Window_TextInput.prototype.setHandler = function(symbol, method) {
+  Window_TextInput.prototype.setHandler = function (symbol, method) {
     this._handlers[symbol] = method;
   };
 
-  Window_TextInput.prototype.setDefault = function(name, max, mode) {
+  Window_TextInput.prototype.setDefault = function (name, max, mode) {
     this._default.name = String(name || '');
     this._default.max = max;
     this._default.mode = mode || '~a-z0-9';
     return this.restoreDefault();
   };
 
-  Window_TextInput.prototype.restoreDefault = function() {
+  Window_TextInput.prototype.restoreDefault = function () {
     this._text = this._default.name;
     this._index = this._default.name.length;
     this._mode = this._default.mode;
@@ -936,7 +946,7 @@ function QInput() {
     return this._text.length > 0;
   };
 
-  Window_TextInput.prototype.add = function(ch) {
+  Window_TextInput.prototype.add = function (ch) {
     if (this._index < this._maxLength) {
       this._text += ch;
       this._index++;
@@ -947,7 +957,7 @@ function QInput() {
     }
   };
 
-  Window_TextInput.prototype.back = function() {
+  Window_TextInput.prototype.back = function () {
     if (this._index > 0) {
       this._index--;
       this._text = this._text.slice(0, this._index);
@@ -958,18 +968,18 @@ function QInput() {
     }
   };
 
-  Window_TextInput.prototype.charWidth = function() {
+  Window_TextInput.prototype.charWidth = function () {
     var text = $gameSystem.isJapanese() ? '\uff21' : 'A';
     return this.textWidth(text);
   };
 
-  Window_TextInput.prototype.left = function() {
+  Window_TextInput.prototype.left = function () {
     var nameCenter = this.contentsWidth() / 2;
     var nameWidth = (this._maxLength + 1) * this.charWidth();
     return Math.min(nameCenter - nameWidth / 2, this.contentsWidth() - nameWidth);
   };
 
-  Window_TextInput.prototype.itemRect = function(index) {
+  Window_TextInput.prototype.itemRect = function (index) {
     return {
       x: this.left() + index * this.charWidth(),
       y: this.lineHeight(),
@@ -978,7 +988,7 @@ function QInput() {
     };
   };
 
-  Window_TextInput.prototype.underlineRect = function(index) {
+  Window_TextInput.prototype.underlineRect = function (index) {
     var rect = this.itemRect(index);
     rect.x++;
     rect.y += rect.height - 4;
@@ -987,11 +997,11 @@ function QInput() {
     return rect;
   };
 
-  Window_TextInput.prototype.underlineColor = function() {
+  Window_TextInput.prototype.underlineColor = function () {
     return this.normalColor();
   };
 
-  Window_TextInput.prototype.drawUnderline = function(index) {
+  Window_TextInput.prototype.drawUnderline = function (index) {
     var rect = this.underlineRect(index);
     var color = this.underlineColor();
     this.contents.paintOpacity = 48;
@@ -999,13 +1009,13 @@ function QInput() {
     this.contents.paintOpacity = 255;
   };
 
-  Window_TextInput.prototype.drawChar = function(index) {
+  Window_TextInput.prototype.drawChar = function (index) {
     var rect = this.itemRect(index);
     this.resetTextColor();
     this.drawText(this._text[index] || '', rect.x, rect.y);
   };
 
-  Window_TextInput.prototype.refresh = function() {
+  Window_TextInput.prototype.refresh = function () {
     this.contents.clear();
     for (var i = 0; i < this._maxLength; i++) {
       this.drawUnderline(i);

@@ -7,13 +7,18 @@ Imported.Dhoom_ChronoToolHUD = true;
 var Dhoom = Dhoom || {};
 Dhoom.ChronoToolHUD = Dhoom.ChronoToolHUD || {};
 /*:
- * @plugindesc Dhoom ChronoToolHUD v1.1b - 11/02/2019
+ * @plugindesc Dhoom ChronoToolHUD v2.0 - 22/06/2019
  * @author DrDhoom - drd-workshop.blogspot.com
  * 
  * @param Main Switch ID
  * @desc Switch ID to hide/show all tools HUD.
  * @type switch
  * @default 0
+ * 
+ * @param Remap Option Vocabs
+ * @desc Vocabs for all input in remap option.
+ * @type struct<remapSetting>
+ * @default {"title":"Battle Keys","chronoWeapon":"Attack","chronoShield":"Guard","chronoEquip":"Change Equipment","chronoItem":"Use Item %1","chronoChangeItem":"Change Item %1","chronoSkill":"Use Skill %1","chronoChangeSkill":"Change Skill %1"}
  * 
  * @param Weapon Setting
  * @type struct<toolSetting>
@@ -31,8 +36,10 @@ Dhoom.ChronoToolHUD = Dhoom.ChronoToolHUD || {};
  * @type struct<toolSkillSetting>[]
  * @default ["{\"input\":\"#w\",\"changeInput\":\"#q\",\"x\":\"379\",\"y\":\"506\",\"background\":\"tool_background\",\"iconX\":\"4\",\"iconY\":\"4\",\"iconWidth\":\"32\",\"iconHeight\":\"32\",\"texts\":\"[\\\"{\\\\\\\"x\\\\\\\":\\\\\\\"15\\\\\\\",\\\\\\\"y\\\\\\\":\\\\\\\"-3\\\\\\\",\\\\\\\"width\\\\\\\":\\\\\\\"10\\\\\\\",\\\\\\\"height\\\\\\\":\\\\\\\"10\\\\\\\",\\\\\\\"text\\\\\\\":\\\\\\\"%4\\\\\\\",\\\\\\\"style\\\\\\\":\\\\\\\"{\\\\\\\\\\\\\\\"name\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"size\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"10\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"color\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#FFFFFF\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineWidth\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"0\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineColor\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#000000\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"bold\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"true\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"italic\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"align\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"center\\\\\\\\\\\\\\\"}\\\\\\\",\\\\\\\"background\\\\\\\":\\\\\\\"tool_key_background\\\\\\\",\\\\\\\"backgroundX\\\\\\\":\\\\\\\"-1\\\\\\\",\\\\\\\"backgroundY\\\\\\\":\\\\\\\"-1\\\\\\\"}\\\",\\\"{\\\\\\\"x\\\\\\\":\\\\\\\"4\\\\\\\",\\\\\\\"y\\\\\\\":\\\\\\\"4\\\\\\\",\\\\\\\"width\\\\\\\":\\\\\\\"32\\\\\\\",\\\\\\\"height\\\\\\\":\\\\\\\"32\\\\\\\",\\\\\\\"text\\\\\\\":\\\\\\\"-%3s\\\\\\\",\\\\\\\"style\\\\\\\":\\\\\\\"{\\\\\\\\\\\\\\\"name\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"size\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"12\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"color\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#FFFFFF\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineWidth\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"2\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineColor\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#000000\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"bold\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"italic\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"align\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"center\\\\\\\\\\\\\\\"}\\\\\\\",\\\\\\\"background\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundX\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundY\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"condition\\\\\\\":\\\\\\\"e > 0\\\\\\\"}\\\",\\\"{\\\\\\\"x\\\\\\\":\\\\\\\"0\\\\\\\",\\\\\\\"y\\\\\\\":\\\\\\\"29\\\\\\\",\\\\\\\"width\\\\\\\":\\\\\\\"40\\\\\\\",\\\\\\\"height\\\\\\\":\\\\\\\"18\\\\\\\",\\\\\\\"text\\\\\\\":\\\\\\\"%2\\\\\\\",\\\\\\\"style\\\\\\\":\\\\\\\"{\\\\\\\\\\\\\\\"name\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"size\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"18\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"color\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#0065b2\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineWidth\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"2\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineColor\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#FFFFFF\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"bold\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"italic\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"align\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"center\\\\\\\\\\\\\\\"}\\\\\\\",\\\\\\\"background\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundX\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundY\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"condition\\\\\\\":\\\\\\\"b > 0 && c === 0\\\\\\\"}\\\",\\\"{\\\\\\\"x\\\\\\\":\\\\\\\"0\\\\\\\",\\\\\\\"y\\\\\\\":\\\\\\\"29\\\\\\\",\\\\\\\"width\\\\\\\":\\\\\\\"40\\\\\\\",\\\\\\\"height\\\\\\\":\\\\\\\"18\\\\\\\",\\\\\\\"text\\\\\\\":\\\\\\\"%2\\\\\\\",\\\\\\\"style\\\\\\\":\\\\\\\"{\\\\\\\\\\\\\\\"name\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"size\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"18\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"color\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#17ac0b\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineWidth\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"2\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineColor\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#FFFFFF\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"bold\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"italic\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"align\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"center\\\\\\\\\\\\\\\"}\\\\\\\",\\\\\\\"background\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundX\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundY\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"condition\\\\\\\":\\\\\\\"c > 0 && b === 0\\\\\\\"}\\\",\\\"{\\\\\\\"x\\\\\\\":\\\\\\\"0\\\\\\\",\\\\\\\"y\\\\\\\":\\\\\\\"29\\\\\\\",\\\\\\\"width\\\\\\\":\\\\\\\"40\\\\\\\",\\\\\\\"height\\\\\\\":\\\\\\\"18\\\\\\\",\\\\\\\"text\\\\\\\":\\\\\\\"%2\\\\\\\",\\\\\\\"style\\\\\\\":\\\\\\\"{\\\\\\\\\\\\\\\"name\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"size\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"18\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"color\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#000000\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineWidth\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"2\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineColor\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#FFFFFF\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"bold\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"italic\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"align\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"center\\\\\\\\\\\\\\\"}\\\\\\\",\\\\\\\"background\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundX\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundY\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"condition\\\\\\\":\\\\\\\"c === 0 && b === 0\\\\\\\"}\\\"]\",\"switch\":\"0\"}","{\"input\":\"#e\",\"changeInput\":\"#r\",\"x\":\"430\",\"y\":\"506\",\"background\":\"tool_background\",\"iconX\":\"4\",\"iconY\":\"4\",\"iconWidth\":\"32\",\"iconHeight\":\"32\",\"texts\":\"[\\\"{\\\\\\\"x\\\\\\\":\\\\\\\"15\\\\\\\",\\\\\\\"y\\\\\\\":\\\\\\\"-3\\\\\\\",\\\\\\\"width\\\\\\\":\\\\\\\"10\\\\\\\",\\\\\\\"height\\\\\\\":\\\\\\\"10\\\\\\\",\\\\\\\"text\\\\\\\":\\\\\\\"%4\\\\\\\",\\\\\\\"style\\\\\\\":\\\\\\\"{\\\\\\\\\\\\\\\"name\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"size\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"10\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"color\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#FFFFFF\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineWidth\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"0\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineColor\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#000000\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"bold\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"true\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"italic\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"align\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"center\\\\\\\\\\\\\\\"}\\\\\\\",\\\\\\\"background\\\\\\\":\\\\\\\"tool_key_background\\\\\\\",\\\\\\\"backgroundX\\\\\\\":\\\\\\\"-1\\\\\\\",\\\\\\\"backgroundY\\\\\\\":\\\\\\\"-1\\\\\\\"}\\\",\\\"{\\\\\\\"x\\\\\\\":\\\\\\\"4\\\\\\\",\\\\\\\"y\\\\\\\":\\\\\\\"4\\\\\\\",\\\\\\\"width\\\\\\\":\\\\\\\"32\\\\\\\",\\\\\\\"height\\\\\\\":\\\\\\\"32\\\\\\\",\\\\\\\"text\\\\\\\":\\\\\\\"-%3s\\\\\\\",\\\\\\\"style\\\\\\\":\\\\\\\"{\\\\\\\\\\\\\\\"name\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"size\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"12\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"color\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#FFFFFF\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineWidth\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"2\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineColor\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#000000\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"bold\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"italic\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"align\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"center\\\\\\\\\\\\\\\"}\\\\\\\",\\\\\\\"background\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundX\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundY\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"condition\\\\\\\":\\\\\\\"e > 0\\\\\\\"}\\\",\\\"{\\\\\\\"x\\\\\\\":\\\\\\\"0\\\\\\\",\\\\\\\"y\\\\\\\":\\\\\\\"29\\\\\\\",\\\\\\\"width\\\\\\\":\\\\\\\"40\\\\\\\",\\\\\\\"height\\\\\\\":\\\\\\\"18\\\\\\\",\\\\\\\"text\\\\\\\":\\\\\\\"%2\\\\\\\",\\\\\\\"style\\\\\\\":\\\\\\\"{\\\\\\\\\\\\\\\"name\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"size\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"18\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"color\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#0065b2\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineWidth\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"2\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineColor\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#FFFFFF\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"bold\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"italic\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"align\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"center\\\\\\\\\\\\\\\"}\\\\\\\",\\\\\\\"background\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundX\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundY\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"condition\\\\\\\":\\\\\\\"b > 0 && c === 0\\\\\\\"}\\\",\\\"{\\\\\\\"x\\\\\\\":\\\\\\\"0\\\\\\\",\\\\\\\"y\\\\\\\":\\\\\\\"29\\\\\\\",\\\\\\\"width\\\\\\\":\\\\\\\"40\\\\\\\",\\\\\\\"height\\\\\\\":\\\\\\\"18\\\\\\\",\\\\\\\"text\\\\\\\":\\\\\\\"%2\\\\\\\",\\\\\\\"style\\\\\\\":\\\\\\\"{\\\\\\\\\\\\\\\"name\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"size\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"18\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"color\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#17ac0b\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineWidth\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"2\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineColor\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#FFFFFF\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"bold\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"italic\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"align\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"center\\\\\\\\\\\\\\\"}\\\\\\\",\\\\\\\"background\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundX\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundY\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"condition\\\\\\\":\\\\\\\"c > 0 && b === 0\\\\\\\"}\\\",\\\"{\\\\\\\"x\\\\\\\":\\\\\\\"0\\\\\\\",\\\\\\\"y\\\\\\\":\\\\\\\"29\\\\\\\",\\\\\\\"width\\\\\\\":\\\\\\\"40\\\\\\\",\\\\\\\"height\\\\\\\":\\\\\\\"18\\\\\\\",\\\\\\\"text\\\\\\\":\\\\\\\"%2\\\\\\\",\\\\\\\"style\\\\\\\":\\\\\\\"{\\\\\\\\\\\\\\\"name\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"size\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"18\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"color\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#000000\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineWidth\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"2\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"outlineColor\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"#FFFFFF\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"bold\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"italic\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"false\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"align\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"center\\\\\\\\\\\\\\\"}\\\\\\\",\\\\\\\"background\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundX\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"backgroundY\\\\\\\":\\\\\\\"\\\\\\\",\\\\\\\"condition\\\\\\\":\\\\\\\"c === 0 && b === 0\\\\\\\"}\\\"]\",\"switch\":\"0\"}"]
  * 
- * @help Plugin Commands:
- * Changelogs:
+ * @help Changelogs:
+ * • v2.0 - 22/06/2019
+ * - Updated to use QInput and QInput+Remap. All input can be remapped in the option menu.
+ * - 
  * • v1.1a - 28/12/2018
  * - Compatibility with YEP Skill Core.
  * • v1.1 - 26/11/2018
@@ -40,20 +47,64 @@ Dhoom.ChronoToolHUD = Dhoom.ChronoToolHUD || {};
  * • v1.0 - 12/10/2018
  * - Initial release.
  * 
+ * Plugin Commands:
  * set_actor_skill : ACTORID : SKILLID : TOOLINDEX(Optional)
  * - Tool index start from 0.
  * set_actor_item : ACTORID : ITEMID : TOOLINDEX(Optional)
  * - Tool index start from 0.
  */
 
+/*~struct~remapSetting:
+@param title
+@text Title Vocab
+@default Battle Keys
+
+@param chronoWeapon
+@text Weapon Attack Vocab
+@desc Set to false to disable.
+@default Attack
+
+@param chronoShield
+@text Shield Guard Vocab
+@desc Set to false to disable.
+@default Guard
+
+@param chronoEquip
+@text Change Equipment Vocab
+@desc Set to false to disable.
+@default Change Equipment
+
+@param chronoItem
+@text Item Use Vocab
+@desc %1 = Index, start from 1. Set to false to disable.
+@default Use Item %1
+
+@param chronoChangeItem
+@text Change Item Vocab
+@desc %1 = Index, start from 1. Set to false to disable.
+@default Change Item %1
+
+@param chronoSkill
+@text Skill Use Vocab
+@desc %1 = Index, start from 1. Set to false to disable.
+@default Use Skill %1
+
+@param chronoChangeSkill
+@text Change Skill Vocab
+@desc %1 = Index, start from 1. Set to false to disable.
+@default Change Skill %1
+*/
+
 /*~struct~toolSetting:
 @param input
 @text Activation Input
-@desc Loot at Quasi Input plugin Key List. Leave empty if not used.
+@desc [QKey, Gamepad Key]. Loot at QInput plugin Key List. Leave empty if not used.
+@type string[]
 
 @param changeInput
 @text Change Input
-@desc Look at Quasi Input plugin Key List. Leave empty if not used.
+@desc [QKey, Gamepad Key]. Look at QInput plugin Key List. Leave empty if not used.
+@type string[]
 
 @param x
 @text X Position
@@ -129,11 +180,13 @@ Dhoom.ChronoToolHUD = Dhoom.ChronoToolHUD || {};
 
 @param input
 @text Activation Input
-@desc Loot at Quasi Input plugin Key List. Leave empty if not used.
+@desc [QKey, Gamepad Key]. Loot at QInput plugin Key List. Leave empty if not used.
+@type string[]
 
 @param changeInput
 @text Change Input
-@desc Look at Quasi Input plugin Key List. Leave empty if not used.
+@desc [QKey, Gamepad Key]. Look at QInput plugin Key List. Leave empty if not used.
+@type string[]
 
 @param x
 @text X Position
@@ -333,17 +386,50 @@ if (!Dhoom.loadParam) {
 }
 
 Dhoom.ChronoToolHUD.mainSwitch = Dhoom.loadParam('Main Switch ID');
+Dhoom.ChronoToolHUD.remapVocabs = Dhoom.loadParam('Remap Option Vocabs');
 Dhoom.ChronoToolHUD.weaponSetting = Dhoom.loadParam('Weapon Setting');
+Dhoom.ChronoToolHUD.weaponSetting.type = 'chronoWeapon';
 Dhoom.ChronoToolHUD.shieldSetting = Dhoom.loadParam('Shield Setting');
+Dhoom.ChronoToolHUD.shieldSetting.type = 'chronoShield';
 Dhoom.ChronoToolHUD.itemSettings = Dhoom.loadParam('Item Settings');
 Dhoom.ChronoToolHUD.skillSettings = Dhoom.loadParam('Skill Settings');
 
-if (Dhoom.ChronoToolHUD.weaponSetting.input) Moghunter.ras_buttonWeapon = Dhoom.ChronoToolHUD.weaponSetting.input.toLowerCase();
-if (Dhoom.ChronoToolHUD.shieldSetting.input) Moghunter.ras_buttonGuard = Dhoom.ChronoToolHUD.shieldSetting.input.toLowerCase();
+Moghunter.ras_buttonWeapon = '';
+Moghunter.ras_buttonGuard = '';
 Moghunter.ras_buttonItem = '';
 Moghunter.ras_buttonSkill = '';
 Moghunter.ras_buttonItemW = '';
 Moghunter.ras_buttonSkillW = '';
+
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+// QInput
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+QInput.remapped.chronoWeapon = Dhoom.ChronoToolHUD.weaponSetting.input;
+QInput.remapped.chronoShield = Dhoom.ChronoToolHUD.shieldSetting.input;
+QInput.remapped.chronoEquip = [].concat(Dhoom.ChronoToolHUD.weaponSetting.changeInput).concat(Dhoom.ChronoToolHUD.shieldSetting.changeInput);
+for (var i = 0; i < Dhoom.ChronoToolHUD.itemSettings.length; i++) {
+    QInput.remapped['chronoItem' + (i + 1)] = Dhoom.ChronoToolHUD.itemSettings[i].input;
+    QInput.remapped['chronoChangeItem' + (i + 1)] = Dhoom.ChronoToolHUD.itemSettings[i].changeInput;
+    Dhoom.ChronoToolHUD.itemSettings[i].type = 'chronoItem';
+}
+for (var i = 0; i < Dhoom.ChronoToolHUD.skillSettings.length; i++) {
+    QInput.remapped['chronoSkill' + (i + 1)] = Dhoom.ChronoToolHUD.skillSettings[i].input;
+    QInput.remapped['chronoChangeSkill' + (i + 1)] = Dhoom.ChronoToolHUD.skillSettings[i].changeInput;
+    Dhoom.ChronoToolHUD.skillSettings[i].type = 'chronoSkill';
+}
+
+Dhoom.ChronoToolHUD.QInput_remap = QInput.remap;
+QInput.remap = function (key) {
+    if (key.contains('chrono')) {
+        return ConfigManager.keys[key];
+    }
+    return Dhoom.ChronoToolHUD.QInput_remap.call(this, key);
+};
+
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+// ConfigManager
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ConfigManager.keys = JsonEx.makeDeepCopy(QInput.remapped);
 
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 // Bitmap
@@ -423,6 +509,31 @@ Game_Actor.prototype.initMembers = function () {
     this._toolSkillActionId = [];
 };
 
+Dhoom.ChronoToolHUD.Game_Actor_refresh = Game_Actor.prototype.refresh;
+Game_Actor.prototype.refresh = function () {
+    this.releaseUnequippableItemsSkillsTool();
+    Dhoom.ChronoToolHUD.Game_Actor_refresh.call(this);
+};
+
+Game_Actor.prototype.releaseUnequippableItemsSkillsTool = function () {
+    for (var i = 0; i < Dhoom.ChronoToolHUD.skillSettings.length; i++) {
+        var stypeId = Dhoom.ChronoToolHUD.skillSettings[i].stypeId;
+        if (this._toolSkillId[i] && (!this.hasSkill(this._toolSkillId[i]) || (stypeId && $dataSkills[this._toolSkillId[i]].stypeId !== stypeId))) {
+            this._toolSkillId[i] = 0;
+        }
+    }
+    this.setToolSkillID();
+};
+
+Dhoom.ChronoToolHUD.Game_Actor_forgetSkill = Game_Actor.prototype.forgetSkill;
+Game_Actor.prototype.forgetSkill = function (skillId) {
+    if (this.isSkillEquipped(skillId)) {
+        $gameTemp._chronoToolMenuSkill = [this._toolSkillId.indexOf(skillId)];
+        this.equipToolSkillID(0);
+    }
+    Dhoom.ChronoToolHUD.Game_Actor_forgetSkill.call(this, skillId);
+};
+
 Game_Actor.prototype.equipToolItemID = function (itemid) {
     var index = $gameTemp._chronoToolMenuItem || 0;
     this._toolItemId[index] = itemid;
@@ -450,7 +561,7 @@ Game_Actor.prototype.setToolItemID = function () {
 Game_Actor.prototype.setToolSkillID = function () {
     for (var i = 0; i < Dhoom.ChronoToolHUD.skillSettings.length; i++) {
         var item = $dataSkills[this._toolSkillId[i] || 0];
-        if (item) {
+        if (item && this.hasSkill(item.id)) {
             this._toolSkillActionId[i] = this.getToolActionID(item);
         } else {
             this._toolSkillActionId[i] = 0;
@@ -467,36 +578,25 @@ Game_Player.prototype.updateToolCommand = function () {
     if (this.isCommandToolMenuUsable() && spriteset && spriteset.isActive()) {
         if ($gameSystem._chronoCom.windowItem) {
             var sprites = spriteset._itemSprites;
-            var found = false;
-            sprites.forEach(function (sprite) {
-                if (sprite.isActive() && Input.isPressed(sprite.changeInput())) {
+            for (var i = 0; i < sprites.length; i++) {
+                if (sprites[i].isActive() && Input.isTriggered('chronoChangeItem' + (i + 1))) {
                     SoundManager.playOk();
-                    this.commandToolMenuItem(sprite);
-                    found = true;
+                    this.commandToolMenuItem(sprites[i]);
                     return;
                 }
-            }, this);
-            if (found) return;
+            }
         }
         if ($gameSystem._chronoCom.windowSkill) {
             var sprites = spriteset._skillSprites;
-            var found = false;
-            sprites.forEach(function (sprite) {
-                if (sprite.isActive() && Input.isTriggered(sprite.changeInput())) {
+            for (var i = 0; i < sprites.length; i++) {
+                if (sprites[i].isActive() && Input.isTriggered('chronoChangeSkill' + (i + 1))) {
                     SoundManager.playOk();
-                    this.commandToolMenuSkill(sprite);
-                    found = true;
+                    this.commandToolMenuSkill(sprites[i]);
                     return;
                 }
-            }, this);
-            if (found) return;
+            }
         };
-        if (spriteset._weaponSprite.isActive() && Input.isTriggered(spriteset._weaponSprite.changeInput())) {
-            SoundManager.playOk();
-            SceneManager.push(Scene_Equip);
-            return;
-        }
-        if (spriteset._shieldSprite.isActive() && Input.isTriggered(spriteset._shieldSprite.changeInput())) {
+        if ((spriteset._shieldSprite.isActive() || spriteset._weaponSprite.isActive()) && Input.isTriggered('chronoEquip')) {
             SoundManager.playOk();
             SceneManager.push(Scene_Equip);
             return;
@@ -522,7 +622,7 @@ Game_Player.prototype.commandSkillUsable = function () {
     var spriteset = SceneManager._scene._spritesetChronoToolHUD;
     if (spriteset && spriteset.isActive()) {
         for (var i = 0; i < spriteset._skillSprites.length; i++) {
-            if (spriteset._skillSprites[i].isActive() && Input.isTriggered(spriteset._skillSprites[i].input())) {
+            if (spriteset._skillSprites[i].isActive() && Input.isTriggered('chronoSkill' + (i + 1))) {
                 if (spriteset._skillSprites[i].isUsable()) {
                     $gameTemp._chronoToolActivateSkill = i;
                     return true;
@@ -541,7 +641,7 @@ Game_Player.prototype.commandItemUsable = function () {
     var spriteset = SceneManager._scene._spritesetChronoToolHUD;
     if (spriteset && spriteset.isActive()) {
         for (var i = 0; i < spriteset._itemSprites.length; i++) {
-            if (spriteset._itemSprites[i].isActive() && Input.isTriggered(spriteset._itemSprites[i].input())) {
+            if (spriteset._itemSprites[i].isActive() && Input.isTriggered('chronoItem' + (i + 1))) {
                 if (spriteset._itemSprites[i].isUsable()) {
                     $gameTemp._chronoToolActivateItem = i;
                     return true;
@@ -585,6 +685,7 @@ Dhoom.ChronoToolHUD.Game_Player_commandGuardUsable = Game_Player.prototype.comma
 Game_Player.prototype.commandGuardUsable = function () {
     var spriteset = SceneManager._scene._spritesetChronoToolHUD;
     if (!spriteset || !spriteset._shieldSprite || !spriteset.isActive() || !spriteset._shieldSprite.isActive()) return false;
+    if ($gameSystem.isAbsMode() && this.guardIsUsable() && $gameSystem._chronoCom.shield && Input.isPressed('chronoShield')) return true;
     return Dhoom.ChronoToolHUD.Game_Player_commandGuardUsable.call(this);
 };
 
@@ -592,6 +693,7 @@ Dhoom.ChronoToolHUD.Game_Player_commandAttackUsable = Game_Player.prototype.comm
 Game_Player.prototype.commandAttackUsable = function () {
     var spriteset = SceneManager._scene._spritesetChronoToolHUD;
     if (!spriteset || !spriteset._weaponSprite || !spriteset.isActive() || !spriteset._weaponSprite.isActive()) return false;
+    if ($gameSystem._chronoCom.attack && Input.isTriggered('chronoWeapon')) return true;
     return Dhoom.ChronoToolHUD.Game_Player_commandAttackUsable.call(this);
 };
 
@@ -616,11 +718,13 @@ Game_Party.prototype.inBattle = function () {
 Dhoom.ChronoToolHUD.Game_Interpreter_setChronoInterpreter = Game_Interpreter.prototype.setChronoInterpreter;
 Game_Interpreter.prototype.setChronoInterpreter = function (command, args) {
     if (command === "set_actor_skill") {
+        var actorId = Number(args[1]);
         $gameTemp._chronoToolMenuSkill = [Number(args[5]) || 0, 0];
     } else if (command === "set_actor_item") {
         $gameTemp._chronoToolMenuItem = Number(args[5]) || 0;
     };
     Dhoom.ChronoToolHUD.Game_Interpreter_setChronoInterpreter.call(this, command, args);
+    if (actorId) $gameActors.actor(actorId).refresh();
 };
 
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -649,11 +753,11 @@ Sprite_ChronoToolHUD.prototype.directory = function () {
 };
 
 Sprite_ChronoToolHUD.prototype.input = function () {
-    return this._setting.input.toLowerCase();
+    return this._setting.input;
 };
 
 Sprite_ChronoToolHUD.prototype.changeInput = function () {
-    return this._setting.changeInput.toLowerCase();
+    return this._setting.changeInput;
 };
 
 Sprite_ChronoToolHUD.prototype.refreshBackground = function () {
@@ -716,8 +820,33 @@ Sprite_ChronoToolHUD.prototype.drawText = function (setting) {
     var name = '';
     var cost = '';
     var cooldown = '';
-    var key = this.input().toUpperCase().replace('#', '');
-    var ckey = this.changeInput().toUpperCase().replace('#', '');
+    if (this._setting.type === 'chronoItem') {
+        var index = Dhoom.ChronoToolHUD.itemSettings.indexOf(this._setting);
+        var inputs = ConfigManager.keys['chronoItem' + (index + 1)];
+        var cInputs = ConfigManager.keys['chronoChangeItem' + (index + 1)];
+    } else if (this._setting.type === 'chronoSkill') {
+        var index = Dhoom.ChronoToolHUD.skillSettings.indexOf(this._setting);
+        var inputs = ConfigManager.keys['chronoSkill' + (index + 1)];
+        var cInputs = ConfigManager.keys['chronoChangeSkill' + (index + 1)];
+    } else {
+        var inputs = ConfigManager.keys[this._setting.type];
+        var cInputs = ConfigManager.keys['chronoEquip'];
+    }
+    var keyName = '';
+    var cKeyName = '';
+    if (Input.preferKeyboard()) {
+        regex = /^#(.*)/;
+    } else {
+        regex = /^\$(.*)/;
+    }
+    for (var i = 0; i < inputs.length; i++) {
+        if (regex.test(inputs[i])) keyName = inputs[i];
+    }
+    for (var i = 0; i < cInputs.length; i++) {
+        if (regex.test(cInputs[i])) cKeyName = cInputs[i];
+    }
+    var key = keyName.toUpperCase().replace('#', '').replace('$', '');
+    var ckey = cKeyName.toUpperCase().replace('#', '').replace('$', '');
     if (this._item) {
         name = this._item.name;
         if (DataManager.isSkill(this._item)) {
@@ -777,6 +906,7 @@ Sprite_ChronoToolHUD.prototype.update = function () {
     if (this._needRefresh && ImageManager.isReady()) {
         this.refreshIcon();
         this.refreshText();
+        this._preferKeyboard = Input.preferKeyboard();
         this._needRefresh = false;
     }
     this.updateCooldownSprite();
@@ -809,7 +939,7 @@ Sprite_ChronoToolHUD.prototype.isNeedRefresh = function () {
     } else {
         if (this._tempName || this._tempCooldown || this._tempCost) return true;
     }
-    return false;
+    return this._preferKeyboard !== Input.preferKeyboard();
 };
 
 Sprite_ChronoToolHUD.prototype.isUsable = function () {
@@ -937,6 +1067,45 @@ Window_ToolSkill.prototype.includes = function (item) {
         if (item.stypeId !== $gameTemp._chronoToolMenuSkill[1]) contained = false;
     }
     return result && contained;
+};
+
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+// Window_InputRemap
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+Dhoom.ChronoToolHUD.Window_InputRemap_addMoveKeys = Window_InputRemap.prototype.addMoveKeys;
+Window_InputRemap.prototype.addMoveKeys = function () {
+    Dhoom.ChronoToolHUD.Window_InputRemap_addMoveKeys.call(this);
+    this.addChronoToolKeys();
+};
+
+Window_InputRemap.prototype.addChronoToolKeys = function () {
+    this.addCommand(Dhoom.ChronoToolHUD.remapVocabs.title, 'spaceholder', false);
+    var keys = ['chronoWeapon', 'chronoShield', 'chronoEquip'];
+    for (var i = 0; i < Dhoom.ChronoToolHUD.itemSettings.length; i++) {
+        keys.push('chronoItem' + (i + 1));
+        keys.push('chronoChangeItem' + (i + 1));
+    }
+    for (var i = 0; i < Dhoom.ChronoToolHUD.skillSettings.length; i++) {
+        keys.push('chronoSkill' + (i + 1));
+        keys.push('chronoChangeSkill' + (i + 1));
+    }
+    for (var i = 0; i < keys.length; i++) {
+        this.addChronoKey(keys[i]);
+    }
+};
+
+Window_InputRemap.prototype.addChronoKey = function (key) {
+    if (!ConfigManager.keys.hasOwnProperty(key)) return;
+    var keyName = key;
+    var index = "";
+    if (/(.+)(\d+)/i.exec(key)) {
+        keyName = RegExp.$1.trim();
+        index = Number(RegExp.$2);
+    }
+    if (Dhoom.ChronoToolHUD.remapVocabs[keyName]) {
+        var vocab = Dhoom.ChronoToolHUD.remapVocabs[keyName].format(index);
+        this.addCommand(vocab, 'set', true, key);
+    }
 };
 
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
