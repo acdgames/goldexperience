@@ -1,0 +1,39 @@
+<animation-list sheet="Clear_extra">
+    <animation id="stand_right" rate="10">
+        <frame x="0" y="56" width="22" height="55" />
+    </animation>
+    <animation id="stand_left" sx="-1.0" rate="10">
+        <frame x="0" y="56" width="22" height="55" />
+    </animation>
+    <animation id="walk_right" rate="10">
+        <frame x="0" y="56" width="23" height="56" />
+        <frame x="23" y="56" width="23" height="56" />
+        <frame x="46" y="56" width="23" height="56" />
+        <frame x="69" y="56" width="23" height="56" />
+        <frame x="92" y="56" width="23" height="56" />
+        <frame x="115" y="56" width="23" height="56" />
+    </animation>
+    <animation id="walk_left" sx="-1.0" rate="10">
+        <frame x="0" y="56" width="23" height="56" />
+        <frame x="23" y="56" width="23" height="56" />
+        <frame x="46" y="56" width="23" height="56" />
+        <frame x="69" y="56" width="23" height="56" />
+        <frame x="92" y="56" width="23" height="56" />
+        <frame x="115" y="56" width="23" height="56" />
+    </animation>
+</animation-list>
+<script>
+if ($params.state.moving == false) {
+switch ( $params.direction4 ) {
+        default: return { animation: "stand_right", oneShot: false };
+        case 4: return { animation: "stand_left", oneShot: false };
+}
+} else {
+if ($params.state.moving > 0) {
+switch ( $params.direction4 ) {
+        default: return { animation: "walk_right", oneShot: false };
+        case 4: return { animation: "walk_left", oneShot: false };
+}
+}
+}
+</script>
