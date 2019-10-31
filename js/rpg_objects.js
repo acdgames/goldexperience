@@ -1,5 +1,5 @@
 //=============================================================================
-// rpg_objects.js v1.5.2
+// rpg_objects.js v1.6.1
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -1382,23 +1382,8 @@ Game_Action.prototype.isMagical = function() {
     return this.item().hitType === Game_Action.HITTYPE_MAGICAL;
 };
 
-
 Game_Action.prototype.isAttack = function() {
-    if (this.item() === $dataSkills[this.subject().attackSkillId()]) {
-    return true;
-    } else if (this.item().damage.elementId == 1) {
-    return true;
-	} else {
-	return false;
-	};
-};
-
-Game_Action.prototype.isAttackSkill = function() {
-    return this.item().damage.elementId == 2;
-};
-
-Game_Action.prototype.isSpell = function() {
-    return !this.item().damage.elementId == 1 && !this.item().damage.elementId == 2;
+    return this.item() === $dataSkills[this.subject().attackSkillId()];
 };
 
 Game_Action.prototype.isGuard = function() {
@@ -9354,7 +9339,7 @@ Game_Interpreter.prototype.command413 = function() {
 };
 
 // Break Loop
-Game_Interpreter.prototype.command113 = function () {
+Game_Interpreter.prototype.command113 = function() {
     var depth = 0;
     while (this._index < this._list.length - 1) {
         this._index++;
@@ -9363,7 +9348,7 @@ Game_Interpreter.prototype.command113 = function () {
         if (command.code === 112)
             depth++;
 
-        if (command.code === 413 && command.indent < this._indent) {
+        if (command.code === 413) {
             if (depth > 0)
                 depth--;
             else
