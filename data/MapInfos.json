@@ -8,7 +8,7 @@ null,
 {"id":6,"expanded":true,"name":"Evil Castle 1F","order":6,"parentId":3,"scrollX":811,"scrollY":713},
 {"id":7,"expanded":true,"name":"Forest Village","order":7,"parentId":3,"scrollX":816,"scrollY":1139},
 {"id":8,"expanded":false,"name":"Test Map","order":8,"parentId":0,"scrollX":819,"scrollY":453},
-{"id":9,"expanded":false,"name":"vs Team Platinum","order":9,"parentId":0,"scrollX":811,"scrollY":1475},
+{"id":9,"expanded":false,"name":"vs Team Platinum","order":9,"parentId":0,"scrollX":811,"scrollY":1459},
 {"id":10,"expanded":false,"name":"vs Team Gold","order":10,"parentId":0,"scrollX":811,"scrollY":1459},
 {"id":11,"expanded":false,"name":"Map Selection","order":11,"parentId":0,"scrollX":819,"scrollY":453}
 ]
