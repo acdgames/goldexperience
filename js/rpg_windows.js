@@ -1,5 +1,5 @@
 //=============================================================================
-// rpg_windows.js v1.6.1
+// rpg_windows.js v1.5.2
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -59,7 +59,7 @@ Window_Base.prototype.textPadding = function() {
 };
 
 Window_Base.prototype.standardBackOpacity = function() {
-    return 255;
+    return 192;
 };
 
 Window_Base.prototype.loadWindowskin = function() {
@@ -504,6 +504,17 @@ Window_Base.prototype.drawActorName = function(actor, x, y, width) {
 Window_Base.prototype.drawActorClass = function(actor, x, y, width) {
     width = width || 168;
     this.resetTextColor();
+		if (actor.isStateAffected(515)) {
+			this.changeTextColor(this.textColor(2));
+		} else if (actor.isStateAffected(516)) {
+			this.changeTextColor(this.textColor(4));
+		} else if (actor.isStateAffected(517)) {
+			this.changeTextColor(this.textColor(3));
+		} else if (actor.isStateAffected(518)) {
+			this.changeTextColor(this.textColor(6));
+		} else {
+        this.resetTextColor();
+		}
     this.drawText(actor.currentClass().name, x, y, width);
 };
 
@@ -1894,6 +1905,7 @@ Window_ItemCategory.prototype.makeCommandList = function() {
 
 Window_ItemCategory.prototype.setItemWindow = function(itemWindow) {
     this._itemWindow = itemWindow;
+    this.update();
 };
 
 //-----------------------------------------------------------------------------
@@ -2069,6 +2081,7 @@ Window_SkillType.prototype.update = function() {
 
 Window_SkillType.prototype.setSkillWindow = function(skillWindow) {
     this._skillWindow = skillWindow;
+    this.update();
 };
 
 Window_SkillType.prototype.selectLast = function() {
@@ -2429,6 +2442,7 @@ Window_EquipSlot.prototype.setStatusWindow = function(statusWindow) {
 
 Window_EquipSlot.prototype.setItemWindow = function(itemWindow) {
     this._itemWindow = itemWindow;
+    this.update();
 };
 
 Window_EquipSlot.prototype.updateHelp = function() {
@@ -5898,6 +5912,7 @@ Window_DebugRange.prototype.processCancel = function() {
 
 Window_DebugRange.prototype.setEditWindow = function(editWindow) {
     this._editWindow = editWindow;
+    this.update();
 };
 
 //-----------------------------------------------------------------------------

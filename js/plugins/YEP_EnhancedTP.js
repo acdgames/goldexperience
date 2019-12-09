@@ -8,10 +8,11 @@ Imported.YEP_EnhancedTP = true;
 
 var Yanfly = Yanfly || {};
 Yanfly.ETP = Yanfly.ETP || {};
+Yanfly.ETP.version = 1.06;
 
 //=============================================================================
  /*:
- * @plugindesc v1.01 Gives you more control over how TP is handled in
+ * @plugindesc v1.06 Gives you more control over how TP is handled in
  * your game in addition to letting players switch TP modes.
  * @author Yanfly Engine Plugins
  *
@@ -58,6 +59,11 @@ Yanfly.ETP = Yanfly.ETP || {};
  * @param Crisis MP
  * @desc This is the rate for what is considered to be low MP.
  * @default 0.25
+ *
+ * @param Dead TP Gain
+ * @desc Allow dead characters to gain TP from TP modes while dead?
+ * NO - false     YES - true
+ * @default false
  *
  * @param ---Mode 1 Settings---
  * @default
@@ -2486,7 +2492,7 @@ Yanfly.ETP = Yanfly.ETP || {};
  *
  * You can use the following notetags to adjust the various settings for TP.
  *
- * Actor Noretags:
+ * Actor and Enemy Notetags:
  * 
  *   <TP Mode: x>
  *   This will set the actor's default TP mode to x. If this notetag isn't used
@@ -2594,7 +2600,29 @@ Yanfly.ETP = Yanfly.ETP || {};
  * Changelog
  * ============================================================================
  *
- * Version 1.01:
+ * Version 1.06:
+ * - Lunatic Mode fail safes added.
+ *
+ * Version 1.05:
+ * - Added 'Dead TP Gain' plugin parameter. Enabling this will allow dead
+ * actors to gain TP from TP modes while in battle. Disabling this will prevent
+ * dead actors from doing so.
+ *
+ * Version 1.04:
+ * - Calculations for TP Gauge increasing for HP and MP values are now
+ * calculated based on the actual HP and MP damage taken as per the results
+ * rather than based off of the raw incoming value (in the event that raw value
+ * gets modified as per the effects of other plugins).
+ *
+ * Version 1.03:
+ * - Fixed the plugin commands that pertain to party members to prevent them
+ * from crashing the game.
+ *
+ * Version 1.02a:
+ * - Updated for RPG Maker MV version 1.1.0.
+ * - Fixed a documentation issue. <TP Mode: x> can work with enemies.
+ *
+ * Version 1.01a:
  * - Fixed a bug with some notetags not working properly.
  * - Fixed a bug with 'EnableTpMode' plugin command not working properly.
  *
@@ -2625,6 +2653,7 @@ for (Yanfly.i = 0; Yanfly.i < Yanfly.Param.ETPUnlocks.length; ++Yanfly.i) {
 };
 Yanfly.Param.ETPCrisisHP = Number(Yanfly.Parameters['Crisis HP']);
 Yanfly.Param.ETPCrisisMP = Number(Yanfly.Parameters['Crisis MP']);
+Yanfly.Param.ETPDeadTpGain = eval(String(Yanfly.Parameters['Dead TP Gain']));
 
 Yanfly.Param.ETPMax = 20;
 var $dataTpModes = [null];
@@ -2669,13 +2698,16 @@ for (Yanfly.i = 1; Yanfly.i < Yanfly.Param.ETPMax + 1; ++Yanfly.i) {
 
 Yanfly.ETP.DataManager_isDatabaseLoaded = DataManager.isDatabaseLoaded;
 DataManager.isDatabaseLoaded = function() {
-    if (!Yanfly.ETP.DataManager_isDatabaseLoaded.call(this)) return false;
+  if (!Yanfly.ETP.DataManager_isDatabaseLoaded.call(this)) return false;
+  if (!Yanfly._loaded_YEP_EnhancedTP) {
     this.processETPNotetags1($dataActors);
     this.processETPNotetags1($dataEnemies);
     this.processETPNotetags2($dataSkills);
     this.processETPNotetags2($dataItems);
     this.processETPNotetags3($dataSkills);
-    return true;
+    Yanfly._loaded_YEP_EnhancedTP = true;
+  }
+  return true;
 };
 
 DataManager.processETPNotetags1 = function(group) {
@@ -2915,7 +2947,13 @@ Game_BattlerBase.prototype.getTpEval = function(evalMode, user, target, value) {
     var subject = this;
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    var tpGain = eval(this.tpMode()[evalMode]);
+    var formula = this.tpMode()[evalMode];
+    try {
+      var tpGain = eval(formula);
+    } catch (e) {
+      var tpGain = 0;
+      Yanfly.Util.displayError(e, formula, 'CUSTOM TP MODE GAIN FORMUAL ERROR');
+    }
     return Math.floor(parseInt(tpGain));
 };
 
@@ -2969,9 +3007,20 @@ Game_Battler.prototype.onBattleEnd = function() {
     this.clearTp();
 };
 
+Game_Battler.prototype.gainTpmodeTp = function(value) {
+  if (this.canGainTpModeTp()) this.gainSilentTp(value);
+};
+
+Game_Battler.prototype.canGainTpModeTp = function() {
+  if (!Yanfly.Param.ETPDeadTpGain) {
+    if (this.isDead()) return false;
+  }
+  return true;
+};
+
 Game_Battler.prototype.gainBattleStartTp = function() {
     var value = this.getTpEval('initialTp', this, this, 0);
-    this.gainSilentTp(value);
+    this.gainTpmodeTp(value);
 };
 
 Yanfly.ETP.Game_Battler_regenerateTp = Game_Battler.prototype.regenerateTp;
@@ -2987,17 +3036,17 @@ Game_Battler.prototype.regenerateTp = function() {
 
 Game_Battler.prototype.regularRegenTp = function() {
     var value = this.getTpEval('regenTp', this, this, 0);
-    this.gainSilentTp(value);
+    this.gainTpmodeTp(value);
 };
 
 Game_Battler.prototype.crisisRegenTp = function() {
     if (this.hpRate() <= Yanfly.Param.ETPCrisisHP) {
       var value = this.getTpEval('crisisHp', this, this, 0);
-      this.gainSilentTp(value);
+      this.gainTpmodeTp(value);
     }
     if (this.mpRate() <= Yanfly.Param.ETPCrisisMP) {
       var value = this.getTpEval('crisisMp', this, this, 0);
-      this.gainSilentTp(value);
+      this.gainTpmodeTp(value);
     }
 };
 
@@ -3005,7 +3054,7 @@ Game_Battler.prototype.onlyMemberRegenTp = function() {
     if (this.isDead()) return;
     if (this.friendsUnit().aliveMembers().length > 1) return;
     var value = this.getTpEval('onlyMember', this, this, 0);
-    this.gainSilentTp(value);
+    this.gainTpmodeTp(value);
 };
 
 Yanfly.ETP.Game_Battler_chargeTpByDamage = 
@@ -3019,7 +3068,7 @@ Game_Battler.prototype.chargeTpByDamage = function(damageRate) {
 Game_Battler.prototype.chargeTpByDamageType = function(target, damage, type) {
     if (!this.tpMode()) return
     var value = this.getTpEval(type, this, target, damage);
-    this.gainSilentTp(value);
+    this.gainTpmodeTp(value);
 };
 
 Yanfly.ETP.Game_Battler_addState = Game_Battler.prototype.addState;
@@ -3044,10 +3093,10 @@ Game_Battler.prototype.chargeTpByAddState = function() {
     if (user && target && user.isEnemy() && target.isEnemy()) return;
     if (user) {
       var value = user.getTpEval('dealState', user, this, 0);
-      user.gainSilentTp(value);
+      user.gainTpmodeTp(value);
     }
     var value = this.getTpEval('gainState', this, user, 0);
-    this.gainSilentTp(value);
+    this.gainTpmodeTp(value);
 };
 
 Game_Battler.prototype.chargeTpByDeath = function() {
@@ -3057,14 +3106,14 @@ Game_Battler.prototype.chargeTpByDeath = function() {
       if (!ally) continue;
       if (ally === this) continue;
       var value = ally.getTpEval('killAlly', ally, this, 0);
-      ally.gainSilentTp(value);
+      ally.gainTpmodeTp(value);
     }
     var length = this.opponentsUnit().members().length;
     for (var i = 0; i < length; ++i) {
       var foe = this.opponentsUnit().members()[i];
       if (!foe) continue;
       var value = foe.getTpEval('killEnemy', foe, this, 0);
-      foe.gainSilentTp(value);
+      foe.gainTpmodeTp(value);
     }
 };
 
@@ -3113,7 +3162,7 @@ Game_Party.prototype.allMembersGainTp = function(type) {
       var member = this.members()[i];
       if (member) {
         var value = member.getTpEval(type, member, member, 0);
-        member.gainSilentTp(value);
+        member.gainTpmodeTp(value);
       }
     }
 };
@@ -3131,7 +3180,7 @@ Game_Action.prototype.apply = function(target) {
     if (!target.tpMode()) return;
     if (result.missed || result.evaded) {
       var value = target.getTpEval('evasion', this.subject(), target, 0);
-      target.gainSilentTp(value);
+      target.gainTpmodeTp(value);
     }
 };
 
@@ -3139,12 +3188,13 @@ Yanfly.ETP.Game_Action_executeHpDamage = Game_Action.prototype.executeHpDamage;
 Game_Action.prototype.executeHpDamage = function(target, value) {
     Yanfly.ETP.Game_Action_executeHpDamage.call(this, target, value);
     var user = this.subject();
-    if (value > 0) {
-      if (target) target.chargeTpByDamageType(user, value, 'takeHpDmg');
-      if (target) this.allyTpGain(target, value, 'allyHpDmg');
-      if (user) user.chargeTpByDamageType(target, value, 'dealHpDmg');
-    } else if (value < 0) {
-      if (user) user.chargeTpByDamageType(target, value, 'healHpDmg');
+    var dmg = target.result().hpDamage;
+    if (dmg > 0) {
+      if (target) target.chargeTpByDamageType(user, dmg, 'takeHpDmg');
+      if (target) this.allyTpGain(target, dmg, 'allyHpDmg');
+      if (user) user.chargeTpByDamageType(target, dmg, 'dealHpDmg');
+    } else if (dmg < 0) {
+      if (user) user.chargeTpByDamageType(target, dmg, 'healHpDmg');
     }
 };
 
@@ -3152,12 +3202,13 @@ Yanfly.ETP.Game_Action_executeMpDamage = Game_Action.prototype.executeMpDamage;
 Game_Action.prototype.executeMpDamage = function(target, value) {
     Yanfly.ETP.Game_Action_executeMpDamage.call(this, target, value);
     var user = this.subject();
-    if (value > 0) {
-      if (target) target.chargeTpByDamageType(user, value, 'takeMpDmg');
-      if (target) this.allyTpGain(target, value, 'allyMpDmg');
-      if (user) user.chargeTpByDamageType(target, value, 'dealMpDmg');
-    } else if (value < 0) {
-      if (user) user.chargeTpByDamageType(target, value, 'healMpDmg');
+    var dmg = target.result().mpDamage;
+    if (dmg > 0) {
+      if (target) target.chargeTpByDamageType(user, dmg, 'takeMpDmg');
+      if (target) this.allyTpGain(target, dmg, 'allyMpDmg');
+      if (user) user.chargeTpByDamageType(target, dmg, 'dealMpDmg');
+    } else if (dmg < 0) {
+      if (user) user.chargeTpByDamageType(target, dmg, 'healMpDmg');
     }
 };
 
@@ -3211,7 +3262,7 @@ Game_Interpreter.prototype.changeTpMode = function(args) {
     if (args[0].toUpperCase() === 'ACTOR') {
       var actor = $gameActors.actor(parseInt(args[1]));
     } else if (args[0].toUpperCase() === 'PARTY') {
-      var actor = $gameParty.members(parseInt(args[1]) - 1);
+      var actor = $gameParty.members()[parseInt(args[1]) - 1];
     } else {
       return;
     }
@@ -3225,7 +3276,7 @@ Game_Interpreter.prototype.unlockTpMode = function(args) {
     if (args[0].toUpperCase() === 'ACTOR') {
       var actor = $gameActors.actor(parseInt(args[1]));
     } else if (args[0].toUpperCase() === 'PARTY') {
-      var actor = $gameParty.members(parseInt(args[1]) - 1);
+      var actor = $gameParty.members()[parseInt(args[1]) - 1];
     } else {
       return;
     }
@@ -3239,7 +3290,7 @@ Game_Interpreter.prototype.removeTpMode = function(args) {
     if (args[0].toUpperCase() === 'ACTOR') {
       var actor = $gameActors.actor(parseInt(args[1]));
     } else if (args[0].toUpperCase() === 'PARTY') {
-      var actor = $gameParty.members(parseInt(args[1]) - 1);
+      var actor = $gameParty.members()[parseInt(args[1]) - 1];
     } else {
       return;
     }
@@ -3253,7 +3304,7 @@ Game_Interpreter.prototype.unlockAllTpModes = function(args) {
     if (args[0].toUpperCase() === 'ACTOR') {
       var actor = $gameActors.actor(parseInt(args[1]));
     } else if (args[0].toUpperCase() === 'PARTY') {
-      var actor = $gameParty.members(parseInt(args[1]) - 1);
+      var actor = $gameParty.members()[parseInt(args[1]) - 1];
     } else {
       return;
     }
@@ -3266,7 +3317,7 @@ Game_Interpreter.prototype.removeAllTpModes = function(args) {
     if (args[0].toUpperCase() === 'ACTOR') {
       var actor = $gameActors.actor(parseInt(args[1]));
     } else if (args[0].toUpperCase() === 'PARTY') {
-      var actor = $gameParty.members(parseInt(args[1]) - 1);
+      var actor = $gameParty.members()[parseInt(args[1]) - 1];
     } else {
       return;
     }
@@ -3400,6 +3451,17 @@ Yanfly.Util.getRange = function(n, m) {
 
 Yanfly.Util.onlyUnique = function(value, index, self) {
     return self.indexOf(value) === index;
+};
+
+Yanfly.Util.displayError = function(e, code, message) {
+  console.log(message);
+  console.log(code || 'NON-EXISTENT');
+  console.error(e);
+  if (Utils.isNwjs() && Utils.isOptionValid('test')) {
+    if (!require('nw.gui').Window.get().isDevToolsOpen()) {
+      require('nw.gui').Window.get().showDevTools();
+    }
+  }
 };
 
 //=============================================================================

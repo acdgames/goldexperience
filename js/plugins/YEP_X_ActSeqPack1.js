@@ -8,22 +8,32 @@ Imported.YEP_X_ActSeqPack1 = true;
 
 var Yanfly = Yanfly || {};
 Yanfly.ASP1 = Yanfly.ASP1 || {};
+Yanfly.ASP1.version = 1.13;
 
 //=============================================================================
  /*:
- * @plugindesc v1.10 (Requires YEP_BattleEngineCore.js) Basic functions are
+ * @plugindesc v1.13 (Requires YEP_BattleEngineCore.js) Basic functions are
  * added to the Battle Engine Core's action sequences.
  * @author Yanfly Engine Plugins
  *
  * @param Default Volume
  * @desc This will be the volume of the BGM played.
+ * @type number
+ * @min 0
+ * @max 100
  * @default 90
  *
  * @param Default Pitch
+ * @type number
+ * @min 0
+ * @max 100
  * @desc This will be the pitch of the BGM played.
  * @default 100
  *
  * @param Default Pan
+ * @type number
+ * @min 0
+ * @max 100
  * @desc This will be the pan of the BGM played.
  * @default 0
  *
@@ -174,7 +184,8 @@ Yanfly.ASP1 = Yanfly.ASP1 || {};
  * Plays the common event found within the skill's/item's traits list. This
  * will only play the last common event on the list, following the game
  * engine's original process. Nothing else will continue on the action list
- * until the common event is finished.
+ * until the common event is finished (unless it is a forced action, in which
+ * case, it will wait until the action is complete first).
  *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Usage Example: action common event
  *=============================================================================
@@ -363,7 +374,8 @@ Yanfly.ASP1 = Yanfly.ASP1 || {};
  * COMMON EVENT: X
  *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Plays common event X at that point in the action sequence. Nothing else
- * will continue until the common event is finished.
+ * will continue until the common event is finished (unless it is a forced
+ * action, in which case, it will wait until the action is complete first).
  *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Usage Example: common event: 1
  *=============================================================================
@@ -706,8 +718,21 @@ Yanfly.ASP1 = Yanfly.ASP1 || {};
  * Changelog
  * ============================================================================
  *
- * Version 1.10:
+ * Version 1.13:
+ * - Bypass the isDevToolsOpen() error when bad code is inserted into a script
+ * call or custom Lunatic Mode code segment due to updating to MV 1.6.1.
+ *
+ * Version 1.12:
+ * - Updated for RPG Maker MV version 1.5.0.
+ *
+ * Version 1.11:
+ * - Lunatic Mode fail safes added.
+ *
+ * Version 1.10a:
  * - Changed the 'Change Variable' action sequence to read more effectively.
+ * - Documentation update for 'Action Common Event' and 'Common Event' to
+ * indicate that they will not work immediately if used as a forced action
+ * since another event is already running.
  *
  * Version 1.09:
  * - Fixed a bug that didn't allow for HP and MP buff/debuff removal.
@@ -1071,7 +1096,15 @@ BattleManager.actionCollapse = function(actionArgs) {
 };
 
 BattleManager.actionCommonEvent = function(id) {
-  $gameTemp.reserveCommonEvent(id);
+  if ($gameTroop.isEventRunning()) {
+    var ev = $dataCommonEvents[id];
+    if (!ev) return;
+    var list = ev.list;
+    var interpreter = $gameTroop._interpreter;
+    interpreter.setupChild(list, 0);
+  } else {
+    $gameTemp.reserveCommonEvent(id);
+  }
   return false;
 };
 
@@ -1163,7 +1196,11 @@ BattleManager.actionEval = function(actionArgs) {
     for (var i = 1; i < actionArgs.length; ++i) {
         text = text + ', ' + String(actionArgs[i]);
     }
-    eval(text);
+    try {
+      eval(text);
+    } catch (e) {
+      Yanfly.Util.displayError(e, text, 'ACTION SEQUENCE EVAL ERROR');
+    }
     return false;
 };
 
@@ -1490,6 +1527,24 @@ BattleManager.actionTpModify = function(actionName, actionArgs) {
       }
     }, this);
     return true;
+};
+
+//=============================================================================
+// Utilities
+//=============================================================================
+
+Yanfly.Util = Yanfly.Util || {};
+
+Yanfly.Util.displayError = function(e, code, message) {
+  console.log(message);
+  console.log(code || 'NON-EXISTENT');
+  console.error(e);
+  if (Utils.RPGMAKER_VERSION && Utils.RPGMAKER_VERSION >= "1.6.0") return;
+  if (Utils.isNwjs() && Utils.isOptionValid('test')) {
+    if (!require('nw.gui').Window.get().isDevToolsOpen()) {
+      require('nw.gui').Window.get().showDevTools();
+    }
+  }
 };
 
 //=============================================================================

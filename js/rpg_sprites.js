@@ -1,5 +1,5 @@
 //=============================================================================
-// rpg_sprites.js v1.6.1
+// rpg_sprites.js v1.5.2
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -266,6 +266,12 @@ Sprite_Character.prototype.setCharacterBitmap = function() {
 };
 
 Sprite_Character.prototype.updateFrame = function() {
+    if (this._character !== $gamePlayer && $gameTemp.isStopMapEventMovement()) {
+    return;
+    }
+    if (this._character == $gamePlayer && $gameTemp.isStopMapPlayerMovement()) {
+    return;
+    }
     if (this._tileId > 0) {
         this.updateTileFrame();
     } else {

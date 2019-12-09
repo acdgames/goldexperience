@@ -1,5 +1,5 @@
 //=============================================================================
-// rpg_objects.js v1.6.1
+// rpg_objects.js v1.5.2
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -1382,8 +1382,35 @@ Game_Action.prototype.isMagical = function() {
     return this.item().hitType === Game_Action.HITTYPE_MAGICAL;
 };
 
+
 Game_Action.prototype.isAttack = function() {
-    return this.item() === $dataSkills[this.subject().attackSkillId()];
+	var elements = this.getItemElements();
+    if (this.item() === $dataSkills[this.subject().attackSkillId()]) {
+    return true;
+    } else if (elements.contains(1)) {
+    return true;
+	} else {
+	return false;
+	};
+};
+
+Game_Action.prototype.isAttackSkill = function() {
+	var elements = this.getItemElements();
+    return (elements.contains(2));
+};
+
+Game_Action.prototype.isAdaptiveType = function() {
+	var elements = this.getItemElements();
+    return (elements.contains(3));
+};
+
+Game_Action.prototype.isAdaptiveDamage = function() {
+	var elements = this.getItemElements();
+    return (elements.contains(4));
+};
+
+Game_Action.prototype.isSpell = function() {
+    return !this.item().damage.elementId == 1 && !this.item().damage.elementId == 2;
 };
 
 Game_Action.prototype.isGuard = function() {
@@ -3044,7 +3071,7 @@ Game_Battler.prototype.removeState = function(stateId) {
         }
         this.eraseState(stateId);
         this.refresh();
-        this._result.pushRemovedState(stateId);
+        this._result.pushRemovedState(stateId); //REMOVAL FLAG
     }
 };
 
@@ -5950,6 +5977,12 @@ Game_Map.prototype.autotileType = function(x, y, z) {
 };
 
 Game_Map.prototype.isPassable = function(x, y, d) {
+	if (x > $dataMap.width || y > $dataMap.height || x < 0 || y < 0) {
+		return false;
+	};
+    if ($gameMap.regionId(x,y) == 9) {
+		return false;
+    }
     return this.checkPassage(x, y, (1 << (d / 2 - 1)) & 0x0f);
 };
 
@@ -6402,6 +6435,9 @@ Game_CharacterBase.prototype.canPass = function(x, y, d) {
     }
     if (this.isCollidedWithCharacters(x2, y2)) {
         return false;
+    }
+    if ($gameMap.regionId(x,y) == 9) {
+		return false;
     }
     return true;
 };
@@ -9339,7 +9375,7 @@ Game_Interpreter.prototype.command413 = function() {
 };
 
 // Break Loop
-Game_Interpreter.prototype.command113 = function() {
+Game_Interpreter.prototype.command113 = function () {
     var depth = 0;
     while (this._index < this._list.length - 1) {
         this._index++;
@@ -9348,7 +9384,7 @@ Game_Interpreter.prototype.command113 = function() {
         if (command.code === 112)
             depth++;
 
-        if (command.code === 413) {
+        if (command.code === 413 && command.indent < this._indent) {
             if (depth > 0)
                 depth--;
             else
