@@ -4878,7 +4878,7 @@ Game_Interpreter.prototype.unitAddState = function(eventId, stateId) {
                 }
             }
             if ($gameSystem.isSubBattlePhase() === 'actor_move') {
-                if (Input.isTriggered('cancel') || TouchInput.isCancelled()) {
+                if (Input.isTriggered('cancel') || TouchInput.isCancelled() || Input.isTriggered('escape')) {
                     SoundManager.playCancel();
                     $gameSystem.setSubBattlePhase('normal');
                     $gameSystem.clearSrpgActorCommandStatusWindowNeedRefresh();
@@ -4887,7 +4887,7 @@ Game_Interpreter.prototype.unitAddState = function(eventId, stateId) {
                     $gameTemp.clearMoveTable();
                 }
             } else if ($gameSystem.isSubBattlePhase() === 'actor_target') {
-                if (Input.isTriggered('cancel') || TouchInput.isCancelled()) {
+                if (Input.isTriggered('cancel') || TouchInput.isCancelled() || Input.isTriggered('escape')) {
                     SoundManager.playCancel();
                     var event = $gameTemp.activeEvent();
                     var battlerArray = $gameSystem.EventToUnit(event.eventId());
