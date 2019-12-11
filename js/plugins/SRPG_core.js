@@ -3459,10 +3459,11 @@ Game_Interpreter.prototype.unitAddState = function(eventId, stateId) {
                     } else if (this.isTurnEndUnit() == true) {
                         var sx = (3 + this.characterPatternX()) * pw;
                         var sy = (0 + this.characterPatternY()) * ph;
-                        this.createTurnEndSprites();
-                        this._turnEndSprite.bitmap = this._turnEndBitmap;
-                        this._turnEndSprite.visible = true;
-                        this._turnEndSprite.setFrame(sx, sy, pw, ph);
+						this.setBlendColor([-30, -30, -30, 100]);
+                        //this.createTurnEndSprites();
+                        //this._turnEndSprite.bitmap = this._turnEndBitmap;
+                        //this._turnEndSprite.visible = true;
+                        //this._turnEndSprite.setFrame(sx, sy, pw, ph);
                     } else if (battlerArray[1].isAutoBattle()) {
                         var sx = (9 + this.characterPatternX()) * pw;
                         var sy = (0 + this.characterPatternY()) * ph;
@@ -3472,7 +3473,9 @@ Game_Interpreter.prototype.unitAddState = function(eventId, stateId) {
                         this._turnEndSprite.setFrame(sx, sy, pw, ph);
                     } else if (this._turnEndSprite) {
                         this._turnEndSprite.visible = false;
-                    }
+                    } else if (!this.isTurnEndUnit()) {
+						this.setBlendColor([0, 0, 0, 0]);
+					}
                 } else if (this._turnEndSprite) {
                     this._turnEndSprite.visible = false;
                 }

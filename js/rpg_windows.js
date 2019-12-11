@@ -2573,6 +2573,7 @@ Window_Status.prototype.drawBlock2 = function(y) {
     this.drawActorFace(this._actor, 12, y);
     this.drawBasicInfo(204, y);
     this.drawExpInfo(456, y);
+    this.drawSrpgParameters(750, y);
 };
 
 Window_Status.prototype.drawBlock3 = function(y) {
@@ -2632,6 +2633,35 @@ Window_Status.prototype.drawExpInfo = function(x, y) {
     this.drawText(value1, x, y + lineHeight * 1, 270, 'right');
     this.drawText(value2, x, y + lineHeight * 3, 270, 'right');
 };
+
+Window_Status.prototype.drawSrpgParameters = function(x, y) {
+        var lineHeight = this.lineHeight();
+		var movetype = "N/A";
+		if (this._actor.isStateAffected(500)) {
+			movetype = "Infantry - ";
+		} else if (this._actor.isStateAffected(501)) {
+			movetype = "Cavalry - ";
+		} else if (this._actor.isStateAffected(502)) {
+			movetype = "Flying - ";
+		} else if (this._actor.isStateAffected(503)) {
+			movetype = "Armor - ";
+		} else if (this._actor.isStateAffected(504)) {
+			movetype = "Warp - ";
+		}
+        this.changeTextColor(this.systemColor());
+        this.drawText("Move: " + movetype, x, y, 180);
+        this.resetTextColor();
+        this.drawText(this._actor.srpgMove(), x + 180, y, 48, 'right');
+        this.changeTextColor(this.systemColor());
+        this.drawText("Range: ", x, y + lineHeight * 2, 120);
+        this.resetTextColor();
+        var text = '';
+        if (this._actor.srpgWeaponMinRange() > 0) {
+            text += this._actor.srpgWeaponMinRange() + '-';
+        }
+        text += this._actor.srpgWeaponRange();
+        this.drawText(text, x + 180, y + lineHeight * 2, 48, 'right');
+    };
 
 Window_Status.prototype.drawEquipments = function(x, y) {
     var equips = this._actor.equips();
