@@ -884,3 +884,4 @@ var PIXI;
         tilemap_1.ZLayer = ZLayer;
     })(tilemap = PIXI.tilemap || (PIXI.tilemap = {}));
 })(PIXI || (PIXI = {}));
+//# sourceMappingURL=pixi-tilemap.js.map

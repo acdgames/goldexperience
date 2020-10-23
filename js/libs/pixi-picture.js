@@ -425,3 +425,4 @@ var PIXI;
         extras.PictureTilingSprite = PictureTilingSprite;
     })(extras = PIXI.extras || (PIXI.extras = {}));
 })(PIXI || (PIXI = {}));
+//# sourceMappingURL=pixi-picture.js.map
