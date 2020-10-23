@@ -416,8 +416,8 @@ PixiOutOfDateError.prototype.constructor = PixiOutOfDateError;
       var gl = this._renderer.gl;
       PIXI.BLEND_MODES.KHAS_LIGHT = 31;
       PIXI.BLEND_MODES.KHAS_LIGHTING = 32;
-      this._renderer.state.blendModes[PIXI.BLEND_MODES.KHAS_LIGHT] = [gl.SRC_ALPHA, gl.ONE];
-      this._renderer.state.blendModes[PIXI.BLEND_MODES.KHAS_LIGHTING] = [gl.ZERO, gl.SRC_COLOR];
+      //this._renderer.state.blendModes[PIXI.BLEND_MODES.KHAS_LIGHT] = [gl.SRC_ALPHA, gl.ONE];
+      //this._renderer.state.blendModes[PIXI.BLEND_MODES.KHAS_LIGHTING] = [gl.ZERO, gl.SRC_COLOR];
     } else {
       throw new PixiOutOfDateError();
     };
