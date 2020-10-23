@@ -1,5 +1,5 @@
 //=============================================================================
-// rpg_windows.js v1.5.2
+// rpg_windows.js v1.6.1
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -59,7 +59,7 @@ Window_Base.prototype.textPadding = function() {
 };
 
 Window_Base.prototype.standardBackOpacity = function() {
-    return 192;
+    return 255;
 };
 
 Window_Base.prototype.loadWindowskin = function() {
@@ -504,17 +504,6 @@ Window_Base.prototype.drawActorName = function(actor, x, y, width) {
 Window_Base.prototype.drawActorClass = function(actor, x, y, width) {
     width = width || 168;
     this.resetTextColor();
-		if (actor.isStateAffected(515)) {
-			this.changeTextColor(this.textColor(2));
-		} else if (actor.isStateAffected(516)) {
-			this.changeTextColor(this.textColor(4));
-		} else if (actor.isStateAffected(517)) {
-			this.changeTextColor(this.textColor(3));
-		} else if (actor.isStateAffected(518)) {
-			this.changeTextColor(this.textColor(6));
-		} else {
-        this.resetTextColor();
-		}
     this.drawText(actor.currentClass().name, x, y, width);
 };
 
@@ -1905,7 +1894,6 @@ Window_ItemCategory.prototype.makeCommandList = function() {
 
 Window_ItemCategory.prototype.setItemWindow = function(itemWindow) {
     this._itemWindow = itemWindow;
-    this.update();
 };
 
 //-----------------------------------------------------------------------------
@@ -2081,7 +2069,6 @@ Window_SkillType.prototype.update = function() {
 
 Window_SkillType.prototype.setSkillWindow = function(skillWindow) {
     this._skillWindow = skillWindow;
-    this.update();
 };
 
 Window_SkillType.prototype.selectLast = function() {
@@ -2442,7 +2429,6 @@ Window_EquipSlot.prototype.setStatusWindow = function(statusWindow) {
 
 Window_EquipSlot.prototype.setItemWindow = function(itemWindow) {
     this._itemWindow = itemWindow;
-    this.update();
 };
 
 Window_EquipSlot.prototype.updateHelp = function() {
@@ -2573,7 +2559,6 @@ Window_Status.prototype.drawBlock2 = function(y) {
     this.drawActorFace(this._actor, 12, y);
     this.drawBasicInfo(204, y);
     this.drawExpInfo(456, y);
-    this.drawSrpgParameters(750, y);
 };
 
 Window_Status.prototype.drawBlock3 = function(y) {
@@ -2633,35 +2618,6 @@ Window_Status.prototype.drawExpInfo = function(x, y) {
     this.drawText(value1, x, y + lineHeight * 1, 270, 'right');
     this.drawText(value2, x, y + lineHeight * 3, 270, 'right');
 };
-
-Window_Status.prototype.drawSrpgParameters = function(x, y) {
-        var lineHeight = this.lineHeight();
-		var movetype = "N/A";
-		if (this._actor.isStateAffected(500)) {
-			movetype = "Infantry - ";
-		} else if (this._actor.isStateAffected(501)) {
-			movetype = "Cavalry - ";
-		} else if (this._actor.isStateAffected(502)) {
-			movetype = "Flying - ";
-		} else if (this._actor.isStateAffected(503)) {
-			movetype = "Armor - ";
-		} else if (this._actor.isStateAffected(504)) {
-			movetype = "Warp - ";
-		}
-        this.changeTextColor(this.systemColor());
-        this.drawText("Move: " + movetype, x, y, 180);
-        this.resetTextColor();
-        this.drawText(this._actor.srpgMove(), x + 180, y, 48, 'right');
-        this.changeTextColor(this.systemColor());
-        this.drawText("Range: ", x, y + lineHeight * 2, 120);
-        this.resetTextColor();
-        var text = '';
-        if (this._actor.srpgWeaponMinRange() > 0) {
-            text += this._actor.srpgWeaponMinRange() + '-';
-        }
-        text += this._actor.srpgWeaponRange();
-        this.drawText(text, x + 180, y + lineHeight * 2, 48, 'right');
-    };
 
 Window_Status.prototype.drawEquipments = function(x, y) {
     var equips = this._actor.equips();
@@ -5942,7 +5898,6 @@ Window_DebugRange.prototype.processCancel = function() {
 
 Window_DebugRange.prototype.setEditWindow = function(editWindow) {
     this._editWindow = editWindow;
-    this.update();
 };
 
 //-----------------------------------------------------------------------------

@@ -8,11 +8,10 @@ Imported.YEP_X_ActSeqPack2 = true;
 
 var Yanfly = Yanfly || {};
 Yanfly.ASP2 = Yanfly.ASP2 || {};
-Yanfly.ASP2.version = 1.12;
 
 //=============================================================================
  /*:
- * @plugindesc v1.12 (Requires YEP_BattleEngineCore.js) Visual functions
+ * @plugindesc v1.07a (Requires YEP_BattleEngineCore.js) Visual functions
  * are added to the Battle Engine Core's action sequences.
  * @author Yanfly Engine Plugins
  *
@@ -242,7 +241,6 @@ Yanfly.ASP2.version = 1.12;
  * target's height. The frames determine how many frames it will take for the
  * target to reach that height. Using 0% for the height will bring the target
  * back to the ground.
- * Note: Floating only works with Sideview.
  *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Usage Example: float user: 200%
  *                float enemies: 500, 30
@@ -268,7 +266,6 @@ Yanfly.ASP2.version = 1.12;
  * than a percentage of the target's height. The frame count is how long the
  * target will be in the air. You can use this with the 'Move' action sequence
  * to make the target appear like it is jumping a distance.
- * Note: Jumping only works with Sideview.
  *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Usage Example: jump user: 150%
  *                jump target: 300, 60
@@ -318,47 +315,25 @@ Yanfly.ASP2.version = 1.12;
  * MOVE target1: FORWARD, (distance), (frames)
  * MOVE target1: BACKWARD, (distance), (frames)
  * MOVE target1: POINT, x coordinate, y coordinate, (frames)
- * MOVE target1: target2, BASE, (frames), (offset)
- * MOVE target1: target2, CENTER, (frames), (offset)
- * MOVE target1: target2, HEAD, (frames), (offset)
- * MOVE target1: target2, FRONT BASE, (frames), (offset)
- * MOVE target1: target2, FRONT CENTER, (frames), (offset)
- * MOVE target1: target2, FRONT HEAD, (frames), (offset)
- * MOVE target1: target2, BACK BASE, (frames), (offset)
- * MOVE target1: target2, BACK CENTER, (frames), (offset)
- * MOVE target1: target2, BACK HEAD, (frames), (offset)
+ * MOVE target1: target2, BASE, (frames)
+ * MOVE target1: target2, CENTER, (frames)
+ * MOVE target1: target2, HEAD, (frames)
+ * MOVE target1: target2, FRONT BASE, (frames)
+ * MOVE target1: target2, FRONT CENTER, (frames)
+ * MOVE target1: target2, FRONT HEAD, (frames)
+ * MOVE target1: target2, BACK BASE, (frames)
+ * MOVE target1: target2, BACK CENTER, (frames)
+ * MOVE target1: target2, BACK HEAD, (frames)
  *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * This is a move command. Arguments can be used in the above formats. This
  * action sequence command will move target1 to any of those locations listed
  * in the arguments. If it's towards target2, you must include what location
  * relative to target2 for target1 to travel to.
- * Note: Moving only works with Sideview.
- *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * You may be curious about the optional (offset) argument there for some of
- * the entries. You can insert any of the below arguments in place of (offset):
- *
- *   offset x +100
- *   offset x -200
- *   offset y +300
- *   offset y -400
- *
- * This will allow you to offset the distance to the destination by a flat
- * amount. Positive numbers would indicate forward while negative numbers will
- * indicate backward.
- *
- *   auto offset x +500
- *   auto offset x -600
- *
- * However, if you use either of the above, depending on if the user is an
- * actor or enemy and depending on the target (if there is one) is an actor or
- * an enemy, it will move them into position accordingly.
  *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Usage Example: move user: home, 20
  *                move target: forward, 48, 12
  *                move enemy 1: point, 400, 300
- *                move enemy 2: point, 500, 250, offset x -50, offset y -50
- *                move actor 3: target, front base, 20
- *                move user: target, front base, 20, auto offset x -100
+ *                move actor 2: front base, 20
  *=============================================================================
  *
  *=============================================================================
@@ -423,7 +398,6 @@ Yanfly.ASP2.version = 1.12;
  *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Waits for all battler float changes to finish before going on to the next
  * action in the action sequence.
- * Note: Floating only works with Sideview.
  *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Usage Example: wait for float
  *=============================================================================
@@ -433,7 +407,6 @@ Yanfly.ASP2.version = 1.12;
  *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Waits for all battler jumps to finish before going on to the next action
  * in the action sequence.
- * Note: Jumping only works with Sideview.
  *- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Usage Example: wait for jump
  *=============================================================================
@@ -451,30 +424,7 @@ Yanfly.ASP2.version = 1.12;
  * Changelog
  * ============================================================================
  *
- * Version 1.12:
- * - Updated for RPG Maker MV version 1.5.0.
- * - Added new Offset X, Offset Y, arguments for the Move action sequence.
- *   Check the helpfile for more information.
- *
- * Version 1.11:
- * - Fixed a bug that caused enemies to not mirror the attack animation.
- *
- * Version 1.10a:
- * - Fixed a bug that caused scaled enemies to have their state icons and
- * overlays appear in odd places.
- * - Documentation update for Move, Float, and Jump related action sequences as
- * they only work in Sideview.
- *
- * Version 1.09:
- * - Animations played on a floating or jumping battlers 'Feet' location will
- * now be played at the base of the battler regardless of how high the battler
- * is floating. This is to provide a more consistent animation image.
- *
- * Version 1.08a:
- * - State Icon and State Overlays will now synch together for floating and
- * jumping battlers.
- *
- * Version 1.07c:
+ * Version 1.07a:
  * - Synchronized battle animations to floating and jumping battlers.
  * 
  * Version 1.06:
@@ -607,7 +557,7 @@ BattleManager.actionAttackAnimation = function(actionArgs) {
   var targets = this.makeActionTargets(actionArgs[0]);
   var mirror = false;
   if (actionArgs[1] && actionArgs[1].toUpperCase() === 'MIRROR') mirror = true;
-  if (mirror) {
+  if (mirror && this._subject.isActor()) {
     this._logWindow.showActorAtkAniMirror(this._subject,
       targets.filter(Yanfly.Util.onlyUnique));
   } else {
@@ -825,13 +775,6 @@ BattleManager.actionMotionTarget = function(name, actionArgs) {
         mover.performAttack();
       });
       return false;
-    } else if (['randattack'].contains(cmd)) {
-      var motions = ['thrust', 'swing', 'missile'];
-      movers.forEach(function(mover) {
-        var motion = motions[Math.floor(Math.random() * motions.length)];
-        mover.forceMotion(motion);
-      });
-      return false;
     } else if (['thrust', 'swing', 'missile'].contains(cmd)) {
       motion = cmd;
       movers.forEach(function(mover) {
@@ -898,9 +841,7 @@ BattleManager.actionMove = function(name, actionArgs) {
       var destY = eval(actionArgs[2]) || 0;
       var frames = actionArgs[3] || 12;
       movers.forEach(function(mover) {
-        var offsetX = BattleManager.actionMoveOffsetX(actionArgs, mover, mover);
-        var offsetY = BattleManager.actionMoveOffsetY(actionArgs, mover, mover);
-        mover.battler().moveToPoint(destX + offsetX, destY + offsetY, frames);
+        mover.battler().moveToPoint(destX, destY, frames);
         mover.requestMotion('walk');
         mover.spriteFacePoint(destX, destY);
       });
@@ -942,9 +883,7 @@ BattleManager.actionMove = function(name, actionArgs) {
 	        var destX = this.actionMoveX(mover, targets, 'back');
 	        var destY = this.actionMoveY(mover, targets, 'head');
 	      }
-        var offsetX = this.actionMoveOffsetX(actionArgs, mover, targets[0]);
-        var offsetY = this.actionMoveOffsetY(actionArgs, mover, targets[0]);
-	      mover.battler().moveToPoint(destX + offsetX, destY + offsetY, frames);
+	      mover.battler().moveToPoint(destX, destY, frames);
         mover.spriteFacePoint(destX, destY);
       }
     }
@@ -1024,49 +963,6 @@ BattleManager.actionMoveY = function(mover, targets, value) {
 		}
 		destY = (value === 'center') ? point / max : point;
 		return destY;
-};
-
-BattleManager.actionMoveOffsetX = function(actionArgs, user, target) {
-  if (actionArgs && actionArgs.length > 0) {
-    var length = actionArgs.length;
-    for (var i = 0; i < length; ++i) {
-      var line = actionArgs[i];
-      if (line.match(/AUTO OFFSET X[ ]([\+\-]\d+)/i)) {
-        var value = parseInt(RegExp.$1);
-        if (user.isActor() && !target) {
-          return value * -1;
-        } else if (user.isEnemy() && !target) {
-          return value;
-        } else if (user.isActor() && target.isActor()) {
-          return value;
-        } else if (user.isActor() && target.isEnemy()) {
-          return value * -1;
-        } else if (user.isEnemy() && target.isEnemy()) {
-          return value * -1;
-        } else if (user.isEnemy() && target.isActor()) {
-          return value;
-        }
-      } else if (line.match(/OFFSET X[ ]([\+\-]\d+)/i)) {
-        return parseInt(RegExp.$1);
-      }
-    }
-  }
-  return 0;
-};
-
-BattleManager.actionMoveOffsetY = function(actionArgs, user, target) {
-  if (actionArgs && actionArgs.length > 0) {
-    var length = actionArgs.length;
-    for (var i = 0; i < length; ++i) {
-      var line = actionArgs[i];
-      if (line.match(/AUTO OFFSET Y[ ]([\+\-]\d+)/i)) {
-        return parseInt(RegExp.$1);
-      } else if (line.match(/OFFSET Y[ ]([\+\-]\d+)/i)) {
-        return parseInt(RegExp.$1);
-      }
-    }
-  }
-  return 0;
 };
 
 BattleManager.actionOpacity = function(name, actionArgs) {
@@ -1197,7 +1093,6 @@ Sprite_Battler.prototype.update = function() {
     Yanfly.ASP2.Sprite_Battler_update.call(this);
     if (this._battler) {
       this.updateFloat();
-      this.updateStateSprites();
       this.updateWeapon();
       this.updateOpacity();
     }
@@ -1212,39 +1107,10 @@ Sprite_Battler.prototype.updateFloat = function() {
     var jumpHeight = this.getJumpHeight();
     var height = floatHeight + jumpHeight;
     if (this._mainSprite && this._mainSprite.bitmap) {
-      var rate = this._battler.spriteHeight() / this._mainSprite.height;
-      this._mainSprite.anchor.y = (baseY + height * rate);
+      this._mainSprite.anchor.y = (baseY + height);
       this._weaponSprite.anchor.y = this._mainSprite.anchor.y;
     } else {
       this.anchor.y = (baseY + height);
-    }
-};
-
-Sprite_Battler.prototype.updateStateSprites = function() {
-    if (this._stateIconSprite) {
-      var height = this._battler.spriteHeight() * -1;
-      height -= Sprite_StateIcon._iconHeight;
-      height /= this.scale.y;
-      this._stateIconSprite.y = height;
-    }
-    if (this._stateSprite) {
-      var height = (this._battler.spriteHeight() - 64 * this.scale.y) * -1;
-      this._stateSprite.y = height;
-    }
-    var heightRate = 0;
-    heightRate += this.getFloatHeight();
-    heightRate += this.getJumpHeight();
-    if (Imported.YEP_X_AnimatedSVEnemies) {
-      if (this._enemy && this._enemy.isFloating()) {
-        heightRate += this.addFloatingHeight();
-      };
-    }
-    var height = this._battler.spriteHeight();
-    if (this._stateIconSprite) {
-      this._stateIconSprite.y += Math.ceil(heightRate * -height);
-    }
-    if (this._stateSprite) {
-      this._stateSprite.y += Math.ceil(heightRate * -height);
     }
 };
 
@@ -1326,9 +1192,8 @@ Yanfly.ASP2.Sprite_Animation_updatePosition =
     Sprite_Animation.prototype.updatePosition;
 Sprite_Animation.prototype.updatePosition = function() {
     Yanfly.ASP2.Sprite_Animation_updatePosition.call(this);
-    if ([0, 1].contains(this._animation.position)) {
-      if (this.isBattlerRelated()) this.updateBattlerPosition();
-    }
+    if (this._animation.position === 3) return;
+    if (this.isBattlerRelated()) this.updateBattlerPosition();
 };
 
 Sprite_Animation.prototype.isBattlerRelated = function() {

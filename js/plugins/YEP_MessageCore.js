@@ -422,8 +422,6 @@ Game_System.prototype.setFastFoward = function(state) {
     this._fastForward = state;
 };
 
-
-
 //=============================================================================
 // Game_Message
 //=============================================================================
@@ -1148,7 +1146,6 @@ Window_Message.prototype.processEscapeCharacter = function(code, textState) {
       break;
     }
 };
-
 
 //=============================================================================
 // End of File

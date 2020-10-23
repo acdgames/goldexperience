@@ -1,5 +1,5 @@
 //=============================================================================
-// rpg_objects.js v1.5.2
+// rpg_objects.js v1.6.1
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -563,7 +563,7 @@ Game_Variables.prototype.value = function(variableId) {
 Game_Variables.prototype.setValue = function(variableId, value) {
     if (variableId > 0 && variableId < $dataSystem.variables.length) {
         if (typeof value === 'number') {
-            value = Math.floor(value);
+            //value = Math.floor(value);
         }
         this._data[variableId] = value;
         this.onChange();
@@ -1382,35 +1382,8 @@ Game_Action.prototype.isMagical = function() {
     return this.item().hitType === Game_Action.HITTYPE_MAGICAL;
 };
 
-
 Game_Action.prototype.isAttack = function() {
-	var elements = this.getItemElements();
-    if (this.item() === $dataSkills[this.subject().attackSkillId()]) {
-    return true;
-    } else if (elements.contains(1)) {
-    return true;
-	} else {
-	return false;
-	};
-};
-
-Game_Action.prototype.isAttackSkill = function() {
-	var elements = this.getItemElements();
-    return (elements.contains(2));
-};
-
-Game_Action.prototype.isAdaptiveType = function() {
-	var elements = this.getItemElements();
-    return (elements.contains(3));
-};
-
-Game_Action.prototype.isAdaptiveDamage = function() {
-	var elements = this.getItemElements();
-    return (elements.contains(4));
-};
-
-Game_Action.prototype.isSpell = function() {
-    return !this.item().damage.elementId == 1 && !this.item().damage.elementId == 2;
+    return this.item() === $dataSkills[this.subject().attackSkillId()];
 };
 
 Game_Action.prototype.isGuard = function() {
@@ -3071,7 +3044,7 @@ Game_Battler.prototype.removeState = function(stateId) {
         }
         this.eraseState(stateId);
         this.refresh();
-        this._result.pushRemovedState(stateId); //REMOVAL FLAG
+        this._result.pushRemovedState(stateId);
     }
 };
 
@@ -5977,12 +5950,6 @@ Game_Map.prototype.autotileType = function(x, y, z) {
 };
 
 Game_Map.prototype.isPassable = function(x, y, d) {
-	if (x > $dataMap.width || y > $dataMap.height || x < 0 || y < 0) {
-		return false;
-	};
-    if ($gameMap.regionId(x,y) == 9) {
-		return false;
-    }
     return this.checkPassage(x, y, (1 << (d / 2 - 1)) & 0x0f);
 };
 
@@ -6095,9 +6062,11 @@ Game_Map.prototype.doScroll = function(direction, distance) {
 };
 
 Game_Map.prototype.updateEvents = function() {
+	if ($gameTemp.isStopMapEventMovement() == false) {
     this.events().forEach(function(event) {
         event.update();
     });
+	}
     this._commonEvents.forEach(function(event) {
         event.update();
     });
@@ -6296,7 +6265,7 @@ Game_CharacterBase.prototype.initMembers = function() {
     this._moveFrequency = 6;
     this._opacity = 255;
     this._blendMode = 0;
-    this._direction = 2;
+    this._direction = 6;
     this._pattern = 1;
     this._priorityType = 1;
     this._tileId = 0;
@@ -6435,9 +6404,6 @@ Game_CharacterBase.prototype.canPass = function(x, y, d) {
     }
     if (this.isCollidedWithCharacters(x2, y2)) {
         return false;
-    }
-    if ($gameMap.regionId(x,y) == 9) {
-		return false;
     }
     return true;
 };
@@ -6611,6 +6577,12 @@ Game_CharacterBase.prototype.animationWait = function() {
 };
 
 Game_CharacterBase.prototype.updateAnimationCount = function() {
+    if (this !== $gamePlayer && $gameTemp.isStopMapEventMovement()) {
+    return;
+    }
+    if (this == $gamePlayer && $gameTemp.isStopMapPlayerMovement()) {
+    return;
+    }
     if (this.isMoving() && this.hasWalkAnime()) {
         this._animationCount += 1.5;
     } else if (this.hasStepAnime() || !this.isOriginalPattern()) {
@@ -6619,10 +6591,17 @@ Game_CharacterBase.prototype.updateAnimationCount = function() {
 };
 
 Game_CharacterBase.prototype.updatePattern = function() {
+	var plus = 1;
+    if (this !== $gamePlayer && $gameTemp.isStopMapEventMovement()) {
+    plus = 0;
+    }
+    if (this == $gamePlayer && $gameTemp.isStopMapPlayerMovement()) {
+    plus = 0;
+    }
     if (!this.hasStepAnime() && this._stopCount > 0) {
         this.resetPattern();
     } else {
-        this._pattern = (this._pattern + 1) % this.maxPattern();
+        this._pattern = (this._pattern + plus) % this.maxPattern();
     }
 };
 
@@ -6974,6 +6953,12 @@ Game_Character.prototype.updateStop = function() {
 };
 
 Game_Character.prototype.updateRoutineMove = function() {
+    if (this !== $gamePlayer && $gameTemp.isStopMapEventMovement()) {
+    return;
+    }
+    if (this == $gamePlayer && $gameTemp.isStopMapPlayerMovement()) {
+    return;
+    }
     if (this._waitCount > 0) {
         this._waitCount--;
     } else {
@@ -8898,7 +8883,11 @@ Game_Interpreter.prototype.updateWait = function() {
 
 Game_Interpreter.prototype.updateWaitCount = function() {
     if (this._waitCount > 0) {
+    if (this !== $gamePlayer && $gameTemp.isStopMapEventMovement() || this == $gamePlayer && $gameTemp.isStopMapPlayerMovement()) {
+		this._waitCount += 0;
+    } else {
         this._waitCount--;
+	}
         return true;
     }
     return false;
@@ -9375,7 +9364,7 @@ Game_Interpreter.prototype.command413 = function() {
 };
 
 // Break Loop
-Game_Interpreter.prototype.command113 = function () {
+Game_Interpreter.prototype.command113 = function() {
     var depth = 0;
     while (this._index < this._list.length - 1) {
         this._index++;
@@ -9384,7 +9373,7 @@ Game_Interpreter.prototype.command113 = function () {
         if (command.code === 112)
             depth++;
 
-        if (command.code === 413 && command.indent < this._indent) {
+        if (command.code === 413) {
             if (depth > 0)
                 depth--;
             else

@@ -1885,7 +1885,7 @@ Sprite_Balloon.prototype.updateFrame = function() {
 };
 
 Sprite_Balloon.prototype.speed = function() {
-    return 8;
+    return 4;
 };
 
 Sprite_Balloon.prototype.waitTime = function() {

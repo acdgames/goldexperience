@@ -1,0 +1,111 @@
+<animation-list sheet="Clear_extra">
+    <animation id="stand_right" rate="10">
+        <frame x="0" y="0" width="96" height="96" />
+        <frame x="96" y="0"  width="96" height="96" />
+        <frame x="192" y="0"  width="96" height="96" />
+        <frame x="288" y="0"  width="96" height="96" />
+        <frame x="384" y="0"  width="96" height="96" />
+        <frame x="480" y="0"  width="96" height="96" />
+        <frame x="576" y="0"  width="96" height="96" />
+        <frame x="672" y="0"  width="96" height="96" />
+    </animation>
+    <animation id="stand_left" sx="-1.0" rate="10">
+        <frame x="0" y="0" width="96" height="96" />
+        <frame x="96" y="0"  width="96" height="96" />
+        <frame x="192" y="0"  width="96" height="96" />
+        <frame x="288" y="0"  width="96" height="96" />
+        <frame x="384" y="0"  width="96" height="96" />
+        <frame x="480" y="0"  width="96" height="96" />
+        <frame x="576" y="0"  width="96" height="96" />
+        <frame x="672" y="0"  width="96" height="96" />
+    </animation>
+    <animation id="walk_right" rate="15">
+        <frame x="0" y="96" width="96" height="96" />
+        <frame x="96" y="96"  width="96" height="96" />
+        <frame x="192" y="96"  width="96" height="96" />
+        <frame x="288" y="96"  width="96" height="96" />
+        <frame x="384" y="96"  width="96" height="96" />
+        <frame x="480" y="96"  width="96" height="96" />
+        <frame x="576" y="96"  width="96" height="96" />
+        <frame x="672" y="96"  width="96" height="96" />
+    </animation>
+    <animation id="walk_left" sx="-1.0" rate="15">
+        <frame x="0" y="96" width="96" height="96" />
+        <frame x="96" y="96"  width="96" height="96" />
+        <frame x="192" y="96"  width="96" height="96" />
+        <frame x="288" y="96"  width="96" height="96" />
+        <frame x="384" y="96"  width="96" height="96" />
+        <frame x="480" y="96"  width="96" height="96" />
+        <frame x="576" y="96"  width="96" height="96" />
+        <frame x="672" y="96"  width="96" height="96" />
+    </animation>
+    <animation id="rise_right" rate="15">
+        <frame x="192" y="192" width="96" height="96" />
+        <frame x="288" y="192"  width="96" height="96" />
+        <frame x="384" y="192"  width="96" height="96" />
+    </animation>
+    <animation id="rise_left" sx="-1.0" rate="15">
+        <frame x="192" y="192" width="96" height="96" />
+        <frame x="288" y="192"  width="96" height="96" />
+        <frame x="384" y="192"  width="96" height="96" />
+    </animation>
+    <animation id="peak_right" rate="5">
+        <frame x="480" y="192" width="96" height="96" />
+        <frame x="576" y="192"  width="96" height="96" />
+    </animation>
+    <animation id="peak_left" sx="-1.0" rate="5">
+        <frame x="480" y="192" width="96" height="96" />
+        <frame x="576" y="192"  width="96" height="96" />
+    </animation>
+    <animation id="fall_right" rate="15">
+        <frame x="672" y="192" width="96" height="96" />
+        <frame x="768" y="192"  width="96" height="96" />
+        <frame x="864" y="192"  width="96" height="96" />
+    </animation>
+    <animation id="fall_left" sx="-1.0" rate="15">
+        <frame x="672" y="192" width="96" height="96" />
+        <frame x="768" y="192"  width="96" height="96" />
+        <frame x="864" y="192"  width="96" height="96" />
+    </animation>
+    <animation id="land_right" rate="5">
+        <frame x="960" y="192" width="96" height="96" />
+        <frame x="1056" y="192"  width="96" height="96" />
+    </animation>
+    <animation id="land_left" sx="-1.0" rate="5">
+        <frame x="960" y="192" width="96" height="96" />
+        <frame x="1056" y="192"  width="96" height="96" />
+    </animation>
+</animation-list>
+<script>
+if ($params.state.jumping > 0) {
+switch ( $params.direction4 ) {
+	default: return { animation: "rise_right", oneShot: false };
+	case 4: return { animation: "rise_left", oneShot: false };
+}
+} else if ( $params.state.jumppeak > 0 ) {
+switch ( $params.direction4 ) {
+	default: return { animation: "peak_right", oneShot: true };
+	case 4: return { animation: "peak_left", oneShot: true };
+}
+} else if ($params.state.falling > 0) {
+switch ( $params.direction4 ) {
+	default: return { animation: "fall_right", oneShot: false };
+	case 4: return { animation: "fall_left", oneShot: false };
+}
+} else if ($params.state.landing > 0) {
+switch ( $params.direction4 ) {
+	default: return { animation: "land_right", oneShot: true };
+	case 4: return { animation: "land_left", oneShot: true };
+}
+} else if ($params.state.moving > 1) {
+switch ( $params.direction4 ) {
+	default: return { animation: "walk_right", oneShot: false };
+	case 4: return { animation: "walk_left", oneShot: false };
+}
+} else {
+switch ( $params.direction4 ) {
+	default: return { animation: "stand_right", oneShot: false };
+	case 4: return { animation: "stand_left", oneShot: false };
+}
+}
+</script>
