@@ -470,10 +470,11 @@ Game_Battler.prototype.lifeSteal = function(damage, type, target, rate, flat) {
     rate *= 1 - this.getLifeStealRate(type + 'Rate', target);
     flat += this.getLifeStealFlat(type + 'Flat', target);
     if (Yanfly.Param.LSHPNeg) {
-      var lifeSteal = Math.floor(damage * (1 - rate) + flat);
+      var lifeSteal = Math.ceil(damage * (1 - rate) + flat);
     } else {
-      var lifeSteal = Math.max(0, Math.floor(damage * (1 - rate) + flat));
+      var lifeSteal = Math.max(0, Math.ceil(damage * (1 - rate) + flat));
     }
+	lifeSteal = Math.round(lifeSteal * this.rec);
     if (Yanfly.Param.LSHPOver) lifeSteal = Math.min(lifeSteal, damage);
     if (lifeSteal <= 0) return;
     this.gainHp(lifeSteal);
@@ -486,9 +487,9 @@ Game_Battler.prototype.magicSteal = function(damage, type, target, rate, flat) {
     rate *= 1 - this.getLifeStealRate(type + 'Rate', target);
     flat += this.getLifeStealFlat(type + 'Flat', target);
     if (Yanfly.Param.LSMPNeg) {
-      var lifeSteal = Math.floor(damage * (1 - rate) + flat);
+      var lifeSteal = Math.ceil(damage * (1 - rate) + flat);
     } else {
-      var lifeSteal = Math.max(0, Math.floor(damage * (1 - rate) + flat));
+      var lifeSteal = Math.max(0, Math.ceil(damage * (1 - rate) + flat));
     }
     if (Yanfly.Param.LSMPOver) lifeSteal = Math.min(lifeSteal, damage);
     if (lifeSteal <= 0) return;

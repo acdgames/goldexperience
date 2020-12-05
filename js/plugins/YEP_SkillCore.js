@@ -8,10 +8,11 @@ Imported.YEP_SkillCore = true;
 
 var Yanfly = Yanfly || {};
 Yanfly.Skill = Yanfly.Skill || {};
+Yanfly.Skill.version = 1.13;
 
 //=============================================================================
 /*:
- * @plugindesc v1.06a Skills are now given more functions and the ability
+ * @plugindesc v1.13 Skills are now given more functions and the ability
  * to require different types of costs.
  * @author Yanfly Engine Plugins
  *
@@ -19,16 +20,27 @@ Yanfly.Skill = Yanfly.Skill || {};
  * @default
  *
  * @param Cost Padding
+ * @parent ---General---
+ * @type number
+ * @min 0
  * @desc If a skill has multiple costs, this is the amount of pixels
  * used as padding in between the costs.
  * @default 4
  *
  * @param Command Alignment
+ * @parent ---General---
+ * @type combo
+ * @option left
+ * @option center
+ * @option right
  * @desc Adjusts the text alignment of the skill type window.
  * left     center     right
  * @default center
  *
  * @param Window Columns
+ * @parent ---General---
+ * @type number
+ * @min 1
  * @desc Choose how many columns to use for the skill window.
  * Default: 2
  * @default 2
@@ -37,21 +49,32 @@ Yanfly.Skill = Yanfly.Skill || {};
  * @default
  *
  * @param HP Format
+ * @parent ---HP Costs---
  * @desc Adjusts the way HP cost appears in the skill list window.
  * %1 - Cost     %2 - HP
  * @default %1%2
  *
  * @param HP Font Size
+ * @parent ---HP Costs---
+ * @type number
+ * @min 1
  * @desc Adjusts the font size used to display HP.
  * Default: 28
  * @default 20
  *
  * @param HP Text Color
+ * @parent ---HP Costs---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Adjusts the text color used from the Window skin for HP.
  * Default: 21
  * @default 18
  *
  * @param HP Icon
+ * @parent ---HP Costs---
+ * @type number
+ * @min 0
  * @desc Choose what icon to use to represent HP costs.
  * Use 0 if you wish to not use an icon.
  * @default 162
@@ -60,21 +83,32 @@ Yanfly.Skill = Yanfly.Skill || {};
  * @default
  *
  * @param MP Format
+ * @parent ---MP Costs---
  * @desc Adjusts the way MP cost appears in the skill list window.
  * %1 - Cost     %2 - MP
  * @default %1%2
  *
  * @param MP Font Size
+ * @parent ---MP Costs---
+ * @type number
+ * @min 1
  * @desc Adjusts the font size used to display MP.
  * Default: 28
  * @default 20
  *
  * @param MP Text Color
+ * @parent ---MP Costs---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Adjusts the text color used from the Window skin for MP.
  * Default: 23
  * @default 23
  *
  * @param MP Icon
+ * @parent ---MP Costs---
+ * @type number
+ * @min 0
  * @desc Choose what icon to use to represent MP costs.
  * Use 0 if you wish to not use an icon.
  * @default 165
@@ -83,21 +117,32 @@ Yanfly.Skill = Yanfly.Skill || {};
  * @default
  *
  * @param TP Format
+ * @parent ---TP Costs---
  * @desc Adjusts the way TP cost appears in the skill list window.
  * %1 - Cost     %2 - TP
  * @default %1%2
  *
  * @param TP Font Size
+ * @parent ---TP Costs---
+ * @type number
+ * @min 1
  * @desc Adjusts the font size used to display TP.
  * Default: 28
  * @default 20
  *
  * @param TP Text Color
+ * @parent ---TP Costs---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc Adjusts the text color used from the Window skin for TP.
  * Default: 29
  * @default 29
  *
  * @param TP Icon
+ * @parent ---TP Costs---
+ * @type number
+ * @min 0
  * @desc Choose what icon to use to represent TP costs.
  * Use 0 if you wish to not use an icon.
  * @default 164
@@ -158,7 +203,8 @@ Yanfly.Skill = Yanfly.Skill || {};
  *   <Hide if Learned Skill: x to y>
  *   Will hide and disable this skill if skill x has been learned. If multiple
  *   skills are listed, the skill will be hidden and disabled if any one of the
- *   listed skills have been learned.
+ *   listed skills have been learned. This will ONLY apply to skills that have
+ *   been learned and not skills added through traits.
  *
  * ============================================================================
  * Gauge Swapping
@@ -309,18 +355,66 @@ Yanfly.Skill = Yanfly.Skill || {};
  * if the skill does land.
  *
  * Skill and Item Notetags:
- *   <Before Eval>    <Pre-Damage Eval>    <Post-Damage Eval>    <After Eval>
- *    code             code                 code                  code
- *    code             code                 code                  code
- *   </Before Eval>   </Pre-Damage Eval>   </Post-Damage Eval>   </After Eval>
+ *   <Before Eval>
+ *    code
+ *    code
+ *   </Before Eval>
+ *
+ *   <Pre-Damage Eval>
+ *    code
+ *    code
+ *   </Pre-Damage Eval>
+ *
+ *   <Post-Damage Eval>
+ *    code
+ *    code
+ *   </Post-Damage Eval>
+ *
+ *   <After Eval>
+ *    code
+ *    code
+ *   </After Eval>
  *   If you wish to use custom effects for your skill, you can insert the
  *   respective notetags into the skill (or item) noteboxes and it will run the
  *   code that appears in between the tags. However, using any form of comments
  *   in this tag will block out code that follows.
  *
+ *   Those using the <Pre-Damage Eval> and <Post-Damage Eval> are able to make
+ *   use of the damage to be dealt and the damage that has been dealt through
+ *   the 'value' variable. The <Pre-Damage Eval> notetag is capable of altering
+ *   the 'value' variable and return it to have damage affected by its code.
+ *
  * ============================================================================
  * Changelog
  * ============================================================================
+ *
+ * Version 1.13:
+ * - Bypass the isDevToolsOpen() error when bad code is inserted into a script
+ * call or custom Lunatic Mode code segment due to updating to MV 1.6.1.
+ *
+ * Version 1.12:
+ * - Updated for RPG Maker MV version 1.5.0.
+ *
+ * Version 1.11a:
+ * - Lunatic Mode fail safes added.
+ * - Documentation fix for the help file. Lunatic Mode tags didn't end right.
+ * The help file is now updated to show the correct notetags.
+ *
+ * Version 1.10b:
+ * - Fixed a visual bug when using text code font changing for custom skill
+ * cost display.
+ * - <Hide if Learned Skill: x> documentation updated.
+ * - Compatibility update for future plugins.
+ *
+ * Version 1.09:
+ * - The <Pre-Damage Eval> notetag now has the ability alter damage dealt. The
+ * 'value' variable refers to and returns the damage affected by the action.
+ *
+ * Version 1.08:
+ * - Updated for RPG Maker MV version 1.1.0.
+ *
+ * Version 1.07:
+ * - Fixed a bug that prevented immortal actors at 0 HP from using skills.
  *
  * Version 1.06a:
  * - Added <Hide in Battle> and <Hide in Field> notetags.
@@ -381,7 +475,8 @@ Yanfly.Icon.Hp = Number(Yanfly.Parameters['HP Icon']);
 
 Yanfly.Skill.DataManager_isDatabaseLoaded = DataManager.isDatabaseLoaded;
 DataManager.isDatabaseLoaded = function() {
-    if (!Yanfly.Skill.DataManager_isDatabaseLoaded.call(this)) return false;
+  if (!Yanfly.Skill.DataManager_isDatabaseLoaded.call(this)) return false;
+  if (!Yanfly._loaded_YEP_SkillCore) {
     this.processSkillNotetags($dataSkills);
     this.processObjectNotetags($dataSkills);
     this.processObjectNotetags($dataItems);
@@ -390,7 +485,9 @@ DataManager.isDatabaseLoaded = function() {
     this.processGSCNotetags2($dataWeapons);
     this.processGSCNotetags2($dataArmors);
     this.processGSCNotetags2($dataStates);
-    return true;
+    Yanfly._loaded_YEP_SkillCore = true;
+  }
+  return true;
 };
 
 DataManager.processSkillNotetags = function(group) {
@@ -663,7 +760,12 @@ Game_BattlerBase.prototype.meetsCustomShowEval = function(skill) {
     var subject = this;
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    eval(skill.costShowEval);
+    var code = skill.costShowEval;
+    try {
+      eval(code);
+    } catch (e) {
+      Yanfly.Util.displayError(e, code, 'SKILL CUSTOM SHOW EVAL ERROR');
+    }
     return visible;
 };
 
@@ -676,7 +778,12 @@ Game_BattlerBase.prototype.meetsSkillConditionsEval = function(skill) {
     var subject = this;
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    eval(skill.requireEval);
+    var code = skill.requireEval;
+    try {
+      eval(code);
+    } catch (e) {
+      Yanfly.Util.displayError(e, code, 'SKILL CUSTOM REQUIRE EVAL ERROR');
+    }
     return value;
 };
 
@@ -689,7 +796,12 @@ Game_BattlerBase.prototype.skillHpCost = function(skill) {
   var s = $gameSwitches._data;
   var v = $gameVariables._data;
   cost += this.mhp * skill.hpCostPer;
-  eval(skill.hpCostEval);
+  var code = skill.hpCostEval;
+  try {
+    eval(code);
+  } catch (e) {
+    Yanfly.Util.displayError(e, code, 'SKILL CUSTOM HP COST ERROR');
+  }
   return Math.max(0, Math.floor(cost));
 };
 
@@ -702,7 +814,12 @@ Game_BattlerBase.prototype.skillMpCost = function(skill) {
   var s = $gameSwitches._data;
   var v = $gameVariables._data;
   cost += this.mmp * skill.mpCostPer;
-  eval(skill.mpCostEval);
+  var code = skill.mpCostEval;
+  try {
+    eval(code);
+  } catch (e) {
+    Yanfly.Util.displayError(e, code, 'SKILL CUSTOM MP COST ERROR');
+  }
   return Math.max(0, Math.floor(cost * this.mcr));
 };
 
@@ -715,7 +832,12 @@ Game_BattlerBase.prototype.skillTpCost = function(skill) {
   var s = $gameSwitches._data;
   var v = $gameVariables._data;
   cost += this.maxTp() * skill.tpCostPer;
-  eval(skill.tpCostEval);
+  var code = skill.tpCostEval;
+  try {
+    eval(code);
+  } catch (e) {
+    Yanfly.Util.displayError(e, code, 'SKILL CUSTOM TP COST ERROR');
+  }
   return Math.max(0, Math.floor(cost));
 };
 
@@ -727,7 +849,9 @@ Game_BattlerBase.prototype.canPaySkillCost = function(skill) {
 };
 
 Game_BattlerBase.prototype.canPaySkillHpCost = function(skill) {
-    return this._hp > this.skillHpCost(skill);
+    var cost = this.skillHpCost(skill);
+    if (cost <= 0) return true;
+    return this._hp > cost;
 };
 
 Yanfly.Skill.Game_BattlerBase_paySkillCost =
@@ -750,7 +874,12 @@ Game_BattlerBase.prototype.paySkillEvalCost = function(skill) {
     var subject = this;
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    eval(skill.executeEval);
+    var code = skill.executeEval;
+    try {
+      eval(code);
+    } catch (e) {
+      Yanfly.Util.displayError(e, code, 'SKILL PAY COST EVAL ERROR');
+    }
 };
 
 Game_BattlerBase.prototype.gauge1 = function() {
@@ -941,6 +1070,17 @@ Game_Enemy.prototype.gaugeIcon3 = function() {
     return this.enemy().gaugeIcon3;
 };
 
+if (!Game_Enemy.prototype.skills) {
+    Game_Enemy.prototype.skills = function() {
+      var skills = []
+      for (var i = 0; i < this.enemy().actions.length; ++i) {
+        var skill = $dataSkills[this.enemy().actions[i].skillId];
+        if (skill) skills.push(skill);
+      }
+      return skills;
+    }
+};
+
 //=============================================================================
 // Game_Action
 //=============================================================================
@@ -965,7 +1105,12 @@ Game_Action.prototype.applyBeforeEval = function(target) {
     var subject = this.subject();
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    eval(item.customBeforeEval);
+    var code = item.customBeforeEval;
+    try {
+      eval(code);
+    } catch (e) {
+      Yanfly.Util.displayError(e, code, 'BEFORE EVAL ERROR');
+    }
 };
 
 Game_Action.prototype.applyAfterEffect = function(target) {
@@ -979,13 +1124,18 @@ Game_Action.prototype.applyAfterEval = function(target) {
     var subject = this.subject();
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    eval(item.customAfterEval);
+    var code = item.customAfterEval;
+    try {
+      eval(code);
+    } catch (e) {
+      Yanfly.Util.displayError(e, code, 'AFTER EVAL ERROR');
+    }
 };
 
 Yanfly.Skill.Game_Action_executeDamage = Game_Action.prototype.executeDamage;
 Game_Action.prototype.executeDamage = function(target, value) {
     this.applyPreDamageEffect(target, value);
-    this.applyPreDamageEval(target, value);
+    value = this.applyPreDamageEval(target, value);
     Yanfly.Skill.Game_Action_executeDamage.call(this, target, value);
     this.applyPostDamageEffect(target, value);
     this.applyPostDamageEval(target, value);
@@ -1002,7 +1152,13 @@ Game_Action.prototype.applyPreDamageEval = function(target, value) {
     var subject = this.subject();
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    eval(item.customPreDamageEval);
+    var code = item.customPreDamageEval;
+    try {
+      eval(code);
+    } catch (e) {
+      Yanfly.Util.displayError(e, code, 'PRE-DAMAGE EVAL ERROR');
+    }
+    return value;
 };
 
 Game_Action.prototype.applyPostDamageEffect = function(target, value) {
@@ -1016,7 +1172,12 @@ Game_Action.prototype.applyPostDamageEval = function(target, value) {
     var subject = this.subject();
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    eval(item.customPostDamageEval);
+    var code = item.customPostDamageEval;
+    try {
+      eval(code);
+    } catch (e) {
+      Yanfly.Util.displayError(e, code, 'POST-DAMAGE EVAL ERROR');
+    }
 };
 
 //=============================================================================
@@ -1057,7 +1218,7 @@ Window_Base.prototype.drawActorTp = function(actor, x, y, width) {
 };
 
 //=============================================================================
-// Window_SkillList
+// Window_SkillType
 //=============================================================================
 
 Window_SkillType.prototype.itemTextAlign = function() {
@@ -1153,6 +1314,7 @@ Window_SkillList.prototype.drawCustomDisplayCost = function(skill, wx, wy, dw) {
     this.runDisplayEvalCost(skill);
     if (skill.customCostText === '') return dw;
     var width = this.textWidthEx(skill.customCostText);
+    this.resetFontSettings();
     this.drawTextEx(skill.customCostText, wx - width + dw, wy);
     var returnWidth = dw - width - Yanfly.Param.SCCCostPadding;
     this.resetFontSettings();
@@ -1167,7 +1329,12 @@ Window_SkillList.prototype.runDisplayEvalCost = function(skill) {
     var subject = this._actor;
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    eval(skill.costdisplayEval);
+    var code = skill.costdisplayEval;
+    try {
+      eval(code);
+    } catch (e) {
+      Yanfly.Util.displayError(e, code, 'SKILL COST DISPLAY EVAL ERROR');
+    }
 };
 
 Window_SkillList.prototype.drawOtherCost = function(skill, wx, wy, dw) {
@@ -1184,6 +1351,18 @@ if (!Yanfly.Util.toGroup) {
     Yanfly.Util.toGroup = function(inVal) {
         return inVal;
     }
+};
+
+Yanfly.Util.displayError = function(e, code, message) {
+  console.log(message);
+  console.log(code || 'NON-EXISTENT');
+  console.error(e);
+  if (Utils.RPGMAKER_VERSION && Utils.RPGMAKER_VERSION >= "1.6.0") return;
+  if (Utils.isNwjs() && Utils.isOptionValid('test')) {
+    if (!require('nw.gui').Window.get().isDevToolsOpen()) {
+      require('nw.gui').Window.get().showDevTools();
+    }
+  }
 };
 
 //=============================================================================

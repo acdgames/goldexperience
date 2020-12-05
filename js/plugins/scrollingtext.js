@@ -35,7 +35,7 @@ Window_Help.prototype.refresh = function(doubleLen) {
        (this._offputScroll < 0 ? this._offputScroll : 0), //x
        0 // y
     );
-   this._offputScroll -= 1.5; // scroll speed
+   this._offputScroll -= 2.0; // scroll speed
    if(Math.abs(this._offputScroll) >= this.textWidth(this._text + space))
        this._offputScroll = this._scrollPause;
 };

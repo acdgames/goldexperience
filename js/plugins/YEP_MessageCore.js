@@ -422,6 +422,8 @@ Game_System.prototype.setFastFoward = function(state) {
     this._fastForward = state;
 };
 
+
+
 //=============================================================================
 // Game_Message
 //=============================================================================
@@ -750,10 +752,14 @@ Window_Base.prototype.textWidthExCheck = function(text) {
 // Window_Help
 //=============================================================================
 
+Window_Help.prototype.standardFontSize = function() {
+    return 18;
+};
+
 Yanfly.Message.Window_Help_setItem = Window_Help.prototype.setItem;
 Window_Help.prototype.setItem = function(item) {
 		if (eval(Yanfly.Param.MSGDescWrap)) {
-			this.setText(item ? '<WordWrap>' + item.description : '');
+		this.setText(item ? '<WordWrap>' + item.description : '');
 		} else {
 			Yanfly.Message.Window_Help_setItem.call(this, item);
 		}
@@ -1146,6 +1152,7 @@ Window_Message.prototype.processEscapeCharacter = function(code, textState) {
       break;
     }
 };
+
 
 //=============================================================================
 // End of File

@@ -8,10 +8,11 @@ Imported.YEP_BuffsStatesCore = true;
 
 var Yanfly = Yanfly || {};
 Yanfly.BSC = Yanfly.BSC || {};
+Yanfly.BSC.version = 1.16;
 
 //=============================================================================
  /*:
- * @plugindesc v1.06 Alter the basic mechanics behind buffs and states
+ * @plugindesc v1.16 Alter the basic mechanics behind buffs and states
  * that aren't adjustable within the RPG Maker editor.
  * @author Yanfly Engine Plugins
  *
@@ -19,69 +20,201 @@ Yanfly.BSC = Yanfly.BSC || {};
  * @default
  *
  * @param Show Turns
+ * @parent ---Turn Indicator---
+ * @type boolean
+ * @on Show
+ * @off Hide
  * @desc Show turns remaining for buffs and states?
  * NO - false     YES - true
  * @default true
  *
  * @param Font Size
+ * @parent ---Turn Indicator---
+ * @type number
+ * @min 1
  * @desc The default font size used for turn count.
  * Default: 28
  * @default 16
  *
  * @param Turn Alignment
+ * @parent ---Turn Indicator---
+ * @type combo
+ * @option left
+ * @option center
+ * @option right
  * @desc How do you want to align the turns?
  * left     center     right
  * @default right
  *
  * @param Turn Buffer X
+ * @parent ---Turn Indicator---
  * @desc Buffer the x position of the turn by this much.
  * @default -3
  *
  * @param Turn Buffer Y
+ * @parent ---Turn Indicator---
  * @desc Buffer the y position of the turn by this much.
  * @default -6
  *
  * @param State Color
+ * @parent ---Turn Indicator---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc The default text color used for state turns.
  * @default 0
  *
  * @param Buff Color
+ * @parent ---Turn Indicator---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc The default text color used for buffs.
  * @default 24
  *
  * @param Debuff Color
+ * @parent ---Turn Indicator---
+ * @type number
+ * @min 0
+ * @max 31
  * @desc The default text color used for debuffs.
  * @default 2
+ *
+ * @param ---Enemy Icons---
+ * @default
+ *
+ * @param Show Enemy Icons
+ * @parent ---Enemy Icons---
+ * @type boolean
+ * @on Show
+ * @off Hide
+ * @desc Do you wish to show enemy state icons?
+ * NO - false     YES - true
+ * @default true
+ *
+ * @param Enemy Buff Turn
+ * @parent ---Enemy Icons---
+ * @type boolean
+ * @on Show
+ * @off Hide
+ * @desc Do you wish to show enemy buff turns remaining?
+ * NO - false     YES - true
+ * @default true
+ *
+ * @param Enemy State Turn
+ * @parent ---Enemy Icons---
+ * @type boolean
+ * @on Show
+ * @off Hide
+ * @desc Do you wish to show enemy state turns remaining?
+ * NO - false     YES - true
+ * @default true
+ *
+ * @param Enemy State Counter
+ * @parent ---Enemy Icons---
+ * @type boolean
+ * @on Show
+ * @off Hide
+ * @desc Do you wish to show enemy state counters?
+ * NO - false     YES - true
+ * @default true
  *
  * @param ---Buff Settings---
  * @default
  *
  * @param Default Limit
+ * @parent ---Buff Settings---
+ * @type number
+ * @min 1
  * @desc The default number of times you can stack buff/debuff.
  * Default: 2
  * @default 4
  *
  * @param Maximum Limit
+ * @parent ---Buff Settings---
+ * @type number
+ * @min 1
  * @desc The maximum number of times you can stack buff/debuff.
  * @default 8
  *
  * @param Buff Formula
+ * @parent ---Buff Settings---
  * @desc The formula used for buff rate calculation.
  * Default: this._buffs[paramId] * 0.25 + 1.0
  * @default this._buffs[paramId] * 0.25 + 1.0
+ *
+ * @param Show Buff Rate
+ * @parent ---Buff Settings---
+ * @type boolean
+ * @on Show
+ * @off Hide
+ * @desc Shows the buff/debuff rate for buffs and debuffs.
+ * YES - true     NO - false
+ * @default false
  *
  * @param ---State Settings---
  * @default
  *
  * @param Reapply Rules
+ * @parent ---State Settings---
+ * @type select
+ * @option Ignore
+ * @value 0
+ * @option Reset
+ * @value 1
+ * @option Add
+ * @value 2
  * @desc The rules when reapplying an already existing state:
  * 0 - Ignore     1 - Reset     2 - Add
  * @default 1
  *
  * @param Show Enemy Turns
+ * @parent ---State Settings---
+ * @type boolean
+ * @on Show
+ * @off Hide
  * @desc If using Battle Engine Core, show turns in help window?
  * NO - false     YES - true
  * @default true
+ *
+ * @param ---Counter Settings---
+ * @default
+ *
+ * @param Counter Font Size
+ * @parent ---Counter Settings---
+ * @type number
+ * @min 1
+ * @desc The default font size used for state counters.
+ * Default: 28
+ * @default 16
+ *
+ * @param Counter Alignment
+ * @parent ---Counter Settings---
+ * @type combo
+ * @option left
+ * @option center
+ * @option right
+ * @desc How do you want to align the counter?
+ * left     center     right
+ * @default center
+ *
+ * @param Counter Buffer X
+ * @parent ---Counter Settings---
+ * @desc Buffer the x position of the counter by this much.
+ * @default 0
+ *
+ * @param Counter Buffer Y
+ * @parent ---Counter Settings---
+ * @desc Buffer the y position of the counter by this much.
+ * @default 8
+ *
+ * @param Counter Color
+ * @parent ---Counter Settings---
+ * @type number
+ * @min 0
+ * @max 31
+ * @desc The default text color used for state counters.
+ * @default 0
  *
  * @help
  * ============================================================================
@@ -446,8 +579,110 @@ Yanfly.BSC = Yanfly.BSC || {};
  *   will occur after hit/miss/evade confirmation and damage execution.
  *
  * ============================================================================
+ * Lunatic Mode - State Counters
+ * ============================================================================
+ *
+ * State Counters are newly added features to suplement states. They are used
+ * purely in custom manners, which means they do not serve any function by
+ * themselves. State Counters can be used to note a number of stacks, a stored
+ * percentage, display a message, etc. All of it is purely updated based on
+ * JavaScript functions.
+ *
+ * ---
+ *
+ * There are a couple of notetags you can use for states:
+ *
+ *   <Counter Font Size: x>
+ *   This adjusts the font size of the counter.
+ *
+ *   <Counter Alignment: left>
+ *   <Counter Alignment: center>
+ *   <Counter Alignment: right>
+ *   This changes the alignment of the counter text.
+ *
+ *   <Counter Buffer X: +x>
+ *   <Counter Buffer X: -x>
+ *   This adjusts the X buffer range for the counter text.
+ *
+ *   <Counter Buffer Y: +x>
+ *   <Counter Buffer Y: -x>
+ *   This adjusts the Y buffer range for the counter text.
+ *
+ *   <Counter Text Color: x>
+ *   This changes the font color of the text to the text color x.
+ *
+ * ---
+ *
+ * The following are JavaScript functions you may use to adjust counters:
+ *
+ *   battler.clearStateCounters();
+ *   - This will clear all the counter values for all states.
+ *
+ *   battler.setStateCounter(stateId, value);
+ *   - This will set the counter value for the particular state to 'value'.
+ *
+ *   battler.addStateCounter(stateId, value);
+ *   - This will add to the counter value for the state. The counter must be
+ *   a number in order for this to work.
+ *
+ *   battler.clampStateCounter(stateId, min, max);
+ *   - This will set a minimum and maximum value for the counter value of the
+ *   particular state. The counter must be a number in order for this to work.
+ *
+ *   battler.removeStateCounter(stateId)
+ *   - This will clear the counter value for the state.
+ *
+ *   battler.getStateCounter(stateId)
+ *   - This will return the current state counter value.
+ *
+ * ============================================================================
  * Changelog
  * ============================================================================
+ *
+ * Version 1.16:
+ * - Bypass the isDevToolsOpen() error when bad code is inserted into a script
+ * call or custom Lunatic Mode code segment due to updating to MV 1.6.1.
+ *
+ * Version 1.15:
+ * - Updated for RPG Maker MV version 1.6.1.
+ *
+ * Version 1.14:
+ * - Updated for RPG Maker MV version 1.5.0.
+ * - Fixed documentation error.
+ *
+ * Version 1.13:
+ * - Custom Turn End effects will no longer occur outside of battle.
+ *
+ * Version 1.12a:
+ * - Lunatic Mode fail safes added.
+ * - Optimization update.
+ *
+ * Version 1.11:
+ * - Fixed a bug involving Lunatic state effects not occuring in the right
+ * order when a state is removed.
+ *
+ * Version 1.10b:
+ * - Added new plugin parameter: Show Buff Rate. This will display the current
+ * buff or debuff rate on the buff icon.
+ * - Optimization Update.
+ * - Documentation fix for battler.clampStateCounter(stateId, min, max).
+ *
+ * Version 1.09b:
+ * - Added new plugin parameters: Show Enemy Icons, Enemy Buff Turn, Enemy
+ * State Turn, and Enemy State Counter to optionally display the enemy state
+ * icons, states, buffs, their turns, and their counters.
+ * - Added 'Lunatic Mode - State Counters'. Read more on it in the help file!
+ * - Added anti-crash method for newly added effect in case non-YEP plugins
+ * have non-battlers attached to battler sprites.
+ * - Fixed a bug that prevented screen flashes when walking around on the map
+ * when an actor is poisoned.
+ *
+ * Version 1.08:
+ * - Fixed an issue that caused adding states midway through Lunatic Mode to
+ * shift the order of states around causing some effects to be skipped.
+ *
+ * Version 1.07:
+ * - Updated for RPG Maker MV version 1.1.0.
  *
  * Version 1.06:
  * - Added new notetags for <Custom Battle Effect>, <Custom Victory Effect>,
@@ -493,13 +728,30 @@ Yanfly.Param.BSCTurnColor = Number(Yanfly.Parameters['State Color']);
 Yanfly.Param.BSCBuffColor = Number(Yanfly.Parameters['Buff Color']);
 Yanfly.Param.BSCDebuffColor = Number(Yanfly.Parameters['Debuff Color']);
 
+Yanfly.Param.BSCShowEnemyIcon = String(Yanfly.Parameters['Show Enemy Icons']);
+Yanfly.Param.BSCShowEnemyIcon = eval(Yanfly.Param.BSCShowEnemyIcon);
+Yanfly.Param.BSCEnemyBTurn = String(Yanfly.Parameters['Enemy Buff Turn']);
+Yanfly.Param.BSCEnemyBTurn = eval(Yanfly.Param.BSCEnemyBTurn);
+Yanfly.Param.BSCEnemyTurn = String(Yanfly.Parameters['Enemy State Turn']);
+Yanfly.Param.BSCEnemyTurn = eval(Yanfly.Param.BSCEnemyTurn);
+Yanfly.Param.BSCEnemyCounter = String(Yanfly.Parameters['Enemy State Counter']);
+Yanfly.Param.BSCEnemyCounter = eval(Yanfly.Param.BSCEnemyCounter);
+
 Yanfly.Param.BSCDefaultLimit = Number(Yanfly.Parameters['Default Limit']);
 Yanfly.Param.BSCMaximumLimit = Number(Yanfly.Parameters['Maximum Limit']);
 Yanfly.Param.BSCBuffFormula = String(Yanfly.Parameters['Buff Formula']);
+Yanfly.Param.BSCShowBuffRate = String(Yanfly.Parameters['Show Buff Rate']);
+Yanfly.Param.BSCShowBuffRate = eval(Yanfly.Param.BSCShowBuffRate);
 
 Yanfly.Param.BSCReapplyRules = Number(Yanfly.Parameters['Reapply Rules']);
 Yanfly.Param.BSCShowEnemyTurns = String(Yanfly.Parameters['Show Enemy Turns']);
 Yanfly.Param.BSCShowEnemyTurns = eval(Yanfly.Param.BSCShowEnemyTurns);
+
+Yanfly.Param.BSCCounterSize = Number(Yanfly.Parameters['Counter Font Size']);
+Yanfly.Param.BSCCounterAlign = String(Yanfly.Parameters['Counter Alignment']);
+Yanfly.Param.BSCCounterBufferX = Number(Yanfly.Parameters['Counter Buffer X']);
+Yanfly.Param.BSCCounterBufferY = Number(Yanfly.Parameters['Counter Buffer Y']);
+Yanfly.Param.BSCCounterColor = Number(Yanfly.Parameters['Counter Color']);
 
 //=============================================================================
 // DataManager
@@ -507,7 +759,8 @@ Yanfly.Param.BSCShowEnemyTurns = eval(Yanfly.Param.BSCShowEnemyTurns);
 
 Yanfly.BSC.DataManager_isDatabaseLoaded = DataManager.isDatabaseLoaded;
 DataManager.isDatabaseLoaded = function() {
-    if (!Yanfly.BSC.DataManager_isDatabaseLoaded.call(this)) return false;
+  if (!Yanfly.BSC.DataManager_isDatabaseLoaded.call(this)) return false;
+  if (!Yanfly._loaded_YEP_BuffsStatesCore) {
     this.processBSCNotetagsT($dataStates);
     this.processBSCNotetags1($dataStates);
     this.processBSCNotetags2($dataActors);
@@ -519,7 +772,9 @@ DataManager.isDatabaseLoaded = function() {
     this.processBSCNotetags3($dataSkills);
     this.processBSCNotetags3($dataItems);
     this.processBSCNotetags4($dataEnemies);
-    return true;
+    Yanfly._loaded_YEP_BuffsStatesCore = true;
+  }
+  return true;
 };
 
 DataManager.processBSCNotetagsT = function(group) {
@@ -544,27 +799,8 @@ DataManager.processBSCNotetags1 = function(group) {
     obj.turnBufferY = Yanfly.Param.BSCTurnBufferY;
     obj.turnColor = Yanfly.Param.BSCTurnColor;
     obj.reapplyRules = Yanfly.Param.BSCReapplyRules;
-    obj.customEffectEval = obj.customEffectEval || {};
-    obj.customEffectEval['addState'] = '';
-    obj.customEffectEval['removeState'] = '';
-    obj.customEffectEval['leaveState'] = '';
-    obj.customEffectEval['turnStartState'] = '';
-    obj.customEffectEval['turnEndState'] = '';
-    obj.customEffectEval['regenerateState'] = '';
-    obj.customEffectEval['selectState'] = '';
-    obj.customEffectEval['deselectState'] = '';
-    obj.customEffectEval['reactState'] = '';
-    obj.customEffectEval['respondState'] = '';
-    obj.customEffectEval['initiateState'] = '';
-    obj.customEffectEval['concludeState'] = '';
-    obj.customEffectEval['confirmState'] = '';
-    obj.customEffectEval['establishState'] = '';
-    obj.customEffectEval['actionStartState'] = '';
-    obj.customEffectEval['actionEndState'] = '';
-    obj.customEffectEval['battle'] = '';
-    obj.customEffectEval['victory'] = '';
-    obj.customEffectEval['defeat'] = '';
-    obj.customEffectEval['escape'] = '';
+    this.initStateEval(obj);
+    this.initStateCounter(obj);
     var evalMode = 'none';
     var evalType = 'none';
 
@@ -640,9 +876,55 @@ DataManager.processBSCNotetags1 = function(group) {
       } else if (evalMode === 'custom state effect') {
         obj.customEffectEval[evalType] = obj.customEffectEval[evalType] +
           line + '\n';
+      } else if (line.match(/<COUNTER FONT SIZE:[ ](\d+)>/i)) {
+        obj.stateCounterSettings['size'] = parseInt(RegExp.$1);
+      } else if (line.match(/<COUNTER[ ](?:ALIGNMENT|align):[ ](.*)>/i)) {
+        obj.stateCounterSettings['align'] = String(RegExp.$1).toLowerCase();
+      } else if (line.match(/<COUNTER BUFFER X:[ ]([\+\-]\d+)>/i)) {
+        obj.stateCounterSettings['bufferX'] = parseInt(RegExp.$1);
+      } else if (line.match(/<COUNTER BUFFER Y:[ ]([\+\-]\d+)>/i)) {
+        obj.stateCounterSettings['bufferY'] = parseInt(RegExp.$1);
+      } else if (line.match(/<COUNTER TEXT COLOR:[ ](\d+)>/i)) {
+        obj.stateCounterSettings['color'] = parseInt(RegExp.$1);
       }
     }
   }
+};
+
+DataManager.initStateEval = function(obj) {
+  obj.customEffectEval = {};
+  obj.customEffectEval['addState'] = '';
+  obj.customEffectEval['removeState'] = '';
+  obj.customEffectEval['leaveState'] = '';
+  obj.customEffectEval['turnStartState'] = '';
+  obj.customEffectEval['turnEndState'] = '';
+  obj.customEffectEval['regenerateState'] = '';
+  obj.customEffectEval['selectState'] = '';
+  obj.customEffectEval['deselectState'] = '';
+  obj.customEffectEval['reactState'] = '';
+  obj.customEffectEval['respondState'] = '';
+  obj.customEffectEval['initiateState'] = '';
+  obj.customEffectEval['concludeState'] = '';
+  obj.customEffectEval['confirmState'] = '';
+  obj.customEffectEval['establishState'] = '';
+  obj.customEffectEval['actionStartState'] = '';
+  obj.customEffectEval['actionEndState'] = '';
+  obj.customEffectEval['battle'] = '';
+  obj.customEffectEval['victory'] = '';
+  obj.customEffectEval['defeat'] = '';
+  obj.customEffectEval['escape'] = '';
+};
+
+DataManager.initStateCounter = function(obj) {
+  obj.stateCounterSettings = {};
+  obj.stateCounterSettings['size'] = Yanfly.Param.BSCCounterSize || 16;
+  obj.stateCounterSettings['align'] = Yanfly.Param.BSCCounterAlign;
+  if (obj.stateCounterSettings['align'] === 'undefined') {
+    obj.stateCounterSettings['align'] = 'center';
+  }
+  obj.stateCounterSettings['bufferX'] = Yanfly.Param.BSCCounterBufferX || 0;
+  obj.stateCounterSettings['bufferY'] = Yanfly.Param.BSCCounterBufferY || 8;
+  obj.stateCounterSettings['color'] = Yanfly.Param.BSCCounterColor || 0;
 };
 
 DataManager.processBSCNotetags2 = function(group) {
@@ -869,6 +1151,13 @@ BattleManager.endBattle = function(result) {
 // Game_BattlerBase
 //=============================================================================
 
+Yanfly.BSC.Game_BattlerBase_initMembers = 
+  Game_BattlerBase.prototype.initMembers;
+Game_BattlerBase.prototype.initMembers = function() {
+    Yanfly.BSC.Game_BattlerBase_initMembers.call(this);
+    this.initStateCounter();
+};
+
 Yanfly.BSC.Game_BattlerBase_refresh = Game_BattlerBase.prototype.refresh;
 Game_BattlerBase.prototype.refresh = function() {
     this._cacheParamBuffRate = {};
@@ -919,7 +1208,7 @@ Game_BattlerBase.prototype.stateTurns = function(stateId) {
 };
 
 Game_BattlerBase.prototype.setStateTurns = function(stateId, turns) {
-    if (Imported.YEP_BattleEngineCore && !eval(Yanfly.Param.BECTimeStates)) {
+    if (Imported.YEP_BattleEngineCore && !Yanfly.Param.BECTimeStates) {
       turns = Math.floor(turns);
     }
     this._stateTurns[stateId] = turns;
@@ -930,7 +1219,7 @@ Game_BattlerBase.prototype.buffTurns = function(paramId) {
 };
 
 Game_BattlerBase.prototype.setBuffTurns = function(paramId, turns) {
-    if (Imported.YEP_BattleEngineCore && !eval(Yanfly.Param.BECTimeBuffs)) {
+    if (Imported.YEP_BattleEngineCore && !Yanfly.Param.BECTimeBuffs) {
       turns = Math.floor(turns);
     }
     this._buffTurns[paramId] = turns;
@@ -941,22 +1230,29 @@ Game_BattlerBase.prototype.paramBuffRate = function(paramId) {
     if (this._cacheParamBuffRate[paramId] !== undefined) {
       return this._cacheParamBuffRate[paramId];
     }
-    var rate = eval(Yanfly.Param.BSCBuffFormula);
+    var code = Yanfly.Param.BSCBuffFormula;
+    try {
+      var rate = eval(code);
+    } catch (e) {
+      var rate = 1;
+      Yanfly.Util.displayError(e, code, 'PARAM BUFF RATE FORMULA ERROR');
+    }
     this._cacheParamBuffRate[paramId] = rate;
     return this._cacheParamBuffRate[paramId];
 };
 
 Game_BattlerBase.prototype.isMaxBuffAffected = function(paramId) {
-    var limit = Math.max(1, this.maxBuffLimit(paramId));
+    var limit = Math.max(0, this.maxBuffLimit(paramId));
     var max = Yanfly.Param.BSCMaximumLimit;
     return this._buffs[paramId] === Math.min(limit, max);
 };
 
 Game_BattlerBase.prototype.maxBuffLimit = function(paramId) {
     var value = Yanfly.Param.BSCDefaultLimit;
-    var length = this.states().length;
+    var states = this.states();
+    var length = states.length;
     for (var i = 0; i < length; ++i) {
-      var state = this.states()[i];
+      var state = states[i];
       if (!state) continue;
       if (state.maxBuff) value += state.maxBuff[paramId];
     }
@@ -964,22 +1260,24 @@ Game_BattlerBase.prototype.maxBuffLimit = function(paramId) {
 };
 
 Game_BattlerBase.prototype.isMaxDebuffAffected = function(paramId) {
-    var limit = Math.min(-1, this.maxDebuffLimit(paramId));
+    var limit = Math.min(0, this.maxDebuffLimit(paramId));
     var max = Yanfly.Param.BSCMaximumLimit * -1;
     return this._buffs[paramId] === Math.max(limit, max);
 };
 
 Game_BattlerBase.prototype.maxDebuffLimit = function(paramId) {
     var value = -1 * Yanfly.Param.BSCDefaultLimit;
-    var length = this.states().length;
+    var states = this.states();
+    var length = states.length;
     for (var i = 0; i < length; ++i) {
-      var state = this.states()[i];
+      var state = states[i];
       if (!state) continue;
       if (state.maxDebuff) value -= state.maxDebuff[paramId];
     }
     return value;
 };
 
+/*
 Game_BattlerBase.prototype.buffIconIndex = function(buffLevel, paramId) {
     if (buffLevel > 0) {
       var level = Math.min(buffLevel - 1, 1);
@@ -991,6 +1289,7 @@ Game_BattlerBase.prototype.buffIconIndex = function(buffLevel, paramId) {
       return 0;
     }
 };
+*/
 
 Yanfly.BSC.Game_BattlerBase_resetStateCounts =
     Game_BattlerBase.prototype.resetStateCounts;
@@ -1009,9 +1308,62 @@ Game_BattlerBase.prototype.resetStateCounts = function(stateId) {
     }
 };
 
+
+Game_BattlerBase.prototype.initStateCounter = function() {
+  this._stateCounter = {};
+};
+
+Game_BattlerBase.prototype.clearStateCounters = function() {
+  this._stateCounter = {};
+};
+
+Game_BattlerBase.prototype.setStateCounter = function(stateId, value) {
+  if (this._stateCounter === undefined) this.initStateCounter();
+  this._stateCounter[stateId] = value;
+  this.refresh();
+};
+
+Game_BattlerBase.prototype.addStateCounter = function(stateId, value) {
+  if (this._stateCounter === undefined) this.initStateCounter();
+  this.setStateCounter(stateId, value + (this.getStateCounter(stateId) || 0));
+};
+
+Game_BattlerBase.prototype.clampStateCounter = function(stateId, min, max) {
+  var value = this.getStateCounter(stateId).clamp(min, max);
+  this.setStateCounter(stateId, value);
+};
+
+Game_BattlerBase.prototype.removeStateCounter = function(stateId) {
+  if (this._stateCounter === undefined) this.initStateCounter();
+  this._stateCounter[stateId] = undefined;
+};
+
+Game_BattlerBase.prototype.getStateCounter = function(stateId) {
+  if (this._stateCounter === undefined) this.initStateCounter();
+  return this._stateCounter[stateId];
+};
+
+Game_BattlerBase.prototype.statesAndBuffs = function() {
+    var group = this.states();
+    var length = group.length;
+    var array = [];
+    for (var i = 0; i < length; ++i) {
+      var state = group[i];
+      if (state && state.iconIndex > 0) array.push(state);
+    }
+    for (var i = 0; i < 8; ++i) {
+      if (this._buffs[i]) array.push(i);
+    }
+    return array;
+};
+
 //=============================================================================
 // Game_Battler
 //=============================================================================
+
+Game_Battler.prototype.hasState = function(stateId) {
+    return this.states().contains($dataStates[stateId]);
+};
 
 Game_Battler.prototype.customEffectEval = function(stateId, type) {
     var state = $dataStates[stateId];
@@ -1023,7 +1375,13 @@ Game_Battler.prototype.customEffectEval = function(stateId, type) {
     var origin = this.stateOrigin(stateId);
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    eval(state.customEffectEval[type]);
+    var code = state.customEffectEval[type];
+    try {
+      eval(code);
+    } catch (e) {
+      Yanfly.Util.displayError(e, code, 
+        'CUSTOM STATE ' + stateId + ' CODE ERROR');
+    }
 };
 
 Yanfly.BSC.Game_Battler_addState = Game_Battler.prototype.addState;
@@ -1044,6 +1402,7 @@ Yanfly.BSC.Game_Battler_removeState = Game_Battler.prototype.removeState;
 Game_Battler.prototype.removeState = function(stateId) {
     var affected = this.isStateAffected(stateId);
     Yanfly.BSC.Game_Battler_removeState.call(this, stateId);
+    this.removeStateCounter(stateId);
     if (affected) {
       this.removeStateEffects(stateId);
       this.clearStateOrigin(stateId);
@@ -1068,9 +1427,10 @@ Game_Battler.prototype.leaveStateEffects = function(stateId) {
 };
 
 Game_Battler.prototype.onTurnStartStateEffects = function() {
-    var length = this.states().length;
+    var states = this.states();
+    var length = states.length;
     for (var i = 0; i < length; ++i) {
-      var state = this.states()[i];
+      var state = states[i];
       if (state) this.turnStartStateEffects(state.id);
     }
 };
@@ -1080,9 +1440,10 @@ Game_Battler.prototype.turnStartStateEffects = function(stateId) {
 };
 
 Game_Battler.prototype.onTurnEndStateEffects = function() {
-    var length = this.states().length;
+    var states = this.states();
+    var length = states.length;
     for (var i = 0; i < length; ++i) {
-      var state = this.states()[i];
+      var state = states[i];
       if (state) this.turnEndStateEffects(state.id);
     }
 };
@@ -1098,6 +1459,7 @@ Game_Battler.prototype.onTurnEnd = function() {
 };
 
 Game_Battler.prototype.meetTurnEndStateEffectsConditions = function() {
+    if (!$gameParty.inBattle()) return false;
     if (Imported.YEP_BattleEngineCore) {
       if (BattleManager.isTurnBased()) {
         return true;
@@ -1111,18 +1473,19 @@ Game_Battler.prototype.meetTurnEndStateEffectsConditions = function() {
 };
 
 Game_Battler.prototype.onRegenerateStateEffects = function() {
-    var length = this.states().length;
+    var states = this.states();
+    var length = states.length;
     for (var i = 0; i < length; ++i) {
-      var state = this.states()[i];
+      var state = states[i];
       if (state) this.regenerateStateEffects(state.id);
     }
 };
 
 Game_Battler.prototype.regenerateStateEffects = function(stateId) {
-    this.clearResult();
+    if ($gameParty.inBattle()) this.clearResult();
     var lifeState = this.isAlive();
     this.customEffectEval(stateId, 'regenerateState');
-    if (this.isDead() && lifeState === true) {
+    if ($gameParty.inBattle() && this.isDead() && lifeState === true) {
       this.performCollapse();
     }
     if (!Imported.YEP_BattleEngineCore) return;
@@ -1131,8 +1494,9 @@ Game_Battler.prototype.regenerateStateEffects = function(stateId) {
 
 Yanfly.BSC.Game_Battler_regenerateAll = Game_Battler.prototype.regenerateAll;
 Game_Battler.prototype.regenerateAll = function() {
-    Yanfly.BSC.Game_Battler_regenerateAll.call(this);
-    this.onRegenerateStateEffects();
+  //if ($gameParty.inBattle()) 
+	  this.onRegenerateStateEffects();
+  Yanfly.BSC.Game_Battler_regenerateAll.call(this);
 };
 
 if (Imported.YEP_BattleEngineCore) {
@@ -1169,9 +1533,10 @@ Game_Battler.prototype.meetTurnStartStateEffectsConditions = function() {
 }; // Imported.YEP_BattleEngineCore
 
 Game_Battler.prototype.onActionStartStateEffects = function() {
-    var length = this.states().length;
+    var states = this.states();
+    var length = states.length;
     for (var i = 0; i < length; ++i) {
-      var state = this.states()[i];
+      var state = states[i];
       if (state) this.actionStartStateEffects(state.id);
     }
 };
@@ -1181,9 +1546,10 @@ Game_Battler.prototype.actionStartStateEffects = function(stateId) {
 };
 
 Game_Battler.prototype.onActionEndStateEffects = function() {
-    var length = this.states().length;
+    var states = this.states();
+    var length = states.length;
     for (var i = 0; i < length; ++i) {
-      var state = this.states()[i];
+      var state = states[i];
       if (state) this.actionEndStateEffects(state.id);
     }
 };
@@ -1253,9 +1619,11 @@ Game_Unit.prototype.processStateEval = function(type) {
     for (var i = 0; i < length1; ++i) {
       var member = this.allMembers()[i];
       if (!member) return;
-      var length2 = member.states().length;
+      member.refresh();
+      var states = member.states();
+      var length2 = states.length;
       for (var j = 0; j < length2; ++j) {
-        var state = member.states()[j];
+        var state = states[j];
         if (state) member.customEffectEval(state.id, type);
       }
     }
@@ -1311,7 +1679,12 @@ Game_Action.prototype.applyBuffTurnsEval = function(turn, paramId, target) {
     var user = this.subject();
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    eval(this.item().modifyTurnBuffEval[paramId]);
+    var code = this.item().modifyTurnBuffEval[paramId];
+    try {
+      eval(code);
+    } catch (e) {
+      Yanfly.Util.displayError(e, code, 'CUSTOM BUFF TURN SET ERROR');
+    }
     return turn;
 };
 
@@ -1337,17 +1710,23 @@ Game_Action.prototype.applyDebuffTurnsEval = function(turn, paramId, target) {
     var user = this.subject();
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    eval(this.item().modifyTurnBuffEval[paramId]);
+    var code = this.item().modifyTurnBuffEval[paramId];
+    try {
+      eval(code);
+    } catch (e) {
+      Yanfly.Util.displayError(e, code, 'CUSTOM DEBUFF TURN SET ERROR');
+    }
     return turn;
 };
 
 Game_Action.prototype.applyModifyStateTurns = function(target) {
     if (!this.item()) return;
     var affected = false;
-    var length = target.states().length;
+    var states = target.states()
+    var length = states.length;
     var removed = [];
     for (var i = 0; i < length; ++i) {
-      var state = target.states()[i];
+      var state = states[i];
       if (state.autoRemovalTiming <= 0) continue;
       if (!target.isStateAffected(state.id)) continue;
       var turn = target.stateTurns(state.id);
@@ -1374,7 +1753,12 @@ Game_Action.prototype.applyStateTurnsEval = function(turn, stateId, target) {
     var origin = target.stateOrigin(stateId);
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    eval(this.item().modifyTurnStateEval[stateId]);
+    var code = this.item().modifyTurnStateEval[stateId];
+    try {
+      eval(code);
+    } catch (e) {
+      Yanfly.Util.displayError(e, code, 'CUSTOM STATE TURN SET ERROR');
+    }
     return turn;
 };
 
@@ -1400,14 +1784,21 @@ function(target, stateId, type, side, value) {
     var origin = side.stateOrigin(stateId);
     var s = $gameSwitches._data;
     var v = $gameVariables._data;
-    eval(state.customEffectEval[type]);
+    var code = state.customEffectEval[type];
+    try {
+      eval(code);
+    } catch (e) {
+      Yanfly.Util.displayError(e, code,
+        'CUSTOM STATE ' + stateId + ' CODE ERROR');
+    }
     return value;
 };
 
 Game_Action.prototype.onApplyStateEffects = function(target) {
+    var states = this.subject().states();
     var length = this.subject().states().length;
     for (var i = 0; i < length; ++i) {
-      var state = this.subject().states()[i];
+      var state = states[i];
       if (!state) continue;
       this.initiateStateEffects(target, state.id)
     }
@@ -1418,9 +1809,10 @@ Game_Action.prototype.initiateStateEffects = function(target, stateId) {
 };
 
 Game_Action.prototype.onSelectStateEffects = function(target) {
-    var length = target.states().length;
+    var states = target.states();
+    var length = states.length;
     for (var i = 0; i < length; ++i) {
-      var state = target.states()[i];
+      var state = states[i];
       if (!state) continue;
       this.selectStateEffects(target, state.id)
     }
@@ -1431,9 +1823,10 @@ Game_Action.prototype.selectStateEffects = function(target, stateId) {
 };
 
 Game_Action.prototype.onDeselectStateEffects = function(target) {
-    var length = target.states().length;
+    var states = target.states();
+    var length = states.length;
     for (var i = 0; i < length; ++i) {
-      var state = target.states()[i];
+      var state = states[i];
       if (!state) continue;
       this.deselectStateEffects(target, state.id)
     }
@@ -1444,9 +1837,10 @@ Game_Action.prototype.deselectStateEffects = function(target, stateId) {
 };
 
 Game_Action.prototype.offApplyStateEffects = function(target) {
-    var length = this.subject().states().length;
+    var states = this.subject().states();
+    var length = states.length;
     for (var i = 0; i < length; ++i) {
-      var state = this.subject().states()[i];
+      var state = states[i];
       if (!state) continue;
       this.concludeStateEffects(target, state.id)
     }
@@ -1466,9 +1860,10 @@ Game_Action.prototype.executeDamage = function(target, value) {
 };
 
 Game_Action.prototype.onPreDamageStateEffects = function(target, value) {
-    var length = this.subject().states().length;
+    var states = this.subject().states();
+    var length = states.length;
     for (var i = 0; i < length; ++i) {
-      var state = this.subject().states()[i];
+      var state = states[i];
       if (!state) continue;
       value = this.confirmStateEffects(target, state.id, value);
     }
@@ -1481,9 +1876,10 @@ Game_Action.prototype.confirmStateEffects = function(target, stateId, value) {
 };
 
 Game_Action.prototype.onReactStateEffects = function(target, value) {
-    var length = target.states().length;
+    var states = target.states();
+    var length = states.length;
     for (var i = 0; i < length; ++i) {
-      var state = target.states()[i];
+      var state = states[i];
       if (!state) continue;
       value = this.reactStateEffects(target, state.id, value);
     }
@@ -1495,9 +1891,10 @@ Game_Action.prototype.reactStateEffects = function(target, stateId, value) {
 };
 
 Game_Action.prototype.onRespondStateEffects = function(target, value) {
-    var length = target.states().length;
+    var states = target.states();
+    var length = states.length;
     for (var i = 0; i < length; ++i) {
-      var state = target.states()[i];
+      var state = states[i];
       if (!state) continue;
       value = this.respondStateEffects(target, state.id, value);
     }
@@ -1510,9 +1907,10 @@ Game_Action.prototype.respondStateEffects = function(target, stateId, value) {
 };
 
 Game_Action.prototype.onPostDamageStateEffects = function(target, value) {
-    var length = this.subject().states().length;
+    var states = this.subject().states();
+    var length = states.length;
     for (var i = 0; i < length; ++i) {
-      var state = this.subject().states()[i];
+      var state = states[i];
       if (!state) continue;
       value = this.establishStateEffects(target, state.id, value);
     }
@@ -1525,73 +1923,225 @@ Game_Action.prototype.establishStateEffects = function(target, stateId, value) {
 };
 
 //=============================================================================
+// Sprite_StateIcon
+//=============================================================================
+
+if (!Yanfly.Param.BSCShowEnemyIcon) {
+
+Sprite_StateIcon.prototype.updateFrame = function() {
+};
+
+} else {
+
+Yanfly.BSC.Sprite_StateIcon_initMembers =
+    Sprite_StateIcon.prototype.initMembers;
+Sprite_StateIcon.prototype.initMembers = function() {
+    Yanfly.BSC.Sprite_StateIcon_initMembers.call(this);
+    this._turnCounterSprite = new Sprite();
+    this.addChild(this._turnCounterSprite);
+    this._turnCounterSprite.anchor.x = 0.5;
+    this._turnCounterSprite.anchor.y = 0.5;
+    var w = Window_Base._iconWidth;
+    var h = Window_Base._iconHeight;
+    this._turnCounterSprite.bitmap = new Bitmap(w, h);
+};
+
+Yanfly.BSC.Sprite_StateIcon_updateFrame = 
+  Sprite_StateIcon.prototype.updateFrame;
+Sprite_StateIcon.prototype.updateFrame = function() {
+  Yanfly.BSC.Sprite_StateIcon_updateFrame.call(this);
+  if (this._turnCounterSprite) this.updateTurnAndCounter();
+};
+
+Sprite_StateIcon.prototype.updateTurnAndCounter = function() {
+    this._turnCounterSprite.bitmap.clear();
+    if (!this._battler) return;
+    var group = this._battler.statesAndBuffs();
+    if (group.length <= 0) return;
+    var state = group[this._animationIndex];
+    if (typeof state === 'number') {
+      if (Yanfly.Param.BSCEnemyBTurn) {
+        this.drawBuffTurns(state);
+        if (Yanfly.Param.BSCShowBuffRate) {
+          this.drawBuffRate(state)
+        }
+      }
+    } else {
+      if (Yanfly.Param.BSCEnemyTurn) this.drawStateTurns(state);
+      if (Yanfly.Param.BSCEnemyCounter) this.drawStateCounter(state);
+    }
+};
+
+Sprite_StateIcon.prototype.textColor = function(n) {
+    return SceneManager._scene._statusWindow.textColor(n);
+};
+
+Sprite_StateIcon.prototype.drawStateTurns = function(state) {
+    if (!state) return;
+    if (!state.showTurns) return;
+    if (state.autoRemovalTiming <= 0) return;
+    var turns = this._battler.stateTurns(state.id);
+    if (turns !== 0 && !turns) return;
+    var turns = Yanfly.Util.toGroup(Math.ceil(turns));
+    var wx = state.turnBufferX;
+    var wy = state.turnBufferY - 2;
+    var ww = Window_Base._iconWidth;
+    var wh = Window_Base.prototype.lineHeight.call(this);
+    var contents = this._turnCounterSprite.bitmap;
+    contents.fontSize = state.turnFontSize;
+    contents.textColor = this.textColor(state.turnColor);
+    contents.drawText(turns, wx, wy, ww, wh, state.turnAlign);
+};
+
+Sprite_StateIcon.prototype.drawStateCounter = function(state) {
+    var value = this._battler.getStateCounter(state.id);
+    if (value === undefined) return;
+    var settings = state.stateCounterSettings;
+    value = Yanfly.Util.toGroup(value);
+    var wx = settings.bufferX;
+    var wy = settings.bufferY - 2;
+    var ww = Window_Base._iconWidth;
+    var wh = Window_Base.prototype.lineHeight.call(this);
+    var contents = this._turnCounterSprite.bitmap;
+    contents.fontSize = settings.size;
+    contents.textColor = this.textColor(settings.color);
+    contents.drawText(value, wx, wy, ww, wh, settings.align);
+};
+
+Sprite_StateIcon.prototype.drawBuffTurns = function(paramId) {
+    if (!Yanfly.Param.BSCShowTurns) return;
+    var turns = this._battler.buffTurns(paramId);
+    turns = Yanfly.Util.toGroup(Math.ceil(turns));
+    var wx = Yanfly.Param.BSCTurnBufferX;
+    var wy = Yanfly.Param.BSCTurnBufferY - 2;
+    var ww = Window_Base._iconWidth;
+    var wh = Window_Base.prototype.lineHeight.call(this);
+    var contents = this._turnCounterSprite.bitmap;
+    contents.fontSize = Yanfly.Param.BSCFontSize;
+    if (this._battler.isBuffAffected(paramId)) {
+      contents.textColor = this.textColor(Yanfly.Param.BSCBuffColor);
+    } else {
+      contents.textColor = this.textColor(Yanfly.Param.BSCDebuffColor);
+    }
+    contents.drawText(turns, wx, wy, ww, wh, Yanfly.Param.BSCTurnAlign);
+};
+
+Sprite_StateIcon.prototype.drawBuffRate = function(paramId) {
+    if (!Yanfly.Param.BSCShowTurns) return;
+    var value = this._battler.paramBuffRate(paramId);
+    var text = Math.ceil(value * 100) + '%';
+    var wx = Yanfly.Param.BSCCounterBufferX || 0;
+    var wy = (Yanfly.Param.BSCCounterBufferY || 8) - 2;
+    var ww = Window_Base._iconWidth;
+    var wh = Window_Base.prototype.lineHeight.call(this);
+    var contents = this._turnCounterSprite.bitmap;
+    contents.fontSize = Yanfly.Param.BSCFontSize * 0.75;
+    contents.textColor = this.textColor(0);
+    contents.drawText(text, wx, wy, ww, wh, 'center');
+};
+
+}; // Yanfly.Param.BSCShowEnemyIcon
+
+//=============================================================================
 // Window_Base
 //=============================================================================
 
 Yanfly.BSC.Window_Base_drawActorIcons = Window_Base.prototype.drawActorIcons;
 Window_Base.prototype.drawActorIcons = function(actor, wx, wy, ww) {
-    ww = ww || 144;
-    Yanfly.BSC.Window_Base_drawActorIcons.call(this, actor, wx, wy, ww);
-    this.drawActorIconsTurns(actor, wx, wy, ww);
+  ww = ww || 144;
+  Yanfly.BSC.Window_Base_drawActorIcons.call(this, actor, wx, wy, ww);
+  this.drawActorIconsTurns(actor, wx, wy, ww);
 };
 
 Window_Base.prototype.drawActorIconsTurns = function(actor, wx, wy, ww) {
-    var iw = Window_Base._iconWidth;
-    var icons = actor.allIcons().slice(0, Math.floor(ww / iw));
-    var max = icons.length;
-    var shownMax = Math.floor(ww / iw);
-    for (var i = 0; i < actor.states().length; ++i) {
-      if (shownMax <= 0) break;
-      var state = actor.states()[i];
-      if (state.iconIndex <= 0) continue;
-      if (state.autoRemovalTiming > 0) {
-        this.drawStateTurns(actor, state, wx, wy);
-      }
-      wx += iw;
-      --shownMax;
+  var iw = Window_Base._iconWidth;
+  var icons = actor.allIcons().slice(0, Math.floor(ww / iw));
+  var max = icons.length;
+  var shownMax = Math.floor(ww / iw);
+  for (var i = 0; i < actor.states().length; ++i) {
+    if (shownMax <= 0) break;
+    var state = actor.states()[i];
+    if (state.iconIndex <= 0) continue;
+    if (state.autoRemovalTiming > 0) {
+      this.drawStateTurns(actor, state, wx, wy);
     }
-    for (var i = 0; i < 8; ++i) {
-      if (shownMax <= 0) break;
-      if (actor._buffs[i] === 0) continue;
-      this.drawBuffTurns(actor, i, wx, wy);
-      wx += iw;
-      --shownMax;
+    this.drawStateCounter(actor, state, wx, wy);
+    wx += iw;
+    --shownMax;
+  }
+  for (var i = 0; i < 8; ++i) {
+    if (shownMax <= 0) break;
+    if (actor._buffs[i] === 0) continue;
+    this.drawBuffTurns(actor, i, wx, wy);
+    if (Yanfly.Param.BSCShowBuffRate) {
+      this.drawBuffRate(actor, i, wx, wy);
     }
-    this.resetFontSettings();
-    this.resetTextColor();
+    wx += iw;
+    --shownMax;
+  }
+  this.resetFontSettings();
+  this.resetTextColor();
 };
 
 Window_Base.prototype.drawStateTurns = function(actor, state, wx, wy) {
-    if (!state.showTurns) return;
-    var turns = actor.stateTurns(state.id);
-    if (turns !== 0 && !turns) return;
-    var turns = Yanfly.Util.toGroup(Math.ceil(turns));
-    wx += state.turnBufferX;
-    wy += state.turnBufferY;
-    this.changePaintOpacity(true);
-    this.changeTextColor(this.textColor(state.turnColor));
-    this.contents.fontSize = state.turnFontSize;
-    this.drawText(turns, wx, wy, Window_Base._iconWidth, state.turnAlign);
-    this.resetFontSettings();
-    this.resetTextColor();
+  if (!state.showTurns) return;
+  var turns = actor.stateTurns(state.id);
+  if (turns !== 0 && !turns) return;
+  var turns = Yanfly.Util.toGroup(Math.ceil(turns));
+  wx += state.turnBufferX;
+  wy += state.turnBufferY;
+  this.changePaintOpacity(true);
+  this.changeTextColor(this.textColor(state.turnColor));
+  this.contents.fontSize = state.turnFontSize;
+  this.drawText(turns, wx, wy, Window_Base._iconWidth, state.turnAlign);
+  this.resetFontSettings();
+  this.resetTextColor();
+};
+
+Window_Base.prototype.drawStateCounter = function(actor, state, wx, wy) {
+  var value = actor.getStateCounter(state.id);
+  if (value === undefined) return;
+  var settings = state.stateCounterSettings;
+  value = Yanfly.Util.toGroup(value);
+  wx += settings.bufferX;
+  wy += settings.bufferY;
+  this.changePaintOpacity(true);
+  this.changeTextColor(this.textColor(settings.color));
+  this.contents.fontSize = settings.size;
+  this.drawText(value, wx, wy, Window_Base._iconWidth, settings.align);
+  this.resetFontSettings();
+  this.resetTextColor();
 };
 
 Window_Base.prototype.drawBuffTurns = function(actor, paramId, wx, wy) {
-    if (!Yanfly.Param.BSCShowTurns) return;
-    var turns = Yanfly.Util.toGroup(Math.ceil(actor.buffTurns(paramId)));
-    wx += Yanfly.Param.BSCTurnBufferX;
-    wy += Yanfly.Param.BSCTurnBufferY;
-    this.changePaintOpacity(true);
-    this.contents.fontSize = Yanfly.Param.BSCFontSize;
-    if (actor.isBuffAffected(paramId)) {
-      this.changeTextColor(this.textColor(Yanfly.Param.BSCBuffColor));
-    } else {
-      this.changeTextColor(this.textColor(Yanfly.Param.BSCDebuffColor));
-    }
-    var align = Yanfly.Param.BSCTurnAlign;
-    this.drawText(turns, wx, wy, Window_Base._iconWidth, align);
-    this.resetFontSettings();
-    this.resetTextColor();
+  if (!Yanfly.Param.BSCShowTurns) return;
+  var turns = Yanfly.Util.toGroup(Math.ceil(actor.buffTurns(paramId)));
+  wx += Yanfly.Param.BSCTurnBufferX;
+  wy += Yanfly.Param.BSCTurnBufferY;
+  this.changePaintOpacity(true);
+  this.contents.fontSize = Yanfly.Param.BSCFontSize;
+  if (actor.isBuffAffected(paramId)) {
+    this.changeTextColor(this.textColor(Yanfly.Param.BSCBuffColor));
+  } else {
+    this.changeTextColor(this.textColor(Yanfly.Param.BSCDebuffColor));
+  }
+  var align = Yanfly.Param.BSCTurnAlign;
+  this.drawText(turns, wx, wy, Window_Base._iconWidth, align);
+  this.resetFontSettings();
+  this.resetTextColor();
+};
+
+Window_Base.prototype.drawBuffRate = function(actor, paramId, wx, wy) {
+  var value = actor.paramBuffRate(paramId);
+  if (value === undefined) return;
+  value = Math.floor(value * 100) + '%';
+  this.contents.fontSize = (Yanfly.Param.BSCCounterSize || 16) * 0.75;
+  wx += Yanfly.Param.BSCCounterBufferX || 0;
+  wy += Yanfly.Param.BSCCounterBufferY || 8;
+  this.changePaintOpacity(true);
+  this.drawText(value, wx, wy, Window_Base._iconWidth, 'center');
+  this.resetFontSettings();
+  this.resetTextColor();
 };
 
 //=============================================================================
@@ -1636,6 +2186,18 @@ if (!Yanfly.Util.toGroup) {
     Yanfly.Util.toGroup = function(inVal) {
         return inVal;
     }
+};
+
+Yanfly.Util.displayError = function(e, code, message) {
+  console.log(message);
+  console.log(code || 'NON-EXISTENT');
+  console.error(e);
+  if (Utils.RPGMAKER_VERSION && Utils.RPGMAKER_VERSION >= "1.6.0") return;
+  if (Utils.isNwjs() && Utils.isOptionValid('test')) {
+    if (!require('nw.gui').Window.get().isDevToolsOpen()) {
+      require('nw.gui').Window.get().showDevTools();
+    }
+  }
 };
 
 //=============================================================================

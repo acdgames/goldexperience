@@ -882,7 +882,7 @@ Game_Battler.prototype.startBarrierAnimation = function() {
 Yanfly.ABR.Game_Battler_regenerateAll = Game_Battler.prototype.regenerateAll;
 Game_Battler.prototype.regenerateAll = function() {
     Yanfly.ABR.Game_Battler_regenerateAll.call(this);
-    //if (!$gameParty.inBattle()) return;
+    if (!$gameParty.inBattle()) return;
     if (this.isAlive()) {
       this.updateBarrierTurns();
       this.regenBarriers();

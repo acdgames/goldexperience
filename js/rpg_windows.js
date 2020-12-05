@@ -265,6 +265,7 @@ Window_Base.prototype.drawTextEx = function(text, x, y) {
         var textState = { index: 0, x: x, y: y, left: x };
         textState.text = this.convertEscapeCharacters(text);
         textState.height = this.calcTextHeight(textState, false);
+		textState.height += 7;
         this.resetFontSettings();
         while (textState.index < textState.text.length) {
             this.processCharacter(textState);
@@ -1502,7 +1503,7 @@ Window_Help.prototype.setItem = function(item) {
 
 Window_Help.prototype.refresh = function() {
     this.contents.clear();
-    this.drawTextEx(this._text, this.textPadding(), 0);
+    this.drawTextEx(this._text, this.textPadding(), -2);
 };
 
 //-----------------------------------------------------------------------------

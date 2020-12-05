@@ -1,761 +1,1199 @@
 //=============================================================================
-// MOG_BattleHud.js
+// MOG_BattleHud.js   -   (Template 10)
 //=============================================================================
 
 /*:
- * @plugindesc (v4.0) Permite customizar o layout de batalha.
+ * @plugindesc (v5.04 *) Permite customizar o layout de batalha.
  * @author Moghunter
  *
+ * @param -> MAIN <<<<<<<<<<<<<<<<<<<<<<<
+ * @desc
+ * 
  * @param Hud X-Axis
+ * @text X-Axis
  * @desc Definição da posição X-Axis da Hud.
- * @default -90
+ * @default -85
+ * @parent -> MAIN <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Hud Y-Axis
+ * @text Y-Axis
  * @desc Definição da posição Y-Axis da Hud.
- * @default 480
+ * @default 465
+ * @parent -> MAIN <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Hud Space X
+ * @text Space X
  * @desc Define o espaço na horizontal entre as huds.
  * @default 0
+ * @parent -> MAIN <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Hud Space Y
+ * @text Space Y
  * @desc Define o espaço na vertical entre as huds.
  * @default 0
+ * @parent -> MAIN <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Hud Slide X
+ * @text Slide Animation X
  * @desc Deslizar X-Axis.
  * @default 0
+ * @parent -> MAIN <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Hud Slide Y
+ * @text Slide Animation Y
  * @desc Deslizar Y-Axis.
- * @default 250
+ * @default 0
+ * @parent -> MAIN <<<<<<<<<<<<<<<<<<<<<<<
  * 
  * @param Vertical Mode
  * @desc Deixar a Hud na posição vertical.
- * @default false
- *
- * @param Command Auto Adjust
- * @desc Ativar ajuste automático baseado na posição
- * da Hud. (false - Define a posição fixa.)
- * @default true
+ * @default false 
+ * @type boolean
+ * @on Vertical Mode
+ * @off Horizontal Mode 
+ * @parent -> MAIN <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Max Battle Members
  * @desc Quantidade de maxima de battler na batalha.
+ * @type number
+ * @min 1 
  * @default 4
+ * @parent -> MAIN <<<<<<<<<<<<<<<<<<<<<<<
  *
- * @param >> LAYOUT OVERLAY =========
+ * @param
+ * 
+ * @param -> LAYOUT OVERLAY <<<<<<<<<<<<<<<<<<<<<<<
+ * @desc 
  *
  * @param Layout2 Visible
+ * @text Visible
  * @desc Ativar o segunda imagem do layout, esta imagem 
  * ficará acima das faces e medidores.
- * @default true
+ * @default false
+ * @type boolean 
+ * @parent -> LAYOUT OVERLAY <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Layout2 X-Axis
+ * @text X-Axis
  * @desc Definição da posição X-Axis da Hud.
  * @default 0
+ * @parent -> LAYOUT OVERLAY <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Layout2 Y-Axis
+ * @text Y-Axis
  * @desc Definição da posição Y-Axis da Hud.
  * @default 0
+ * @parent -> LAYOUT OVERLAY <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param
  * 
- * @param >> TURN ===================
- * @desc 
- * @default  
+ * @param -> TURN <<<<<<<<<<<<<<<<<<<<<<<
+ * @desc  
  *
  * @param Turn Visible
+ * @text Visible
  * @desc Apresentar a imagem do turno.
  * @default true
+ * @type boolean
+ * @parent -> TURN <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Turn X-Axis
+ * @text X-Axis
  * @desc Definição da posição X-Axis do turno.
- * @default -10
+ * @default -30
+ * @parent -> TURN <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Turn Y-Axis
+ * @text Y-Axis
  * @desc Definição da posição Y-Axis do turno.
- * @default -10
+ * @default 0
+ * @parent -> TURN <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Turn Rotation Speed
+ * @text Rotation Animation Speed
  * @desc Definição da velocidade de rotação da imagem.
- * @default 0.01
+ * @default 0
+ * @parent -> TURN <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Turn Zoom Animation
+ * @text Zoom Animation
  * @desc Ativar a animação de zoom ao ativar.
- * @default true
+ * @default false
+ * @type boolean 
+ * @parent -> TURN <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param
  * 
- * @param >> FACE ===================
- * @desc 
- * @default  
+ * @param -> FACE <<<<<<<<<<<<<<<<<<<<<<<
+ * @desc  
  *
  * @param Face Visible
+ * @text Visible
  * @desc Apresentar a imagem da face.
  * @default true
+ * @type boolean 
+ * @parent -> FACE <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Face X-Axis
+ * @text X-Axis
  * @desc Definição da posição X-Axis da face.
- * @default 52
+ * @default 76
+ * @parent -> FACE <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Face Y-Axis
+ * @text Y-Axis
  * @desc Definição da posição Y-Axis da face.
- * @default 52
+ * @default 50
+ * @parent -> FACE <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param Face Shake Animation
+ * @text Shake Animation
  * @desc Ativar animação de tremer da face.
  * @default true
+ * @type boolean 
+ * @parent -> FACE <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param Face Zoom Animation
+ * @text Zoom Animation
  * @desc Ativar animação de zoom de ação.
  * @default true
+ * @type boolean 
+ * @parent -> FACE <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param Face Frame Animation
+ * @text Animated (Frames)
  * @desc Ativar animação por frames.
  *       É necessário dividir a imagem por 5.
- * @default true
+ * @default false
+ * @type boolean 
+ * @parent -> FACE <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param Face Priority
+ * @text Priority
  * @desc Prioridade da Face. (0 Low - 1 High)
+ * @type select
+ * @option Low (Below of Gauge)
+ * @value 0
+ * @option High (Above of Gauge)
+ * @value 1
  * @default 0
+ * @parent -> FACE <<<<<<<<<<<<<<<<<<<<<<< 
  *
- * @param >> NAME ===================
+ * @param
+ * 
+ * @param -> NAME <<<<<<<<<<<<<<<<<<<<<<<
  * @desc 
- * @default
  *
  * @param Name Visible
+ * @text Visible
  * @desc Apresentar o nome do personagem.
- * @default true
+ * @default false
+ * @type boolean 
+ * @parent -> NAME <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Name X-Axis
+ * @text X-Axis
  * @desc Definição da posição X-Axis do nome.
- * @default -45
+ * @default 0
+ * @parent -> NAME <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param Name Y-Axis
+ * @text Y-Axis
  * @desc Definição da posição Y-Axis do nome.
- * @default 65 
+ * @default 0
+ * @parent -> NAME <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param Name Align
+ * @text Text Alignment
  * @desc Alinhamento do nome.
  * 0 - Left  1 - Center   2 - Right
+ * @type select
+ * @option Left
+ * @value 0
+ * @option Center
+ * @value 1
+ * @option Right
+ * @value 2 
  * @default 1
+ * @parent -> NAME <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param Name Font Size
+ * @text Font Size
  * @desc Definição do tamanho da fonte do nome.
  * @default 20
+ * @parent -> NAME <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param Name Bold Size
+ * @text Bold Size
  * @desc Definição do tamanho do contorno.
  * @default 4
+ * @parent -> NAME <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param Name Font Italic
+ * @text Font Italic
  * @desc Ativar fonte em itálico.
  * @default false
+ * @type boolean 
+ * @parent -> NAME <<<<<<<<<<<<<<<<<<<<<<< 
  *
- * @param >> HP ===================
- * @desc 
- * @default 
- *
+ * @param
+ * 
+ * @param -> HP <<<<<<<<<<<<<<<<<<<<<<<
+ * @desc  
+ * 
  * @param HP Meter Visible
+ * @text Gauge Visible
  * @desc Apresentar o medidor de HP
- * @default true   
+ * @default true
+ * @type boolean 
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param HP Meter X-Axis
+ * @text Gauge X-Axis
  * @desc Definição da posição X-Axis do medidor de HP.
- * @default 87
+ * @default 47
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param HP Meter Y-Axis
+ * @text Gauge Y-Axis
  * @desc Definição da posição Y-Axis do medidor de HP.
- * @default 7
+ * @default 41
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param HP Meter Angle
+ * @text Gauge Angle
  * @desc Ángulo do medidor.
  * @default 0
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param HP Meter Flow Anime
+ * @text Gradient Animation
  * @desc Ativar animação de gradiente no medidor.
  * É necessário que a imagem tenha 3x a largura do medidor.
- * @default true
+ * @default false
+ * @type boolean 
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param HP Number Visible
+ * @text Number Visible
  * @desc Apresentar o numero de HP
- * @default true   
+ * @default true
+ * @type boolean 
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param HP Number Align type
+ * @text Number Alignment
  * @desc Definição do tipo de alinhamento dos números.
- * (0 - right 1) (Center 2 - Left) (3 - Diagonal)
+ * (0 - right / 1 - Center / 2 - Left / 3 - Diagonal)
+ * @type select
+ * @option Right
+ * @value 0
+ * @option Center
+ * @value 1
+ * @option Left
+ * @value 2
+ * @option Diagonal
+ * @value 3
  * @default 0
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<< 
  * 
  * @param HP Number X-Axis
+ * @text Number X-Axis
  * @desc Definição da posição X-Axis do numero de HP.
- * @default 170
+ * @default 145
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param HP Number Y-Axis
+ * @text Number Y-Axis
  * @desc Definição da posição Y-Axis do numero de HP.
- * @default -11
+ * @default 30
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<< 
  * 
  * @param MaxHP Number Visible
+ * @text Max HP Visible
  * @desc Apresentar o numero de HP maximo.
  * @default false
+ * @type boolean
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param MaxHP Number X-Axis
+ * @text Max HP X-Axis
  * @desc Definição da posição X-Axis do numero de HP maximo.
- * @default 185
+ * @default 0
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param MaxHP Number Y-Axis
+ * @text Max HP Y-Axis
  * @desc Definição da posição Y-Axis do numero de HP maximo.
- * @default 40
+ * @default 0
+ * @parent -> HP <<<<<<<<<<<<<<<<<<<<<<< 
  *
- * @param >> MP ===================
- * @desc 
- * @default  
+ * @param
+ * 
+ * @param -> MP <<<<<<<<<<<<<<<<<<<<<<<
+ * @desc
  *
  * @param MP Meter Visible
+ * @text Gauge Visible
  * @desc Apresentar o medidor de MP
- * @default true   
+ * @default true
+ * @type boolean
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MP Meter X-Axis
+ * @text Gauge X-Axis
  * @desc Definição da posição X-Axis do medidor de MP.
- * @default 104
+ * @default 47
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param MP Meter Y-Axis
+ * @text Gauge Y-Axis
  * @desc Definição da posição Y-Axis do medidor de MP.
- * @default 33
+ * @default 74
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param MP Meter Angle
+ * @text Gauge Angle
  * @desc Ángulo do medidor.
  * @default 0
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param MP Meter Flow Anime
+ * @text Gradient Animation
  * @desc Ativar animação de gradiente no medidor.
  * É necessário que a imagem tenha 3x a largura do medidor.
- * @default true
+ * @default false
+ * @type boolean
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param MP Number Visible
+ * @text Number Visible
  * @desc Apresentar o numero de MP
  * @default true
+ * @type boolean
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param MP Number Align type
+ * @text Number Alignment
  * @desc Definição do tipo de alinhamento dos números.
- * (0 - right 1) (Center 2 - Left) (3 - Diagonal)
+ * (0 - right / 1 - Center / 2 - Left / 3 - Diagonal)
+ * @type select
+ * @option Right
+ * @value 0
+ * @option Center
+ * @value 1
+ * @option Left
+ * @value 2
+ * @option Diagonal
+ * @value 3
  * @default 0
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<< 
  * 
  * @param MP Number X-Axis
+ * @text Number X-Axis
  * @desc Definição da posição X-Axis do numero de MP.
- * @default 187
+ * @default 145
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param MP Number Y-Axis
+ * @text Number Y-Axis
  * @desc Definição da posição Y-Axis do numero de MP.
- * @default 26
+ * @default 63
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param MaxMP Number Visible
+ * @text Max MP Visible
  * @desc Apresentar o numero de MP maximo.
  * @default false
+ * @type boolean
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param MaxMP Number X-Axis
+ * @text Max HP X-Axis
  * @desc Definição da posição X-Axis do numero de MP maximo.
- * @default 196
+ * @default 0
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param MaxMP Number Y-Axis
+ * @text Max HP Y-Axis
  * @desc Definição da posição Y-Axis do numero de MP maximo.
- * @default 78
+ * @default 0
+ * @parent -> MP <<<<<<<<<<<<<<<<<<<<<<< 
  *
- * @param >> TP ===================
+ * @param
+ * 
+ * @param -> TP <<<<<<<<<<<<<<<<<<<<<<<
  * @desc 
- * @default  
  *
  * @param TP Meter Visible
+ * @text Gauge Visible
  * @desc Apresentar o medidor de TP
- * @default true   
+ * @default true
+ * @type boolean
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Meter X-Axis
+ * @text Gauge X-Axis
  * @desc Definição da posição X-Axis do medidor de TP.
- * @default 104
+ * @default 47
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Meter Y-Axis
+ * @text Gauge Y-Axis
  * @desc Definição da posição Y-Axis do medidor de TP.
- * @default 59
+ * @default 107
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Meter Angle
+ * @text Gauge Angle
  * @desc Ángulo do medidor.
  * @default 0
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Meter Flow Anime
+ * @text Gradient Animation
  * @desc Ativar animação de gradiente no medidor.
  * É necessário que a imagem tenha 3x a largura do medidor.
- * @default true
+ * @default false
+ * @type boolean
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Number Visible
+ * @text Number Visible
  * @desc Apresentar o numero de TP.
- * @default true   
+ * @default true
+ * @type boolean
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Number Align type
+ * @text Number Alignment
  * @desc Definição do tipo de alinhamento dos números.
- * (0 - right 1) (Center 2 - Left) (3 - Diagonal)
+ * (0 - right / 1 - Center / 2 - Left / 3 - Diagonal)
+ * @type select
+ * @option Right
+ * @value 0
+ * @option Center
+ * @value 1
+ * @option Left
+ * @value 2
+ * @option Diagonal
+ * @value 3
  * @default 0
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Number X-Axis
+ * @text Number X-Axis
  * @desc Definição da posição X-Axis do numero de TP.
- * @default 187
+ * @default 145
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param TP Number Y-Axis
+ * @text Number Y-Axis
  * @desc Definição da posição Y-Axis do numero de TP.
- * @default 43
+ * @default 96
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MaxTP Number Visible
+ * @text Max TP Visible
  * @desc Apresentar o numero de TP maximo.
  * @default false
+ * @type boolean
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MaxTP Number X-Axis
+ * @text Max TP X-Axis
  * @desc Definição da posição X-Axis do numero de TP maximo.
- * @default 185
+ * @default 0
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param MaxTP Number Y-Axis
+ * @text Max TP Y-Axis
  * @desc Definição da posição Y-Axis do numero de TP maximo.
- * @default 116
+ * @default 0
+ * @parent -> TP <<<<<<<<<<<<<<<<<<<<<<<
  *
- * @param >> ATB ===================
+ * @param
+ * 
+ * @param -> ATB <<<<<<<<<<<<<<<<<<<<<<<
  * @desc 
- * @default  
  *
  * @param ATB Meter Visible
+ * @text Gauge Visible
  * @desc Apresentar o medidor de TP
- * @default true   
+ * @default true
+ * @type boolean
+ * @parent -> ATB <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param ATB Meter X-Axis
+ * @text Gauge X-Axis
  * @desc Definição da posição X-Axis do medidor de ATB.
- * @default 69
+ * @default 45
+ * @parent -> ATB <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param ATB Meter Y-Axis
+ * @text Gauge Y-Axis
  * @desc Definição da posição Y-Axis do medidor de ATB.
- * @default 117
+ * @default 23
+ * @parent -> ATB <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param ATB Meter Angle
+ * @text Gauge Angle
  * @desc Ángulo do medidor.
  * @default 0
+ * @parent -> ATB <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param ATB Meter Flow Anime
+ * @text Gradient Animation
  * @desc Ativar animação de gradiente no medidor.
  * É necessário que a imagem tenha 3x a largura do medidor.
- * @default true
+ * @default false
+ * @type boolean
+ * @parent -> ATB <<<<<<<<<<<<<<<<<<<<<<<
  *
- * @param >> STATES ===================
+ * @param
+ * 
+ * @param -> STATES <<<<<<<<<<<<<<<<<<<<<<<
  * @desc 
- * @default 
  *
  * @param States Visible
+ * @text Visible
  * @desc Apresentar o numero as condições.
- * @default true   
+ * @default true
+ * @type boolean
+ * @parent -> STATES <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param States X-Axis
+ * @text X-Axis
  * @desc Definição da posição X-Axis das condições.
- * @default 102
+ * @default 105
+ * @parent -> STATES <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param States Y-Axis
+ * @text Y-Axis
  * @desc Definição da posição Y-Axis das condições.
- * @default 76
+ * @default 123
+ * @parent -> STATES <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param States Mode
+ * @text View Mode
  * @desc Definição do modo apresentado das condições.
  * 0 - Timing Mode     1 - Line Mode
+ * @type select
+ * @option Timing Mode (Show one state for second)
+ * @value 0
+ * @option Line Mode (Show all states)
+ * @value 1 
  * @default 0
+ * @parent -> STATES <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param States Max
+ * @text Max number of states
  * @desc Quantidade maxima de ícones apresentados.
+ * @type number
+ * @min 1 
  * @default 4
+ * @parent -> STATES <<<<<<<<<<<<<<<<<<<<<<< 
  *
  * @param States Align
+ * @text Alignment
  * @desc Alinhamento dos ícones.
- * 0 - Left  1 - Right  2 - Upper  3 - Below 
+ * 0 - Left  1 - Right  2 - Upper  3 - Below
+ * @type select
+ * @option Left
+ * @value 0
+ * @option Right
+ * @value 1
+ * @option Upper
+ * @value 2
+ * @option Below
+ * @value 3 
  * @default 0
- *  
- * @param >> W COMMAND ===================
+ * @parent -> STATES <<<<<<<<<<<<<<<<<<<<<<< 
+ *
+ * @param
+ * 
+ * @param -> W COMMAND <<<<<<<<<<<<<<<<<<<<<<<
+ * @text -> Window Command <<<<<<<<<<<<<<<<<<<<<<<
  * @desc 
- * @default 
+ *
+ * @param Command Auto Adjust
+ * @text Position Mode
+ * @desc Ativar ajuste automático baseado na posição
+ * da Hud.
+ * @type select
+ * @option Auto
+ * @value 0
+ * @option Static
+ * @value 1
+ * @default 0
+ * @parent -> W COMMAND <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Command X-Axis
+ * @text X-Axis
  * @desc Definição do posição X-axis do comando.
- * @default 0    
+ * @default 0
+ * @parent -> W COMMAND <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Command Y-Axis
+ * @text Y-Axis
  * @desc Definição do posição Y-axis do comando.
- * @default -15
+ * @default -70
+ * @parent -> W COMMAND <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Command Width
+ * @text Width
  * @desc Definição da largura da janela.
  * @default 192
+ * @parent -> W COMMAND <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Command Height
+ * @text Height
  * @desc Definição da altura da janela.
  * @default 180
+ * @parent -> W COMMAND <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Command Slide X
+ * @text Slide Animation X
  * @desc Animação de slide X-Axis.
- * @default 0    
+ * @default 0
+ * @parent -> W COMMAND <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Command Slide Y
+ * @text Slide Animation Y
  * @desc Animação de slide Y-Axis.
- * @default 64
+ * @default 0
+ * @parent -> W COMMAND <<<<<<<<<<<<<<<<<<<<<<<
  * 
  * @param Layout Command
+ * @text Layout (Picture)
  * @desc Ativar a imagem de layout.
  * @default true
+ * @type boolean
+ * @parent -> W COMMAND <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param L Command X-Axis
+ * @text Layout X-Axis
  * @desc Definição do posição X-axis do layout.
- * @default -25   
+ * @default -2
+ * @parent -> W COMMAND <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param L Command Y-Axis
+ * @text Layout Y-Axis
  * @desc Definição do posição Y-axis do layout.
- * @default -35
+ * @default 5
+ * @parent -> W COMMAND <<<<<<<<<<<<<<<<<<<<<<<
  *
- * @param >> W PARTY ===================
+ * @param
+ * 
+ * @param -> W PARTY <<<<<<<<<<<<<<<<<<<<<<<
+ * @text -> Window Party <<<<<<<<<<<<<<<<<<<<<<<
  * @desc 
- * @default  
  *
  * @param W Party X-Axis
+ * @text X-Axis
  * @desc Definição do posição X-axis da janela.
- * @default 325    
+ * @default 325
+ * @parent -> W PARTY <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Party Y-Axis
+ * @text Y-Axis
  * @desc Definição do posição Y-axis do janela.
  * @default 170
+ * @parent -> W PARTY <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Party Width
+ * @text Width
  * @desc Definição da largura da janela.
  * @default 192
+ * @parent -> W PARTY <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Party Height
+ * @text Height
  * @desc Definição da altura da janela.
  * @default 110
+ * @parent -> W PARTY <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Party Slide X
+ * @text Slide Animation X
  * @desc Animação de Slide X-Axis.
  * @default 0
+ * @parent -> W PARTY <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Party Slide Y
+ * @text Slide Animation Y
  * @desc Animação de Slide Y-Axis.
- * @default -100
+ * @default 0
+ * @parent -> W PARTY <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Layout Party
+ * @text Layout (Picture)
  * @desc Ativar a imagem de layout.
  * @default true
+ * @type boolean
+ * @parent -> W PARTY <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param L Party X-Axis
+ * @text Layout X-Axis
  * @desc Definição do posição X-axis do layout.
- * @default -325   
+ * @default -325
+ * @parent -> W PARTY <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param L Party Y-Axis
+ * @text Layout Y-Axis
  * @desc Definição do posição Y-axis do layout.
- * @default -42 
+ * @default -42
+ * @parent -> W PARTY <<<<<<<<<<<<<<<<<<<<<<<
  *
- * @param >> W HELP ===================
+ * @param
+ * 
+ * @param -> W HELP <<<<<<<<<<<<<<<<<<<<<<<
+ * @text -> Window Help <<<<<<<<<<<<<<<<<<<<<<<
  * @desc 
- * @default  
  *
  * @param W Help X-Axis
+ * @text X-Axis
  * @desc Definição do posição X-axis da janela.
- * @default 0    
+ * @default 0
+ * @parent -> W HELP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Help Y-Axis
+ * @text Y-Axis
  * @desc Definição do posição Y-axis do janela.
  * @default 0
+ * @parent -> W HELP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Help Width
+ * @text Width
  * @desc Definição da largura da janela.
  * @default 816
+ * @parent -> W HELP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Help Height
+ * @text Height
  * @desc Definição da altura da janela.
  * @default 108
+ * @parent -> W HELP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Help Slide X
+ * @text Slide Animation X
  * @desc Animação de Slide X-Axis.
  * @default 0
+ * @parent -> W HELP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Help Slide Y
+ * @text Slide Animation Y
  * @desc Animação de Slide Y-Axis.
- * @default -50
+ * @default 0
+ * @parent -> W HELP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Layout Help
+ * @text Layout (Picture)
  * @desc Ativar a imagem de layout.
  * @default true
+ * @type boolean
+ * @parent -> W HELP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param L Help X-Axis
+ * @text Layout X-Axis
  * @desc Definição do posição X-axis do layout.
- * @default 0   
+ * @default 0
+ * @parent -> W HELP <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param L Help Y-Axis
+ * @text Layout Y-Axis
  * @desc Definição do posição Y-axis do layout.
- * @default 0 
+ * @default 0
+ * @parent -> W HELP <<<<<<<<<<<<<<<<<<<<<<<
  *
- * @param >> W SKILL ===================
+ * @param
+ * 
+ * @param -> W SKILL <<<<<<<<<<<<<<<<<<<<<<<
+ * @text -> Window Skill <<<<<<<<<<<<<<<<<<<<<<< 
  * @desc 
- * @default  
  *
  * @param W Skill X-Axis
+ * @text X-Axis
  * @desc Definição do posição X-axis da janela.
- * @default 0    
+ * @default 0
+ * @parent -> W SKILL <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Skill Y-Axis
+ * @text Y-Axis 
  * @desc Definição do posição Y-axis do janela.
  * @default 444
+ * @parent -> W SKILL <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Skill Width
+ * @text Width 
  * @desc Definição da largura da janela.
  * @default 816
+ * @parent -> W SKILL <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Skill Height
+ * @text Height 
  * @desc Definição da altura da janela.
  * @default 180
+ * @parent -> W SKILL <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Skill maxCols
+ * @text Max Columns
  * @desc Definição da quantidade de colunas da janela.
- * @default 2 
+ * @type number
+ * @min 1 
+ * @default 2
+ * @parent -> W SKILL <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Skill Slide X
+ * @text Slide Animation X
  * @desc Animação de Slide X-Axis.
  * @default 0
+ * @parent -> W SKILL <<<<<<<<<<<<<<<<<<<<<<<
  * 
  * @param W Skill Slide Y
+ * @text Slide Animation Y
  * @desc Animação de Slide Y-Axis.
- * @default 50 
+ * @default 0
+ * @parent -> W SKILL <<<<<<<<<<<<<<<<<<<<<<<
  * 
  * @param Layout Skill
+ * @text Layout (Picture)
  * @desc Ativar a imagem de layout.
  * @default true
+ * @type boolean
+ * @parent -> W SKILL <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param L Skill X-Axis
+ * @text Layout X-Axis
  * @desc Definição do posição X-axis do layout.
  * @default 0
- *
+ * @parent -> W SKILL <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param L Skill Y-Axis
+ * @text Layout Y-Axis
  * @desc Definição do posição Y-axis do layout.
  * @default -67
+ * @parent -> W SKILL <<<<<<<<<<<<<<<<<<<<<<<
  *
- *
- * @param >> W ITEM ===================
+ * @param
+ * 
+ * @param -> W ITEM <<<<<<<<<<<<<<<<<<<<<<<
+ * @text -> Window Item <<<<<<<<<<<<<<<<<<<<<<< 
  * @desc 
  * @default  
  *
  * @param W Item X-Axis
+ * @text X-Axis
  * @desc Definição do posição X-axis da janela.
- * @default 0    
+ * @default 0
+ * @parent -> W ITEM <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Item Y-Axis
+ * @text Y-Axis
  * @desc Definição do posição Y-axis do janela.
  * @default 444
+ * @parent -> W ITEM <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Item Width
+ * @text Width
  * @desc Definição da largura da janela.
  * @default 816
+ * @parent -> W ITEM <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Item Height
+ * @text Height
  * @desc Definição da altura da janela.
  * @default 180
+ * @parent -> W ITEM <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Item maxCols
+ * @text Max Columns
  * @desc Definição da quantidade de colunas da janela.
- * @default 2 
+ * @type number
+ * @min 1 
+ * @default 2
+ * @parent -> W ITEM <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Item Slide X
+ * @text Slide Animation X 
  * @desc Animação de Slide X-Axis.
  * @default 0
+ * @parent -> W ITEM <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param W Item Slide Y
+ * @text Slide Animation Y
  * @desc Animação de Slide Y-Axis.
- * @default 50 
+ * @default 0
+ * @parent -> W ITEM <<<<<<<<<<<<<<<<<<<<<<<
  * 
  * @param Layout Item
+ * @text Layout (Picture)
  * @desc Ativar a imagem de layout.
  * @default true
+ * @type boolean
+ * @parent -> W ITEM <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param L Item X-Axis
+ * @text Layout X-Axis
  * @desc Definição do posição X-axis do layout.
- * @default 0   
+ * @default 0
+ * @parent -> W ITEM <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param L Item Y-Axis
- * @desc Definição do posição Y-axis do layout.
- * @default -67 
- *
- * @param >> W ACTOR ===================
- * @desc 
- * @default  
- *
- * @param W Actor X-Axis
- * @desc Definição do posição X-axis da janela.
- * @default 0    
- *
- * @param W Actor Y-Axis
- * @desc Definição do posição Y-axis do janela.
- * @default 444
- *
- * @param W Actor Width
- * @desc Definição da largura da janela.
- * @default 816
- *
- * @param W Actor Height
- * @desc Definição da altura da janela.
- * @default 180
- *
- * @param W Actor maxCols
- * @desc Definição da quantidade de colunas da janela.
- * @default 1 
- *
- * @param W Actor Slide X
- * @desc Animação de Slide X-Axis.
- * @default 0
- *
- * @param W Actor Slide Y
- * @desc Animação de Slide Y-Axis.
- * @default 50 
- * 
- * @param Layout Actor
- * @desc Ativar a imagem de layout.
- * @default true
- *
- * @param L Actor X-Axis
- * @desc Definição do posição X-axis do layout.
- * @default 0   
- *
- * @param L Actor Y-Axis
- * @desc Definição do posição Y-axis do layout.
- * @default -67   
- *
- * @param >> W ENEMY ===================
- * @desc 
- * @default  
- *
- * @param W Enemy X-Axis
- * @desc Definição do posição X-axis da janela.
- * @default 0    
- *
- * @param W Enemy Y-Axis
- * @desc Definição do posição Y-axis do janela.
- * @default 444
- *
- * @param W Enemy Width
- * @desc Definição da largura da janela.
- * @default 816
- *
- * @param W Enemy Height
- * @desc Definição da altura da janela.
- * @default 180
- *
- * @param W Enemy maxCols
- * @desc Definição da quantidade de colunas da janela.
- * @default 2 
- *
- * @param W Enemy Slide X
- * @desc Animação de Slide X-Axis.
- * @default 0
- *
- * @param W Enemy Slide Y
- * @desc Animação de Slide Y-Axis.
- * @default 50 
- * 
- * @param Layout Enemy
- * @desc Ativar a imagem de layout.
- * @default true
- *
- * @param L Enemy X-Axis
- * @desc Definição do posição X-axis do layout.
- * @default 0
- *
- * @param L Enemy Y-Axis
+ * @text Layout Y-Axis
  * @desc Definição do posição Y-axis do layout.
  * @default -67
+ * @parent -> W ITEM <<<<<<<<<<<<<<<<<<<<<<<
  *
- * @param >> SCREEN LAYOUT ===================
+ * @param
+ * 
+ * @param -> W ACTOR <<<<<<<<<<<<<<<<<<<<<<<
+ * @text -> Window Actor <<<<<<<<<<<<<<<<<<<<<<< 
  * @desc 
- * @default
+ *
+ * @param W Actor X-Axis
+ * @text X-Axis
+ * @desc Definição do posição X-axis da janela.
+ * @default 0
+ * @parent -> W ACTOR <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param W Actor Y-Axis
+ * @text Y-Axis
+ * @desc Definição do posição Y-axis do janela.
+ * @default 444
+ * @parent -> W ACTOR <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param W Actor Width
+ * @text Width
+ * @desc Definição da largura da janela.
+ * @default 816
+ * @parent -> W ACTOR <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param W Actor Height
+ * @text Height
+ * @desc Definição da altura da janela.
+ * @default 180
+ * @parent -> W ACTOR <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param W Actor maxCols
+ * @text Max Columns
+ * @desc Definição da quantidade de colunas da janela.
+ * @type number
+ * @min 1 
+ * @default 1
+ * @parent -> W ACTOR <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param W Actor Slide X
+ * @text Slide Animation X
+ * @desc Animação de Slide X-Axis.
+ * @default 0
+ * @parent -> W ACTOR <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param W Actor Slide Y
+ * @text Slide Animation Y
+ * @desc Animação de Slide Y-Axis.
+ * @default 0
+ * @parent -> W ACTOR <<<<<<<<<<<<<<<<<<<<<<<
+ * 
+ * @param Layout Actor
+ * @text Layout (Picture)
+ * @desc Ativar a imagem de layout.
+ * @default true
+ * @type boolean
+ * @parent -> W ACTOR <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param L Actor X-Axis
+ * @text Layout X-Axis
+ * @desc Definição do posição X-axis do layout.
+ * @default 0
+ * @parent -> W ACTOR <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param L Actor Y-Axis
+ * @text Layout Y-Axis
+ * @desc Definição do posição Y-axis do layout.
+ * @default -67
+ * @parent -> W ACTOR <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param
+ * 
+ * @param -> W ENEMY <<<<<<<<<<<<<<<<<<<<<<<
+ * @text -> Window Enemy <<<<<<<<<<<<<<<<<<<<<<< 
+ * @desc 
+ *
+ * @param W Enemy X-Axis
+ * @text X-Axis
+ * @desc Definição do posição X-axis da janela.
+ * @default 0
+ * @parent -> W ENEMY <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param W Enemy Y-Axis
+ * @text Y-Axis 
+ * @desc Definição do posição Y-axis do janela.
+ * @default 444
+ * @parent -> W ENEMY <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param W Enemy Width
+ * @text Width
+ * @desc Definição da largura da janela.
+ * @default 816
+ * @parent -> W ENEMY <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param W Enemy Height
+ * @text Height
+ * @desc Definição da altura da janela.
+ * @default 180
+ * @parent -> W ENEMY <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param W Enemy maxCols
+ * @text Max Columns
+ * @desc Definição da quantidade de colunas da janela.
+ * @type number
+ * @min 1 
+ * @default 2
+ * @parent -> W ENEMY <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param W Enemy Slide X
+ * @text Slide Animation X
+ * @desc Animação de Slide X-Axis.
+ * @default 0
+ * @parent -> W ENEMY <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param W Enemy Slide Y
+ * @text Slide Animation Y
+ * @desc Animação de Slide Y-Axis.
+ * @default 0
+ * @parent -> W ENEMY <<<<<<<<<<<<<<<<<<<<<<<
+ * 
+ * @param Layout Enemy
+ * @text Layout (Picture)
+ * @desc Ativar a imagem de layout.
+ * @default true
+ * @type boolean
+ * @parent -> W ENEMY <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param L Enemy X-Axis
+ * @text Layout X-Axis
+ * @desc Definição do posição X-axis do layout.
+ * @default 0
+ * @parent -> W ENEMY <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param L Enemy Y-Axis
+ * @text Layout Y-Axis
+ * @desc Definição do posição Y-axis do layout.
+ * @default -67
+ * @parent -> W ENEMY <<<<<<<<<<<<<<<<<<<<<<<
+ *
+ * @param
+ * 
+ * @param -> SCREEN LAYOUT <<<<<<<<<<<<<<<<<<<<<<<
+ * @desc 
  *
  * @param Screen Layout
+ * @text Visible
  * @desc Ativar o Layout da tela.
  * @default true
+ * @type boolean
+ * @parent -> SCREEN LAYOUT <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Screen X-Axis
+ * @text X-Axis
  * @desc Definição do posição X-axis da imagem.
  * @default 0
+ * @parent -> SCREEN LAYOUT <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Screen Y-Axis
+ * @text Y-Axis 
  * @desc Definição do posição Y-axis da imagem.
  * @default 0
+ * @parent -> SCREEN LAYOUT <<<<<<<<<<<<<<<<<<<<<<<
  *
- * @param >> CUSTOM POSITION ===================
+ * @param
+ * 
+ * @param -> CUSTOM POSITION <<<<<<<<<<<<<<<<<<<<<<<
  * @desc 
- * @default   
  *
  * @param Custom Position 1
  * @desc Definição da posição da hud.
  * Ex -     200,200
  * @default
+ * @parent -> CUSTOM POSITION <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Custom Position 2
  * @desc Definição da posição da hud.
  * Ex -     200,200
  * @default
+ * @parent -> CUSTOM POSITION <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Custom Position 3
  * @desc Definição da posição da hud.
  * Ex -     200,200
  * @default
+ * @parent -> CUSTOM POSITION <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Custom Position 4
  * @desc Definição da posição da hud.
  * Ex -     200,200
  * @default
+ * @parent -> CUSTOM POSITION <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Custom Position 5
  * @desc Definição da posição da hud.
  * Ex -     200,200
  * @default
+ * @parent -> CUSTOM POSITION <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Custom Position 6
  * @desc Definição da posição da hud.
  * Ex -     200,200
- * @default  
+ * @default
+ * @parent -> CUSTOM POSITION <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Custom Position 7
  * @desc Definição da posição da hud.
  * Ex -     200,200
  * @default
+ * @parent -> CUSTOM POSITION <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @param Custom Position 8
  * @desc Definição da posição da hud.
  * Ex -     200,200
- * @default  
+ * @default
+ * @parent -> CUSTOM POSITION <<<<<<<<<<<<<<<<<<<<<<<
  *
  * @help  
  * =============================================================================
- * +++ MOG_BattleHud (v4.0) +++
- * By Moghunter 
+ * +++ MOG_BattleHud (v5.04) +++
+ * By Moghunter
  * https://atelierrgss.wordpress.com/
  * =============================================================================
  * O plugin permite customizar o layout de batalha.
+ *
+ * =============================================================================
+ * - REQUIRED FILES
+ * ============================================================================= 
  * Serão necessários os arquivos. (img/battlehud/)
  *
- * HP_Meter.png
- * HP_Number.png
- * MP_Meter.png
- * MP_Number.png
- * TP_Meter.png
- * TP_Number.png
- * ATB_Meter.png
- * Layout.png
- * Layout_Actor.png
- * Layout_Command.png
- * Layout_Enemy.png
- * Layout_Help.png
- * Layout_Item.png
- * Layout_Party.png
- * Layout_Screen.png
- * Layout_Skill.png
- * Turn.png
+ * ->  HP_Meter.png
+ * ->  HP_Number.png
+ * ->  MP_Meter.png
+ * ->  MP_Number.png
+ * ->  TP_Meter.png
+ * ->  TP_Number.png
+ * ->  ATB_Meter.png
+ * ->  Layout.png
+ * ->  Layout_Actor.png
+ * ->  Layout_Command.png
+ * ->  Layout_Enemy.png
+ * ->  Layout_Help.png
+ * ->  Layout_Item.png
+ * ->  Layout_Party.png
+ * ->  Layout_Screen.png
+ * ->  Layout_Skill.png
+ * ->  Turn.png
  *
  * =============================================================================
  * Para nomear as faces dos battlers basta nomear da seguinte forma.
  *
  * Face_ + ACTOR_ID.png
- *
- * Ex
  *
  * Face_1.png
  * Face_2.png
@@ -763,71 +1201,40 @@
  * ...
  *
  * =============================================================================
- * PLUGIN COMMANDS
- * ============================================================================= 
- * Para ocultar a hud use o commando abaixo.
+ * - NOTETAGS
+ * =============================================================================
+ * Para ativar o efeito de respirar nas faces utilize a notetag abaixo
  *
- * bhud_disable
- * 
- * Para apresentar a hud use o commando abaixo
- *
- * bhud_enable 
+ * Face Breath Effect
  *
  * =============================================================================
- * SCRIPT COMMANDS
+ * - PLUGIN COMMANDS
  * ============================================================================= 
- * Para ocultar a hud use o commando abaixo.
+ * Para ocultar a hud use o comando abaixo.
  *
- * $gameSystem._bhud_visible = false
+ *     bhud_disable
+ * 
+ * Para apresentar a hud use o comando abaixo
+ *
+ *     bhud_enable 
+ *
+ * =============================================================================
+ * - SCRIPT COMMANDS
+ * ============================================================================= 
+ * Para ocultar a hud use o comando abaixo.
+ *
+ *     $gameSystem._bhud_visible = false
  *
  * Para apresentar a hud use o commando abaixo.
  *
- * $gameSystem._bhud_visible = true
+ *     $gameSystem._bhud_visible = true
  *  
- * =============================================================================
- * HISTÓRICO
- * =============================================================================
- * (4.0) - Compatibilidade com MOG ATB. 
- * (3.9) - Correção na apresentação do sprite de layout. 
- * (3.8) - Correção na apresentação do valor do TP.
- * (3.7) - Correção na prioridade de layers (sobreposição de huds).
- *       - Correção na apresentação do valor do TP maximo.
- *       - Melhoria na codificação.
- * (3.6) - Compatibilidade com Chrono Engine.   
- * (3.5) - Correção na apresentação de nomes longos.  
- * (3.4) - Apresentar as condições no modo de linha. 
- * (3.3) - Correção do crash ao desativar as condições (states).
- * (3.2) - Adição da animação de Slide.
- *       - Adição de novos efeitos no sprite de turno.
- *       - Adição do parâmetro de alinhar o nome.
- *       - Compatibilidade com Victor Active Time Battle.
- * (3.1) - Correção do crash quando a face é desativada. 
- * (3.0) - Correção da função da face animada. 
- * (2.9) - Modificação da posição do layout (Overlay) acima dos medidores .  
- * (2.8) - Adição do comando para ocultar a hud. 
- * (2.7) - Correção de alguns plugins parameters.  
- * (2.6) - Correção de parametro da posição do Screen Layout Y. 
- * (2.5) - Correção de alguns plugins parameters não fucionarem
- * (2.4) - Correção de não apresentar os ícones de Buff e Debuff. 
- * (2.3) - Melhoria na codificação.
- * (2.2) - Adição da opção do alinhamento dos números. 
- *       - Adição do layout Overlay. 
- * (2.1) - Compatibilidade com MOG Battle Cursor no modo Front View. 
- * (2.0) - Faces como actors no modo Frontview. 
- *       - Opção de definir a quantidade battlers na batalha.
- * (1.5) - Correção no setup do ângulo dos medidores. 
- * (1.4) - Correção na prioridade do layout Screen.
- * (1.3) - Correção na posição do plugin do template. 
- * (1.2) - Adição do modo hud na vertical.
- *       - Opção de definir o espaço entre as huds.
- *       - Opção de definir uma posição absoluta para a janela de comando.
- *       - Opção de definir posições especificas das huds.
- *       - Função de faces animadas por frames.
- *       - Opção da animação em gradiente do medidor.
- * (1.1) - Opção de poder definir a prioridade da face. 
- *               (0 - Abaixo do layout. 1 - Acima do layout.)
- *       - Opção de definir a quantidade de colunas da janela.
- *       - Correção da posição das condições através do setup.
+ * ============================================================================
+ * - WHAT'S  NEW
+ * ============================================================================
+ * - (version 5.04) 
+ * (BUG FIX) - Correção de não apresentar a face correta no inicio da batalha 
+ *             caso o personagem seja abatido na batalha anterior. 
  *
  */
  
@@ -952,7 +1359,7 @@
 	Moghunter.bhud_statesAlign = Number(Moghunter.parameters['States Align'] || 0);	
 	
     // COMMAND WINDOWS
-	Moghunter.bhud_auto_pos = String(Moghunter.parameters['Command Auto Adjust'] || true);
+	Moghunter.bhud_auto_pos = Number(Moghunter.parameters['Command Auto Adjust'] || 0);
     Moghunter.bhud_com_x = Number(Moghunter.parameters['W Command X-Axis'] || 0);
     Moghunter.bhud_com_y = Number(Moghunter.parameters['W Command Y-Axis'] || -15);
 	Moghunter.bhud_com_layout = String(Moghunter.parameters['Layout Command'] || true);
@@ -1039,6 +1446,24 @@
 	for (var i = 0; i < 8; i++) {
 		Moghunter.bhud_custom_pos[i] = (Moghunter.parameters['Custom Position ' + String(i + 1)] || null);
 	};
+	
+//=============================================================================
+// ** Sprite Animation
+//=============================================================================
+
+//==============================
+// * Update Position
+//==============================
+var _mog_bhud_sprAnim_updatePosition = Sprite_Animation.prototype.updatePosition;
+Sprite_Animation.prototype.updatePosition = function() {
+	_mog_bhud_sprAnim_updatePosition.call(this)
+	if (this._battler) {
+		if (this._animation.position === 3 && this.x === 0 && this.y === 0) {
+			this.x = Graphics.boxWidth / 2;
+			this.y = Graphics.boxHeight / 2;
+		};
+	};
+};
 
 //=============================================================================
 // ** ImageManager
@@ -1089,6 +1514,7 @@ Game_Temp.prototype.initialize = function() {
 	_alias_mog_bhud_temp_initialize.call(this);
 	this._bhud_position = [];	
 	this._bhud_position_active = null;
+	this._bhudFaceAnime = false;
 	this._battleEnd = false;
 	this._bhud_dp = false;
 	this._refreshBhud = false;
@@ -1113,8 +1539,9 @@ Game_System.prototype.initialize = function() {
 	this._bhud_auto_com = false;
 	this._bhud_pos_mode = 0;
 	this._bhud_visible = true;
-	if (String(Moghunter.bhud_pos_mode) === "true") {this._bhud_pos_mode = 1};
-	if (String(Moghunter.bhud_auto_pos) === "true") {this._bhud_auto_com = true};
+	this._bhudFaceBattler = String(Moghunter.bhud_face_visible) == "true" && !$dataSystem.optSideView ? true : false;
+	if (String(Moghunter.bhud_pos_mode) == "true") {this._bhud_pos_mode = 1};
+	if (Number(Moghunter.bhud_auto_pos) == 0) {this._bhud_auto_com = true};
 };
 
 //==============================
@@ -1219,6 +1646,50 @@ Game_BattlerBase.prototype.eraseState = function(stateId) {
 };
 
 //=============================================================================
+// ** Game Battler
+//=============================================================================
+
+//==============================
+// ** iniMembers
+//==============================
+var _mog_bhud_gbattler_initMembers = Game_Battler.prototype.initMembers;
+Game_Battler.prototype.initMembers = function() {
+	_mog_bhud_gbattler_initMembers.call(this);
+	this._bhud = {};
+	this._bhud.faceBreath = false;	
+};
+
+
+//==============================
+// * Notetags
+//==============================
+Game_Battler.prototype.notetags = function() {
+	if (this.isEnemy()) {return this.enemy().note.split(/[\r\n]+/)};
+;;	if (this.isActor()) {return this.actor().note.split(/[\r\n]+/)};
+};
+
+//==============================
+// ** get Bmotion Idle
+//==============================
+Game_Battler.prototype.checkBhudNoteTags = function() {
+    this.notetags().forEach(function(note) {			
+         var note_data = note.split(': ')
+    	 if (note_data[0].toLowerCase() == "face breath effect"){
+             this._bhud.faceBreath = true; 
+    	 };
+	},this);
+};
+
+//==============================
+// * 
+//==============================
+var _mog_bhud_gactor_initMembers = Game_Actor.prototype.initMembers;
+Game_Actor.prototype.initMembers = function() {
+	_mog_bhud_gactor_initMembers.call(this);
+	
+};
+
+//=============================================================================
 // ** Game Action
 //=============================================================================
 
@@ -1230,8 +1701,8 @@ Game_Action.prototype.apply = function(target) {
 	 var oldhp = target.hp
 	 _alias_mog_bhud_apply.call(this,target);
 	 if (target.isActor()) {
-		 if (oldhp > target.hp) {target._bhud_face_data = [30,20,3,30]}
-		 else if (oldhp < target.hp) {target._bhud_face_data = [0,20,1,30]};
+		 if (oldhp > target.hp) {target._bhud_face_data = [60,0,3,60]}
+		 else if (oldhp < target.hp) {target._bhud_face_data = [0,70,1,70]};
 	 };
 };
 
@@ -1241,7 +1712,7 @@ Game_Action.prototype.apply = function(target) {
 var _alias_mog_bmhud_action_prepare = Game_Action.prototype.prepare
 Game_Action.prototype.prepare = function() {	
 	_alias_mog_bmhud_action_prepare.call(this);
-	if (this.subject().isActor() && String(Moghunter.bhud_face_zoom) === "true"){this.subject()._bhud_face_data = [0,40,2,40];};
+	if (this.subject().isActor() && String(Moghunter.bhud_face_zoom) === "true"){this.subject()._bhud_face_data = [0,70,2,70];};
 };
 
 //=============================================================================
@@ -1519,7 +1990,7 @@ var _alias_bhud_sprt_actor_initialize = Sprite_Actor.prototype.initialize
 Sprite_Actor.prototype.initialize = function(battler) {
 	_alias_bhud_sprt_actor_initialize.call(this,battler);
 	this._sprite_face = false;
-	if (String(Moghunter.bhud_face_visible) === "true") {this._sprite_face = true};
+	if (String(Moghunter.bhud_face_visible) == "true") {this._sprite_face = true};
 };
 
 //==============================
@@ -1588,6 +2059,17 @@ Sprite_Actor.prototype.setupDamagePopup = function() {
 	_alias_mog_bhud_sprt_actor_setupDamagePopup.call(this);
 };
 
+//==============================
+// ** update Main
+//==============================
+var _mog_bhud_sprActor_updateMain = Sprite_Actor.prototype.updateMain;
+Sprite_Actor.prototype.updateMain = function() {
+    _mog_bhud_sprActor_updateMain.call(this);
+	if (this.isAnimationPlaying()) {
+    	$gameTemp._bhudFaceAnime = 3;
+	};
+};
+
 //=============================================================================
 // ** Spriteset Battle
 //=============================================================================
@@ -1599,6 +2081,17 @@ var _mog_bhud_sprbat_updateActors = Spriteset_Battle.prototype.updateActors;
 Spriteset_Battle.prototype.updateActors = function() {
 	if (!$gameSystem.isSideView()) {return};
 	_mog_bhud_sprbat_updateActors.call(this);
+};
+
+//==============================
+// * Is Busy
+//==============================	
+Spriteset_Battle.prototype.isBusy = function() {
+	if ($gameSystem._bhudFaceBattler) {
+		return this.isAnimationPlaying() || this.isAnyoneMoving() || $gameTemp._bhudFaceAnime > 0;
+	};
+	if (Imported.YEP_BattleEngineCore) {return false};
+	return this.isAnimationPlaying() || this.isAnyoneMoving();
 };
 
 //=============================================================================
@@ -1765,8 +2258,7 @@ Scene_Battle.prototype.createSpriteset = function() {
 //==============================
 Scene_Battle.prototype.createBattleHudSB = function() {
 	this.createBattleHud();
-	if (!$gameSystem.isSideView()) {this.createActorsF()};
-	
+	if (!$gameSystem.isSideView()) {this.createActorsF()};	
 };
 
 //==============================
@@ -1953,6 +2445,7 @@ Scene_Battle.prototype.create_layout_window = function() {
 //==============================
 var _alias_mog_bhud_scnbattle_update = Scene_Battle.prototype.update
 Scene_Battle.prototype.update = function() {
+	if ($gameTemp._bhudFaceAnime > 0) {$gameTemp._bhudFaceAnime--};
     _alias_mog_bhud_scnbattle_update.call(this);
 	this.updateBattleHud();
 };
@@ -2025,6 +2518,7 @@ Scene_Battle.prototype.updateLayoutWindow = function() {
     	this._skill_layout.x = Moghunter.bhud_skill_lay_x + this._skillWindow.x;
     	this._skill_layout.y = Moghunter.bhud_skill_lay_y + this._skillWindow.y;
     	this._skill_layout.visible = this._skillWindow.isOpenAndActive();
+
 		this._skill_layout.opacity = this._skillWindow.contentsOpacity;
 		if (!this._skillWindow.visible) {this._skill_layout.visible = false};
     };	
@@ -2166,6 +2660,7 @@ Battle_Hud.prototype.need_refreh_bhud = function() {
 Battle_Hud.prototype.refresh_bhud = function() {
 	 this._data_initial_ref[1] = false;
 	 this._battler = $gameParty.battleMembers()[this._hud_id];
+	 if (this._battler) {this._battler.checkBhudNoteTags()}
 	 this.opacity = 0;
 	 this._hud_size = [0,0];
 	 this.base_parameter_clear();
@@ -2182,7 +2677,7 @@ Battle_Hud.prototype.refresh_position = function() {
 	 this._layout.y = this._pos_y;
 	 if (this._face) {
      	 this._face.x = this._pos_x + Moghunter.bhud_face_pos_x;
- 	     this._face.y = this._pos_y + Moghunter.bhud_face_pos_y;
+ 	     this._face.y = this._pos_y + Moghunter.bhud_face_pos_y + this._face.ph;
      };
 	 if (this._turn) {
         this._turn.x = this._pos_x + (this._turn.width / 2) + Moghunter.bhud_turn_pos_x;
@@ -2529,9 +3024,13 @@ Battle_Hud.prototype.create_face = function() {
 	this._face.anchor.x = 0.5;
 	this._face.anchor.y = 0.5;
 	this._face_data = [0,0,false,false,false,-1];
+	this._face.ph = 0;
+	this._face.animation = [-1,0,0,0,0,0,0,0,0];
+	this._face.breathEffect = this._battler._bhud.faceBreath;
+	this._face.scaleY = 0;
 	if (String(Moghunter.bhud_face_shake) === "true") {this._face_data[2] = true}
 	if (String(Moghunter.bhud_face_animated) === "true") {this._face_data[4] = true}
-	this._battler._bhud_face_data = [0,0,0,0]
+	this._battler._bhud_face_data = [0,0,0,1]
 	this.addChild(this._face);
 };
 
@@ -2545,6 +3044,67 @@ Battle_Hud.prototype.update_face = function() {
     this.update_face_animation();
     this.update_face_shake();
     this.update_face_zoom();
+	if (this._face.breathEffect) {this.updateFaceEffects()};
+};
+
+//==============================
+// * update Face Effects
+//==============================
+Battle_Hud.prototype.updateFaceEffects = function() {	
+	if (this._face_data[5] == 0 || this._face_data[5] == 3) {
+		this._face.anchor.y = 1;
+		this._face.y = this._pos_y + Moghunter.bhud_face_pos_y + this._face.height / 2;
+		this.updateBreathEffect()
+	} else {
+		this._face.anchor.y = 0.5;
+		this._face.y = this._pos_y + Moghunter.bhud_face_pos_y;
+
+	};
+};
+
+//==============================
+// * set Breath Effect
+//==============================
+Battle_Hud.prototype.setBreathEffect = function() {
+ 	    this._face.animation[0] = 0;
+		var rds = Math.randomInt(100);
+		var rds2 = rds * 0.0000001;		
+		this._face.animation[2] = 0.000005;
+	    this._face.animation[3] = 0.0002;
+		var int = this._face.animation[3];
+        var int2 = (Math.randomInt(int) * 0.0001).toFixed(4);
+  	    this._face.animation[1] = int2;
+		this._face.animation[8] = Math.randomInt(80)
+};
+
+//==============================
+// * update Breath Effect
+//==============================
+Battle_Hud.prototype.updateBreathEffect = function() {
+	this._face.scale.y = 1.00 + this._face.scaleY;	
+	if (this._face.animation[0] == -1) {
+		 if (this._face.bitmap.isReady()) {this.setBreathEffect()} 
+		 return   
+	}	
+	if (this._face.animation[8] > 0) {
+		this._face.animation[8]--
+		return
+	}
+	if (this._face.animation[0] == 0) {		  
+		this._face.animation[1] -= this._face.animation[2]
+		this._face.scaleY += this._face.animation[1];	
+ 	    if (this._face.animation[1] <= -this._face.animation[3]) {	
+		    this._face.animation[1] = -this._face.animation[3]
+		    this._face.animation[0] = 1;
+		};	
+	  } else {
+		  this._face.animation[1] += this._face.animation[2]
+		  this._face.scaleY += this._face.animation[1];
+		  if (this._face.animation[1] >= this._face.animation[3]) {	
+			  this._face.animation[1] = this._face.animation[3]
+			  this._face.animation[0] = 0;
+		  };
+	  };		
 };
 
 //==============================
@@ -2576,10 +3136,10 @@ Battle_Hud.prototype.update_face_animation = function() {
 Battle_Hud.prototype.update_face_zoom = function() {
 	if (this._battler._bhud_face_data[1] > 0) {this._battler._bhud_face_data[1] -= 1;
 	    if (this._battler._bhud_face_data[1] == 0) {this._face.scale.x = 1.00}
-		else if (this._battler._bhud_face_data[1] < 20) {this._face.scale.x -= 0.01;
+		else if (this._battler._bhud_face_data[1] < 35) {this._face.scale.x -= 0.005;
 		         if (this._face.scale.x < 1.00) {this._face.scale.x = 1.00;};	
 	    }
-		else if (this._battler._bhud_face_data[1] < 40){this._face.scale.x += 0.01;
+		else if (this._battler._bhud_face_data[1] < 70){this._face.scale.x += 0.005;
 		         if (this._face.scale.x > 1.25) {this._face.scale.x = 1.25;};
 	    };
 	    this._face.scale.y = this._face.scale.x;
@@ -2639,7 +3199,7 @@ Battle_Hud.prototype.create_hp_meter = function() {
 	this._hp_meter_red = new Sprite(this._hp_meter_img);
 	this._hp_meter_red.x = this._pos_x + Moghunter.bhud_hp_meter_pos_x;
 	this._hp_meter_red.y = this._pos_y + Moghunter.bhud_hp_meter_pos_y;
-	this._hp_meter_red.rotation = Moghunter.bhud_hp_meter_rotation;
+	this._hp_meter_red.rotation = Moghunter.bhud_hp_meter_rotation * Math.PI / 180;
 	this.addChild(this._hp_meter_red);		
 	this._hp_meter_blue = new Sprite(this._hp_meter_img);
 	this._hp_meter_blue.x = this._hp_meter_red.x;
@@ -2747,7 +3307,7 @@ Battle_Hud.prototype.create_mp_meter = function() {
 	this._mp_meter_red = new Sprite(this._mp_meter_img);
 	this._mp_meter_red.x = this._pos_x + Moghunter.bhud_mp_meter_pos_x;
 	this._mp_meter_red.y = this._pos_y + Moghunter.bhud_mp_meter_pos_y;
-	this._mp_meter_red.rotation = Moghunter.bhud_mp_meter_rotation;
+	this._mp_meter_red.rotation = Moghunter.bhud_mp_meter_rotation * Math.PI / 180;
 	this.addChild(this._mp_meter_red);		
 	this._mp_meter_blue = new Sprite(this._mp_meter_img);
 	this._mp_meter_blue.x = this._mp_meter_red.x;
@@ -2856,7 +3416,7 @@ Battle_Hud.prototype.create_tp_meter = function() {
 	this._tp_meter_red = new Sprite(this._tp_meter_img);
 	this._tp_meter_red.x = this._pos_x + Moghunter.bhud_tp_meter_pos_x;
 	this._tp_meter_red.y = this._pos_y + Moghunter.bhud_tp_meter_pos_y;
-	this._tp_meter_red.rotation = Moghunter.bhud_tp_meter_rotation;
+	this._tp_meter_red.rotation = Moghunter.bhud_tp_meter_rotation * Math.PI / 180;
 	this.addChild(this._tp_meter_red);		
 	this._tp_meter_blue = new Sprite(this._tp_meter_img);
 	this._tp_meter_blue.x = this._tp_meter_red.x;
@@ -2887,6 +3447,7 @@ Battle_Hud.prototype.create_tp_number = function() {
 	   this._tp_number[i] = new Sprite(this._tp_number_img);
 	   this._tp_number[i].visible = false;
 	   this._tp_number[i].x = this._tp_img_data[4];
+
 	   this._tp_number[i].y = this._tp_img_data[5] ;
 	   this.addChild(this._tp_number[i]);
 	};	
@@ -2959,7 +3520,7 @@ Battle_Hud.prototype.create_at_meter = function() {
 	this._at_meter = new Sprite(this._at_meter_img);
 	this._at_meter.x = this._pos_x + Moghunter.bhud_at_meter_pos_x;
 	this._at_meter.y = this._pos_y + Moghunter.bhud_at_meter_pos_y;
-	this._at_meter.rotation = Moghunter.bhud_at_meter_rotation; 
+	this._at_meter.rotation = Moghunter.bhud_at_meter_rotation * Math.PI / 180; 
 	this.addChild(this._at_meter);	
 	if (String(Moghunter.bhud_at_meter_flow) === "true") {this._at_flow[0] = true;
 	    this._at_flow[2] = this._at_meter_img.width / 3;

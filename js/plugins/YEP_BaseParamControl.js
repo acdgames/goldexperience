@@ -438,7 +438,7 @@ Yanfly.BPC.version = 1.04;
  *   battler.setMat(x)
  *   battler.setMdf(x)
  *   battler.setAgi(x)
- *   battler.setLui(x)
+ *   battler.setLuk(x)
  *   - Sets the battler's respective base parameter value to x. This will alter
  *   the 'plus' variable to fit this setting as best as possible without taking
  *   into consideration the rates and flats.
@@ -450,7 +450,7 @@ Yanfly.BPC.version = 1.04;
  *   battler.setMatPlus(x)
  *   battler.setMdfPlus(x)
  *   battler.setAgiPlus(x)
- *   battler.setLuiPlus(x)
+ *   battler.setLukPlus(x)
  *   - Sets the battler's respective base parameter plus value to x.
  *
  *   battler.addMaxHp(x)
@@ -460,7 +460,7 @@ Yanfly.BPC.version = 1.04;
  *   battler.addMat(x)
  *   battler.addMdf(x)
  *   battler.addAgi(x)
- *   battler.addLui(x)
+ *   battler.addLuk(x)
  *   - Adds x value to battler's respective base parameter plus value.
  *
  *   battler.minusMaxHp(x)
@@ -470,7 +470,7 @@ Yanfly.BPC.version = 1.04;
  *   battler.minusMat(x)
  *   battler.minusMdf(x)
  *   battler.minusAgi(x)
- *   battler.minusLui(x)
+ *   battler.minusLuk(x)
  *   - Subtracts x value to battler's respective base parameter plus value.
  *
  *   battler.clearCustomParamLimits();
@@ -511,6 +511,7 @@ Yanfly.BPC.version = 1.04;
  * Version 1.04:
  * - Bypass the isDevToolsOpen() error when bad code is inserted into a script
  * call or custom Lunatic Mode code segment due to updating to MV 1.6.1.
+ * - Fixed a typo in the documentation for script calls regarding LUK.
  *
  * Version 1.03:
  * - Updated for RPG Maker MV version 1.5.0.

@@ -1,0 +1,46 @@
+Network.requestPvPBattle = function()
+
+$gamePlayer.followers().getNetworkCharByActorId();
+
+
+
+$gamePlayer._netPlayerForAction = $gamePlayer.followers().getNetworkCharByActorId();
+Network.requestPvPBattle();
+
+
+GET TARGET MAP
+
+var targ = $gamePlayer.followers().getNetworkCharByActorId($gameVariables.value(102));
+if (targ == null) {
+$gameVariables.value(103) = 1;
+} else {
+$gameVariables.value(103) = 0;
+$gamePlayer._netPlayerForAction = $gamePlayer.followers().getNetworkCharByActorId($gameVariables.value(102));
+Network.requestPvPBattle();
+}
+
+
+NetPartyManager.getMyActorId()
+
+hide_choice(1, "$gameParty.members().contains($gameActors.actor(1)) == false" );
+hide_choice(2, "$gameParty.members().contains($gameActors.actor(2)) == false" );
+hide_choice(3, "$gameParty.members().contains($gameActors.actor(3)) == false" );
+hide_choice(4, "$gameParty.members().contains($gameActors.actor(4)) == false" );
+hide_choice(5, "$gameParty.members().contains($gameActors.actor(5)) == false" );
+hide_choice(6, "$gameParty.members().contains($gameActors.actor(6)) == false" );
+hide_choice(7, "$gameParty.members().contains($gameActors.actor(7)) == false" );
+hide_choice(8, "$gameParty.members().contains($gameActors.actor(8)) == false" );
+hide_choice(9, "$gameParty.members().contains($gameActors.actor(9)) == false" );
+hide_choice(10, "$gameParty.members().contains($gameActors.actor(10)) == false" );
+hide_choice(11, "$gameParty.members().contains($gameActors.actor(11)) == false" );
+hide_choice(12, "$gameParty.members().contains($gameActors.actor(12)) == false" );
+hide_choice(13, "$gameParty.members().contains($gameActors.actor(13)) == false" );
+hide_choice(14, "$gameParty.members().contains($gameActors.actor(14)) == false" );
+hide_choice(15, "$gameParty.members().contains($gameActors.actor(15)) == false" );
+hide_choice(16, "$gameParty.members().contains($gameActors.actor(16)) == false" );
+hide_choice(17, "$gameParty.members().contains($gameActors.actor(17)) == false" );
+hide_choice(18, "$gameParty.members().contains($gameActors.actor(18)) == false" );
+hide_choice(19, "$gameParty.members().contains($gameActors.actor(19)) == false" );
+hide_choice(20, "$gameParty.members().contains($gameActors.actor(20)) == false" );
+hide_choice(21, "$gameParty.members().contains($gameActors.actor(21)) == false" );
+hide_choice(22, "$gameParty.members().contains($gameActors.actor(22)) == false" );

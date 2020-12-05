@@ -563,7 +563,7 @@ Game_Variables.prototype.value = function(variableId) {
 Game_Variables.prototype.setValue = function(variableId, value) {
     if (variableId > 0 && variableId < $dataSystem.variables.length) {
         if (typeof value === 'number') {
-            //value = Math.floor(value);
+            value = Math.floor(value);
         }
         this._data[variableId] = value;
         this.onChange();
@@ -1386,6 +1386,22 @@ Game_Action.prototype.isAttack = function() {
     return this.item() === $dataSkills[this.subject().attackSkillId()];
 };
 
+
+Game_Action.prototype.isAttackSkill = function() {
+	var elements = this.getItemElements();
+    return (elements.contains(2));
+};
+
+Game_Action.prototype.isAdaptive = function() {
+	var elements = this.getItemElements();
+    return (elements.contains(3));
+};
+
+Game_Action.prototype.isTrue = function() {
+	var elements = this.getItemElements();
+    return (elements.contains(4));
+};
+
 Game_Action.prototype.isGuard = function() {
     return this.item() === $dataSkills[this.subject().guardSkillId()];
 };
@@ -1430,7 +1446,7 @@ Game_Action.prototype.isValid = function() {
 
 Game_Action.prototype.speed = function() {
     var agi = this.subject().agi;
-    var speed = agi + Math.randomInt(Math.floor(5 + agi / 4));
+    var speed = agi; //+ Math.randomInt(Math.floor(5 + agi / 4));
     if (this.item()) {
         speed += this.item().speed;
     }
@@ -1877,9 +1893,11 @@ Game_Action.prototype.itemEffectAddState = function(target, effect) {
 Game_Action.prototype.itemEffectAddAttackState = function(target, effect) {
     this.subject().attackStates().forEach(function(stateId) {
         var chance = effect.value1;
+		if (chance !== 1.0) {
         chance *= target.stateRate(stateId);
         chance *= this.subject().attackStatesRate(stateId);
         chance *= this.lukEffectRate(target);
+		}
         if (Math.random() < chance) {
             target.addState(stateId);
             this.makeSuccess(target);
@@ -1889,10 +1907,12 @@ Game_Action.prototype.itemEffectAddAttackState = function(target, effect) {
 
 Game_Action.prototype.itemEffectAddNormalState = function(target, effect) {
     var chance = effect.value1;
+		if (chance !== 1.0) {
     if (!this.isCertainHit()) {
         chance *= target.stateRate(effect.dataId);
         chance *= this.lukEffectRate(target);
     }
+		}
     if (Math.random() < chance) {
         target.addState(effect.dataId);
         this.makeSuccess(target);
@@ -1913,7 +1933,10 @@ Game_Action.prototype.itemEffectAddBuff = function(target, effect) {
 };
 
 Game_Action.prototype.itemEffectAddDebuff = function(target, effect) {
+	var chance = target.debuffRate(effect.dataId);
+	if (chance !== 1.0) {
     var chance = target.debuffRate(effect.dataId) * this.lukEffectRate(target);
+	}
     if (Math.random() < chance) {
         target.addDebuff(effect.dataId, effect.value1);
         this.makeSuccess(target);
@@ -2197,7 +2220,7 @@ Game_BattlerBase.prototype.initMembers = function() {
     this._tp = 0;
     this._hidden = false;
     this.clearParamPlus();
-    this.clearStates();
+    this.initStates();
     this.clearBuffs();
 };
 
@@ -2208,6 +2231,11 @@ Game_BattlerBase.prototype.clearParamPlus = function() {
 Game_BattlerBase.prototype.clearStates = function() {
     this._states = [];
     this._stateTurns = {};
+};
+
+Game_BattlerBase.prototype.initStates = function() {
+    this._states = this._states || [];
+    this._stateTurns = this._stateTurns || {};
 };
 
 Game_BattlerBase.prototype.eraseState = function(stateId) {
@@ -2319,7 +2347,7 @@ Game_BattlerBase.prototype.updateBuffTurns = function() {
 Game_BattlerBase.prototype.die = function() {
     this._hp = 0;
     this.clearStates();
-    this.clearBuffs();
+    //this.clearBuffs();
 };
 
 Game_BattlerBase.prototype.revive = function() {
@@ -2353,10 +2381,33 @@ Game_BattlerBase.prototype.buffIcons = function() {
 };
 
 Game_BattlerBase.prototype.buffIconIndex = function(buffLevel, paramId) {
-    if (buffLevel > 0) {
-        return Game_BattlerBase.ICON_BUFF_START + (buffLevel - 1) * 8 + paramId;
-    } else if (buffLevel < 0) {
-        return Game_BattlerBase.ICON_DEBUFF_START + (-buffLevel - 1) * 8 + paramId;
+    if (buffLevel !== 0) {
+		switch (paramId) {
+			case 0: 
+			return 136;
+			break;
+			case 1: 
+			return 137;
+			break;
+			case 2: 
+			return 672;
+			break;
+			case 3: 
+			return 673;
+			break;
+			case 4: 
+			return 674;
+			break;
+			case 5: 
+			return 675;
+			break;
+			case 6: 
+			return 677;
+			break;
+			case 7: 
+			return 676;
+			break;
+		}
     } else {
         return 0;
     }
@@ -2444,7 +2495,7 @@ Game_BattlerBase.prototype.paramRate = function(paramId) {
 };
 
 Game_BattlerBase.prototype.paramBuffRate = function(paramId) {
-    return this._buffs[paramId] * 0.25 + 1.0;
+    return this._buffs[paramId] * 0.2 + 1.0;
 };
 
 Game_BattlerBase.prototype.param = function(paramId) {
@@ -2768,6 +2819,9 @@ Game_BattlerBase.prototype.canPaySkillCost = function(skill) {
 
 Game_BattlerBase.prototype.paySkillCost = function(skill) {
     this._mp -= this.skillMpCost(skill);
+	if (this.skillTpCost(skill) == 200) {
+		this.addState(10);
+	}
     this._tp -= this.skillTpCost(skill);
 };
 
@@ -3228,7 +3282,9 @@ Game_Battler.prototype.chargeTpByDamage = function(damageRate) {
 };
 
 Game_Battler.prototype.regenerateHp = function() {
-    var value = Math.floor(this.mhp * this.hrg);
+	//Weighted HP Regeneration
+	var wthrg = this.hrg > 0 ? this.hrg * this.rec : this.hrg;
+    var value = Math.floor(this.mhp * wthrg);
     value = Math.max(value, -this.maxSlipDamage());
     if (value !== 0) {
         this.gainHp(value);
@@ -4173,7 +4229,7 @@ Game_Actor.prototype.showRemovedStates = function() {
 };
 
 Game_Actor.prototype.stepsForTurn = function() {
-    return 20;
+    return 5;
 };
 
 Game_Actor.prototype.turnEndOnMap = function() {
@@ -4308,7 +4364,9 @@ Game_Enemy.prototype.setup = function(enemyId, x, y) {
     this._enemyId = enemyId;
     this._screenX = x;
     this._screenY = y;
-    this.recoverAll();
+    this.initStates();
+    this._hp = this.mhp;
+    this._mp = this.mmp;
 };
 
 Game_Enemy.prototype.isEnemy = function() {
@@ -5292,7 +5350,7 @@ Game_Troop.prototype.letterTable = function() {
 Game_Troop.prototype.enemyNames = function() {
     var names = [];
     this.members().forEach(function(enemy) {
-        var name = enemy.originalName();
+        var name = enemy._name || enemy.originalName();
         if (enemy.isAlive() && !names.contains(name)) {
             names.push(name);
         }
@@ -6062,11 +6120,9 @@ Game_Map.prototype.doScroll = function(direction, distance) {
 };
 
 Game_Map.prototype.updateEvents = function() {
-	if ($gameTemp.isStopMapEventMovement() == false) {
     this.events().forEach(function(event) {
         event.update();
     });
-	}
     this._commonEvents.forEach(function(event) {
         event.update();
     });
@@ -6265,7 +6321,7 @@ Game_CharacterBase.prototype.initMembers = function() {
     this._moveFrequency = 6;
     this._opacity = 255;
     this._blendMode = 0;
-    this._direction = 6;
+    this._direction = 2;
     this._pattern = 1;
     this._priorityType = 1;
     this._tileId = 0;
@@ -6577,12 +6633,6 @@ Game_CharacterBase.prototype.animationWait = function() {
 };
 
 Game_CharacterBase.prototype.updateAnimationCount = function() {
-    if (this !== $gamePlayer && $gameTemp.isStopMapEventMovement()) {
-    return;
-    }
-    if (this == $gamePlayer && $gameTemp.isStopMapPlayerMovement()) {
-    return;
-    }
     if (this.isMoving() && this.hasWalkAnime()) {
         this._animationCount += 1.5;
     } else if (this.hasStepAnime() || !this.isOriginalPattern()) {
@@ -6591,17 +6641,10 @@ Game_CharacterBase.prototype.updateAnimationCount = function() {
 };
 
 Game_CharacterBase.prototype.updatePattern = function() {
-	var plus = 1;
-    if (this !== $gamePlayer && $gameTemp.isStopMapEventMovement()) {
-    plus = 0;
-    }
-    if (this == $gamePlayer && $gameTemp.isStopMapPlayerMovement()) {
-    plus = 0;
-    }
     if (!this.hasStepAnime() && this._stopCount > 0) {
         this.resetPattern();
     } else {
-        this._pattern = (this._pattern + plus) % this.maxPattern();
+        this._pattern = (this._pattern + 1) % this.maxPattern();
     }
 };
 
@@ -6953,12 +6996,6 @@ Game_Character.prototype.updateStop = function() {
 };
 
 Game_Character.prototype.updateRoutineMove = function() {
-    if (this !== $gamePlayer && $gameTemp.isStopMapEventMovement()) {
-    return;
-    }
-    if (this == $gamePlayer && $gameTemp.isStopMapPlayerMovement()) {
-    return;
-    }
     if (this._waitCount > 0) {
         this._waitCount--;
     } else {
@@ -8883,11 +8920,7 @@ Game_Interpreter.prototype.updateWait = function() {
 
 Game_Interpreter.prototype.updateWaitCount = function() {
     if (this._waitCount > 0) {
-    if (this !== $gamePlayer && $gameTemp.isStopMapEventMovement() || this == $gamePlayer && $gameTemp.isStopMapPlayerMovement()) {
-		this._waitCount += 0;
-    } else {
         this._waitCount--;
-	}
         return true;
     }
     return false;
