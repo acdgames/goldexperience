@@ -1,8 +1,0 @@
-v0.0.5
-Add Movement Range, Movement Type, and Weapon Range to Status
-Units are now greyed out after their turn is over
-
-v0.0.4
-12/9/2019
-
-First Private Release
